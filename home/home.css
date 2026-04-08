@@ -1,0 +1,10 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.conteudo{
+    height: 100vh;
+    display: flex;
+    gap: 1em;
+}

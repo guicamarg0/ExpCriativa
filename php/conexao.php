@@ -3,7 +3,7 @@
 $servidor = "localhost:3306";
 $usuario  = "root";
 $senha    = "";
-$nome_banco = "projeto";
+$nome_banco = "mitra_db";
 
 $conexao = new mysqli($servidor, $usuario, $senha, $nome_banco);
 if($conexao->connect_error){

@@ -26,7 +26,7 @@ async function buscar(id){
         document.getElementById("id").value = id;
     }else{
         alert("ERRO:" + resposta.mensagem);
-        window.location.href = "../home/";
+        window.location.href = "../exemplo/";
     }
 }
 
@@ -59,7 +59,7 @@ async function alterar(){
     const resposta = await retorno.json();
     if(resposta.status == "ok"){
         alert("SUCESSO: " + resposta.mensagem);
-        window.location.href = '../home/'
+        window.location.href = '../exemplo/'
     }else{
         alert("ERRO: " + resposta.mensagem);
     }
