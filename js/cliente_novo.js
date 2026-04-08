@@ -30,7 +30,7 @@ async function novo(){
     const resposta = await retorno.json();
     if(resposta.status == "ok"){
         alert("SUCESSO: " + resposta.mensagem);
-        window.location.href = "../home/";
+        window.location.href = "../exemplo/";
     }else{
         alert("ERRO: " + resposta.mensagem);
     }
