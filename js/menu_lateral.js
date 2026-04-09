@@ -25,6 +25,40 @@ document.addEventListener("DOMContentLoaded", () => {
         document.head.appendChild(link);
     }
 
+    const setActiveLink = (container) => {
+        const currentPath = window.location.pathname.replace(/\/index\.html$/, "/");
+        const currentHash = window.location.hash;
+        const links = container.querySelectorAll(".links a").length
+            ? container.querySelectorAll(".links a")
+            : container.querySelectorAll("a");
+
+        links.forEach((link) => {
+            link.classList.remove("active");
+
+            const href = link.getAttribute("href") || "";
+            if (!href || href === "#") {
+                return;
+            }
+
+            if (href.startsWith("#")) {
+                if (href === currentHash) {
+                    link.classList.add("active");
+                }
+                return;
+            }
+
+            try {
+                const linkUrl = new URL(href, window.location.href);
+                const linkPath = linkUrl.pathname.replace(/\/index\.html$/, "/");
+                if (linkPath === currentPath) {
+                    link.classList.add("active");
+                }
+            } catch (error) {
+                console.warn("Link invalido no menu:", href);
+            }
+        });
+    };
+
     fetch(menuHtmlPath)
         .then((response) => response.text())
         .then((html) => {
@@ -36,6 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const target = document.querySelector(targetSelector);
                 if (target) {
                     target.innerHTML = menu.innerHTML;
+                    setActiveLink(target);
+                    window.addEventListener("hashchange", () => setActiveLink(target));
+                    window.addEventListener("popstate", () => setActiveLink(target));
                 }
             }
         })
