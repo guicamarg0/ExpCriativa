@@ -28,16 +28,15 @@
         while($linha = $resultado->fetch_assoc()){
             $tabela[] = $linha;
         }
-
         $retorno = [
-            'status'    => 'ok', // ok - nok
-            'mensagem'  => 'Sucesso, consulta efetuada.', // mensagem que envio para o front
+            'status'    => 'ok',
+            'mensagem'  => 'Sucesso, consulta efetuada.',
             'data'      => $tabela
         ];
     }else{
         $retorno = [
-            'status'    => 'nok', // ok - nok
-            'mensagem'  => 'Não há registros', // mensagem que envio para o front
+            'status'    => 'nok',
+            'mensagem'  => 'Não há registros',
             'data'      => []
         ];
     }

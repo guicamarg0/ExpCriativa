@@ -1,5 +1,5 @@
 <?php
-    include_once('conexao.php');
+    include_once('../php/conexao.php');
     // Configurando o padrão de retorno em todas
     // as situações
     $retorno = [
@@ -8,8 +8,8 @@
         'data'      => []
     ];
 
-    $stmt = $conexao->prepare("SELECT * FROM cliente WHERE usuario = ? AND senha = ?");
-    $stmt->bind_param("ss",$_POST['usuario'],$_POST['senha']);
+    $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE email = ? AND senha = ?");
+    $stmt->bind_param("ss",$_POST['email'],$_POST['senha']);
     
     // Recuperando informações do banco de dados
     // Vou executar a query
@@ -24,7 +24,7 @@
         }
 
         session_start();
-        $_SESSION['usuario'] = $tabela;
+        $_SESSION['email'] = $tabela;
 
         $retorno = [
             'status'    => 'ok', // ok - nok
