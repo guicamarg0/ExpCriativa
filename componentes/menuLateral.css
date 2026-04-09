@@ -27,19 +27,19 @@
     text-decoration: none;
     color : var(--cor-primaria);
 }
-.menu a:hover{
+.links a:hover{
     background-color:var(--cor-primaria);
     color: var(--cor-branco);
     transition: .5s;
 }
 
-.menu a.active{
+.links a.active{
     background-color:  var(--cor-secundaria);
     color:  var(--cor-branco)
 }
 
-.menu a i,
-.menu a .bi{
+.links a i,
+.links a .bi{
     display: flex;
     margin-left: 1em;
     font-size: 2em;
