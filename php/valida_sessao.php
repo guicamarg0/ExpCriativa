@@ -10,10 +10,14 @@
         // Pega o id do usuário (assumindo que está no primeiro registro)
         $id_do_usuario = $dados_usuario_tabela[0]['id'];
         
+        // Pega o id_nivel do usuário (nível de acesso)
+        $id_nivel = isset($dados_usuario_tabela[0]['id_nivel']) ? $dados_usuario_tabela[0]['id_nivel'] : null;
+        
         $retorno = [
             'status'    => 'ok',
             'mensagem'  => 'Sessão válida.',
-            'id'       => $id_do_usuario // <-- ENVIA O ID DE VOLTA
+            'id'       => $id_do_usuario, // <-- ENVIA O ID DE VOLTA
+            'id_nivel' => $id_nivel // <-- ENVIA O ID DO NÍVEL DE ACESSO
         ];
 
     }else{
