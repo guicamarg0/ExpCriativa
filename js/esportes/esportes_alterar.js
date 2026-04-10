@@ -22,8 +22,8 @@ async function buscar(id){
         document.getElementById("status").value = registro.status;
         document.getElementById("id").value = id;
     }else{
-        alert("Erro!" + resposta.mensagem);
-        window.location.href = "../esportes/esportes.html";
+        alert("ERRO:" + resposta.mensagem);
+        window.location.href = "../exemplo/";
     }
 }
 
@@ -49,7 +49,7 @@ async function alterar(){
         });
     const resposta = await retorno.json();
     if(resposta.status == "ok"){
-        alert("Sucesso! " + resposta.mensagem);
+        alert("SUCESSO: " + resposta.mensagem);
         window.location.href = '../esportes/esportes.html'
     }else{
         alert("Erro... " + resposta.mensagem);
