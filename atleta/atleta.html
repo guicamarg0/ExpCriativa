@@ -28,7 +28,7 @@
             </div>
             <form class="modalAtletaForm" action="#">
                 <label>
-                    Nome
+                    Nome Completo
                     <input type="text" name="nome" maxlength="100" required>
                 </label>
                 <label>
@@ -36,22 +36,21 @@
                     <textarea name="descricao" rows="3"></textarea>
                 </label>
                 <label>
-                    Modalidade (id)
-                    <input type="number" name="id_modalidade" min="1">
+                    Data de Nascimento
+                    <input type="date" name="datadenasc">
                 </label>
                 <label>
-                    Genero (id)
-                    <input type="number" name="id_genero" min="1">
+                    Gênero
+                    <select name="genero">
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
                 </label>
                 <label>
-                    Categoria
-                    <input type="text" name="categoria" maxlength="50">
-                </label>
-                <label>
-                    Status
-                    <select name="status">
-                        <option value="ativa" selected>Ativa</option>
-                        <option value="inativa">Inativa</option>
+                    Esporte
+                    <select name="esporte">
+                        <option value="volei">Vôlei</option>
+                        <option value="natacao">Natação</option>
                     </select>
                 </label>
                 <div class="modalAtletaAcoes">
@@ -73,7 +72,7 @@
             <form class="modalAtletaForm modalAtletaFormEditar" action="#">
                 <input type="hidden" name="id">
                 <label>
-                    Nome
+                    Nome Completo
                     <input type="text" name="nome" maxlength="100" required>
                 </label>
                 <label>
@@ -81,22 +80,21 @@
                     <textarea name="descricao" rows="3"></textarea>
                 </label>
                 <label>
-                    Modalidade (id)
-                    <input type="number" name="id_modalidade" min="1">
+                    Data de Nascimento
+                    <input type="date" name="datadenasc">
                 </label>
                 <label>
-                    Genero (id)
-                    <input type="number" name="id_genero" min="1">
+                    Gênero
+                    <select name="genero">
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
                 </label>
                 <label>
-                    Categoria
-                    <input type="text" name="categoria" maxlength="50">
-                </label>
-                <label>
-                    Status
-                    <select name="status">
-                        <option value="ativa">Ativa</option>
-                        <option value="inativa">Inativa</option>
+                    Esporte
+                    <select name="esporte">
+                        <option value="volei">Vôlei</option>
+                        <option value="natacao">Natação</option>
                     </select>
                 </label>
                 <div class="modalAtletaAcoes">
@@ -128,8 +126,7 @@
     data-menuHtml="../componentes/menuLateral.html"
     data-menuCss="../componentes/menuLateral.css"
     data-menuTarget=".menu"></script>
-      <script src="../js/atleta_novo.js"></script>
-      <script src="../js/atleta_alterar.js"></script>
+      <script src="../js/atleta/atleta.js"></script>
 
 </body>
 </html>
