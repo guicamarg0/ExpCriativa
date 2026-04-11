@@ -16,10 +16,10 @@
     .then((data) => {
       if (data.status !== "ok") {
         // Sempre redireciona para a página de login absoluta
-        window.location.replace("/login/index_login.html");
+        window.location.replace("/login/index.html");
       }
     })
     .catch(() => {
-      window.location.replace("/login/index_login.html");
+      window.location.replace("/login/index.html");
     });
 })();

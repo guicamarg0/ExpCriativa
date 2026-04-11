@@ -16,7 +16,7 @@
         $ativo      = (int) $_POST['ativo'];
     
         // Preparando para inserção no banco de dados
-        $stmt = $conexao->prepare("UPDATE cliente SET nome = ?, email = ?, usuario = ?, senha = ?, ativo = ? WHERE id = ?");
+        $stmt = $conexao->prepare("UPDATE usuario SET nome = ?, email = ?, usuario = ?, senha = ?, ativo = ? WHERE id = ?");
         $stmt->bind_param("ssssii",$nome, $email, $usuario, $senha, $ativo, $_GET['id']);
         $stmt->execute();
 

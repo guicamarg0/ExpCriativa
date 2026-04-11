@@ -15,7 +15,7 @@
 
     // Preparando para inserção no banco de dados
     $stmt = $conexao->prepare("
-    INSERT INTO cliente(nome, email, usuario, senha, instagram, ativo) VALUES(?,?,?,?,?,?)");
+    INSERT INTO usuario(nome, email, usuario, senha, instagram, ativo) VALUES(?,?,?,?,?,?)");
     $stmt->bind_param("sssssi",$nome, $email, $usuario, $senha, $instagram, $ativo);
     $stmt->execute();
 

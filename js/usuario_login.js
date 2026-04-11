@@ -16,7 +16,7 @@ async function login() {
   fd.append("email", email_limpo);
   fd.append("senha", senha_limpa);
 
-  const retorno = await fetch("../php/cliente_login.php", {
+  const retorno = await fetch("../php/usuario_login.php", {
     method: "POST",
     body: fd,
   });
