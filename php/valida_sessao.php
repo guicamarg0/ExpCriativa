@@ -1,17 +1,33 @@
 <?php
     session_start();
-    if(isset($_SESSION['usuario'])){
+    
+    // Verifica se a sessão 'email' existe
+    if(isset($_SESSION['email'])){
+        
+        // Pega os dados do usuário que foram salvos no login
+        $dados_usuario_tabela = $_SESSION['email']; 
+        
+        // Pega o id do usuário (assumindo que está no primeiro registro)
+        $id_do_usuario = isset($dados_usuario_tabela[0]['id']) ? $dados_usuario_tabela[0]['id'] : null;
+        
+        // Pega o id_nivel do usuário (nível de acesso)
+        $id_nivel = isset($dados_usuario_tabela[0]['id_nivel']) ? $dados_usuario_tabela[0]['id_nivel'] : null;
+        
         $retorno = [
-            'status'    => 'ok', // ok - nok
-            'mensagem'  => '', // mensagem que envio para o front
-            'data'      => []
+            'status'    => 'ok',
+            'mensagem'  => 'Sessão válida.',
+            'id'        => $id_do_usuario, // <-- ENVIA O ID DE VOLTA
+            'id_nivel'  => $id_nivel, // <-- ENVIA O ID DO NÍVEL DE ACESSO
+            'data'      => $dados_usuario_tabela
         ];
+
     }else{
         $retorno = [
-            'status'    => 'nok', // ok - nok
-            'mensagem'  => '', // mensagem que envio para o front
-            'data'      => []
+            'status'    => 'nok',
+            'mensagem'  => 'Sessão inválida.'
         ];
     }
-    header("Content-type:application/json;charset:utf-8;");
+    
+    // Corrija o header (remova o ';' extra no final)
+    header("Content-type: application/json; charset=utf-8");
     echo json_encode($retorno);
