@@ -7,9 +7,10 @@
   else if (path.includes("/js/") || path.includes("/componentes/"))
     phpPath = "../../php/valida_sessao.php";
   else if (path.includes("/login/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("/esportes/")) phpPath = "../php/valida_sessao.php";
   else if (path.includes("/exemplo/")) phpPath = "../php/valida_sessao.php";
   else if (path.includes("/equipe/")) phpPath = "../php/valida_sessao.php";
-  else phpPath = "php/valida_sessao.php";
+  else phpPath = "../php/valida_sessao.php";
 
   fetch(phpPath, { cache: "no-store" }) // força a não usar cache
     .then((response) => response.json())

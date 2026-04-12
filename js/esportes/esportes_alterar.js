@@ -6,8 +6,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // pega a URL e armazena em um const
     // busca nessa URL a variável id e armazana no const id.
-
-    valida_sessao();
     const url = new URLSearchParams(window.location.search);
     const id = url.get("id");
     buscar(id);

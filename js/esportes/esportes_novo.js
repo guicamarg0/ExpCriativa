@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    valida_sessao();
-});
-
 document.getElementById("enviar").addEventListener("click", () => {
     novo();
 });
