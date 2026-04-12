@@ -1,8 +1,8 @@
 <?php
 // Variáveis de conexão com o Banco de Dados
-$servidor = "localhost:3306";
+$servidor = "localhost:3305";
 $usuario  = "root";
-$senha    = "PUC@1234";
+$senha    = "";
 $nome_banco = "mitra_db";
 
 $conexao = new mysqli($servidor, $usuario, $senha, $nome_banco);

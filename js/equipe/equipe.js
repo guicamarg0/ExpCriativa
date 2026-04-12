@@ -18,13 +18,120 @@ fetch("../php/valida_sessao.php")
   });
 
 document.addEventListener("DOMContentLoaded", () => {
+  prepararFiltroStatusEquipe();
   buscar();
+  carregarTreinadoresAtivos();
+  carregarGenerosAtivos();
   prepararModalEquipe();
   prepararModalEdicao();
   prepararModalConfirmacao();
 });
 
 let confirmarAcao = null;
+let treinadoresAtivos = [];
+let generosAtivos = [];
+
+function obterFiltroStatusEquipe() {
+  const filtro = document.querySelector("#filtroStatusEquipe");
+  if (!filtro) {
+    return "ativa";
+  }
+
+  const valor = (filtro.value || "").toLowerCase();
+  if (valor === "inativa" || valor === "todos") {
+    return valor;
+  }
+  return "ativa";
+}
+
+function prepararFiltroStatusEquipe() {
+  const filtro = document.querySelector("#filtroStatusEquipe");
+  if (!filtro) {
+    return;
+  }
+
+  filtro.addEventListener("change", () => {
+    buscar();
+  });
+}
+
+function preencherSelectTreinadorResponsavel(select, selecionado = "") {
+  if (!select) {
+    return;
+  }
+
+  let optionsHtml = '<option value="">Sem treinador responsavel</option>';
+  for (let i = 0; i < treinadoresAtivos.length; i++) {
+    const treinador = treinadoresAtivos[i];
+    optionsHtml += `<option value="${escaparHtml(treinador.id)}">${escaparHtml(treinador.nome || "Sem nome")}</option>`;
+  }
+
+  select.innerHTML = optionsHtml;
+  select.value = selecionado ? String(selecionado) : "";
+}
+
+function preencherSelectsTreinadorResponsavel(selecionadoEditar = "") {
+  const selectCadastro = document.querySelector("#modalEquipe .selectTreinadorResponsavel");
+  const selectEdicao = document.querySelector("#modalEquipeEdicao .selectTreinadorResponsavel");
+  preencherSelectTreinadorResponsavel(selectCadastro, "");
+  preencherSelectTreinadorResponsavel(selectEdicao, selecionadoEditar);
+}
+
+async function carregarTreinadoresAtivos() {
+  try {
+    const retorno = await fetch("../php/treinador/treinador_get.php?status=ativo");
+    const resposta = await retorno.json();
+    if (resposta.status === "ok" && Array.isArray(resposta.data)) {
+      treinadoresAtivos = resposta.data;
+    } else {
+      treinadoresAtivos = [];
+    }
+    preencherSelectsTreinadorResponsavel();
+  } catch (erro) {
+    treinadoresAtivos = [];
+    preencherSelectsTreinadorResponsavel();
+    console.error(erro);
+  }
+}
+
+function preencherSelectGenero(select, selecionado = "") {
+  if (!select) {
+    return;
+  }
+
+  let optionsHtml = '<option value="">Selecione</option>';
+  for (let i = 0; i < generosAtivos.length; i++) {
+    const genero = generosAtivos[i];
+    optionsHtml += `<option value="${escaparHtml(genero.id)}">${escaparHtml(genero.nome || "Sem nome")}</option>`;
+  }
+
+  select.innerHTML = optionsHtml;
+  select.value = selecionado ? String(selecionado) : "";
+}
+
+function preencherSelectsGenero(selecionadoEditar = "") {
+  const selectCadastro = document.querySelector("#modalEquipe .selectGenero");
+  const selectEdicao = document.querySelector("#modalEquipeEdicao .selectGenero");
+  preencherSelectGenero(selectCadastro, "");
+  preencherSelectGenero(selectEdicao, selecionadoEditar);
+}
+
+async function carregarGenerosAtivos() {
+  try {
+    const retorno = await fetch("../php/genero_get.php?status=ativo");
+    const resposta = await retorno.json();
+    if (resposta.status === "ok" && Array.isArray(resposta.data)) {
+      generosAtivos = resposta.data;
+    } else {
+      generosAtivos = [];
+    }
+    preencherSelectsGenero();
+  } catch (erro) {
+    generosAtivos = [];
+    preencherSelectsGenero();
+    console.error(erro);
+  }
+}
 
 function prepararModalConfirmacao() {
   const modal = document.querySelector("#modalConfirmacao");
@@ -81,7 +188,10 @@ function prepararModalConfirmacao() {
 }
 
 async function buscar() {
-  const retorno = await fetch("../php/equipe/equipe_get.php");
+  const status = obterFiltroStatusEquipe();
+  const retorno = await fetch(
+    `../php/equipe/equipe_get.php?status=${encodeURIComponent(status)}`,
+  );
   const resposta = await retorno.json();
   if (resposta.status == "ok") {
     preencherTabela(resposta.data);
@@ -97,8 +207,14 @@ function formatStatus(valor) {
   if (String(valor).toLowerCase() === "ativa") {
     return "Ativa";
   }
+  if (String(valor).toLowerCase() === "inativa") {
+    return "Inativa";
+  }
   if (String(valor).toLowerCase() === "ativo") {
     return "Ativo";
+  }
+  if (String(valor).toLowerCase() === "inativo") {
+    return "Inativo";
   }
   if (valor === 1 || valor === "1" || valor === true) {
     return "Ativo";
@@ -109,6 +225,15 @@ function formatStatus(valor) {
   return String(valor);
 }
 
+function escaparHtml(valor) {
+  return String(valor ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function preencherTabela(tabela) {
   const lista = document.querySelector(".listViewEquipes");
   if (!lista) {
@@ -117,24 +242,31 @@ function preencherTabela(tabela) {
 
   let html = "";
   if (!tabela || tabela.length === 0) {
-    html = "<p>Nenhuma equipe cadastrada.</p>";
+    html = '<p class="estadoListaVazia">Nenhuma equipe cadastrada.</p>';
     lista.innerHTML = html;
     return;
   }
 
   for (let i = 0; i < tabela.length; i++) {
     const equipe = tabela[i];
+    const nome = equipe.nome || "Sem nome";
+    const modalidade = equipe.modalidade || "-";
+    const categoria = equipe.categoria || "-";
+    const genero = equipe.genero || "-";
+    const treinadorResponsavel = equipe.treinador_responsavel_nome || "-";
     const integrantes = equipe.integrantes || equipe.numero_integrantes || "-";
+    const status = formatStatus(equipe.status);
 
     html += `
             <div class="linhaEquipe">
-                <button class="btnEditarEquipe" data-id="${equipe.id}"><i class="bi bi-pencil-square"></i></button>
-                <p><b>${equipe.nome || "Sem nome"}</b></p>
-                <p>Modalidade: ${equipe.modalidade || "-"}</p>
-                <p>Categoria: ${equipe.categoria || "-"}</p>
-                <p>Genero: ${equipe.genero || "-"}</p>
-                <p>Numero de integrantes: ${integrantes}</p>
-                <p>Status: ${formatStatus(equipe.status)}</p>
+                <button class="btnEditarEquipe" data-id="${escaparHtml(equipe.id)}"><i class="bi bi-pencil-square"></i></button>
+                <p title="${escaparHtml(nome)}"><b>${escaparHtml(nome)}</b></p>
+                <p title="${escaparHtml(modalidade)}">${escaparHtml(modalidade)}</p>
+                <p title="${escaparHtml(categoria)}">${escaparHtml(categoria)}</p>
+                <p title="${escaparHtml(genero)}">${escaparHtml(genero)}</p>
+                <p title="${escaparHtml(treinadorResponsavel)}">${escaparHtml(treinadorResponsavel)}</p>
+                <p title="${escaparHtml(integrantes)}">${escaparHtml(integrantes)}</p>
+                <p title="${escaparHtml(status)}">${escaparHtml(status)}</p>
             </div>
         `;
   }
@@ -145,13 +277,21 @@ function preencherTabela(tabela) {
 function prepararModalEquipe() {
   const botaoAbrir = document.querySelector("#btnAbrirModalEquipe");
   const modal = document.querySelector("#modalEquipe");
-  const form = document.querySelector(".modalEquipeForm");
+  const form = document.querySelector("#modalEquipe .modalEquipeForm");
+  const selectTreinador = document.querySelector(
+    "#modalEquipe .selectTreinadorResponsavel",
+  );
+  const selectGenero = document.querySelector("#modalEquipe .selectGenero");
 
   if (!botaoAbrir || !modal) {
     return;
   }
 
-  const abrirModal = () => {
+  const abrirModal = async () => {
+    await carregarTreinadoresAtivos();
+    await carregarGenerosAtivos();
+    preencherSelectTreinadorResponsavel(selectTreinador, "");
+    preencherSelectGenero(selectGenero, "");
     modal.classList.add("ativo");
     modal.setAttribute("aria-hidden", "false");
   };
@@ -161,7 +301,9 @@ function prepararModalEquipe() {
     modal.setAttribute("aria-hidden", "true");
   };
 
-  botaoAbrir.addEventListener("click", abrirModal);
+  botaoAbrir.addEventListener("click", () => {
+    abrirModal();
+  });
 
   modal.addEventListener("click", (event) => {
     if (event.target && event.target.hasAttribute("data-modal-close")) {
@@ -204,10 +346,14 @@ function prepararModalEquipe() {
 }
 
 function prepararModalEdicao() {
-  const lista = document.querySelector(".listViewEquipes");
+  const lista = document.querySelector(".listaEquipesGrid");
   const modal = document.querySelector("#modalEquipeEdicao");
   const form = document.querySelector(".modalEquipeFormEditar");
   const btnExcluir = modal ? modal.querySelector(".btnExcluir") : null;
+  const selectTreinador = modal
+    ? modal.querySelector(".selectTreinadorResponsavel")
+    : null;
+  const selectGenero = modal ? modal.querySelector(".selectGenero") : null;
 
   if (!lista || !modal) {
     return;
@@ -235,7 +381,11 @@ function prepararModalEdicao() {
     }
 
     try {
-      const retorno = await fetch(`../php/equipe/equipe_get.php?id=${id}`);
+      await carregarTreinadoresAtivos();
+      await carregarGenerosAtivos();
+      const retorno = await fetch(
+        `../php/equipe/equipe_get.php?id=${id}&status=todos`,
+      );
       const resposta = await retorno.json();
       if (resposta.status !== "ok" || !resposta.data || !resposta.data[0]) {
         alert("Nao foi possivel carregar a equipe.");
@@ -243,6 +393,15 @@ function prepararModalEdicao() {
       }
 
       preencherModalEdicao(resposta.data[0], form);
+      if (selectTreinador) {
+        preencherSelectTreinadorResponsavel(
+          selectTreinador,
+          resposta.data[0].id_treinador_responsavel || "",
+        );
+      }
+      if (selectGenero) {
+        preencherSelectGenero(selectGenero, resposta.data[0].id_genero || "");
+      }
       abrirModal();
     } catch (erro) {
       alert("Erro ao carregar equipe.");
@@ -334,4 +493,7 @@ function preencherModalEdicao(equipe, form) {
   form.id_genero.value = equipe.id_genero || "";
   form.categoria.value = equipe.categoria || "";
   form.status.value = equipe.status || "ativa";
+  if (form.id_treinador_responsavel) {
+    form.id_treinador_responsavel.value = equipe.id_treinador_responsavel || "";
+  }
 }

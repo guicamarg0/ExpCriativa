@@ -26,6 +26,7 @@
     $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
     $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : '';
     $status = isset($_POST['status']) && $_POST['status'] !== '' ? trim($_POST['status']) : 'ativa';
+    $id_treinador_responsavel = isset($_POST['id_treinador_responsavel']) ? trim($_POST['id_treinador_responsavel']) : '';
 
     if($id <= 0){
         $retorno = [
@@ -51,8 +52,64 @@
         exit;
     }
 
+    if($id_treinador_responsavel !== '' && !ctype_digit($id_treinador_responsavel)){
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Treinador responsavel invalido.',
+            'data'      => []
+        ];
+
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
+    }
+
+    if($id_treinador_responsavel !== ''){
+        $idTreinador = (int) $id_treinador_responsavel;
+        $stmtValidaTreinador = $conexao->prepare(
+            "SELECT id FROM treinadores WHERE id = ? AND status = 'ativo' LIMIT 1"
+        );
+
+        if(!$stmtValidaTreinador){
+            $retorno = [
+                'status'    => 'nok',
+                'mensagem'  => 'Erro ao preparar validacao de treinador.',
+                'data'      => []
+            ];
+
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+
+        $stmtValidaTreinador->bind_param("i", $idTreinador);
+        $stmtValidaTreinador->execute();
+        $resultadoTreinador = $stmtValidaTreinador->get_result();
+        $stmtValidaTreinador->close();
+
+        if($resultadoTreinador->num_rows === 0){
+            $retorno = [
+                'status'    => 'nok',
+                'mensagem'  => 'Selecione um treinador ativo valido.',
+                'data'      => []
+            ];
+
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+    }
+
     $stmt = $conexao->prepare(
-        "UPDATE equipes SET nome = ?, descricao = ?, id_modalidade = ?, id_genero = ?, categoria = ?, status = ? WHERE id = ?"
+        "UPDATE equipes SET
+            nome = ?,
+            descricao = ?,
+            id_modalidade = ?,
+            id_genero = ?,
+            categoria = ?,
+            status = ?,
+            id_treinador_responsavel = NULLIF(?, '')
+        WHERE id = ?"
     );
 
     if(!$stmt){
@@ -67,7 +124,17 @@
         exit;
     }
 
-    $stmt->bind_param("ssiissi", $nome, $descricao, $id_modalidade, $id_genero, $categoria, $status, $id);
+    $stmt->bind_param(
+        "ssiisssi",
+        $nome,
+        $descricao,
+        $id_modalidade,
+        $id_genero,
+        $categoria,
+        $status,
+        $id_treinador_responsavel,
+        $id
+    );
     $stmt->execute();
 
     if($stmt->affected_rows > 0){

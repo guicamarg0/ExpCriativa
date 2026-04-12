@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treinadores</title>
+    <link rel="icon" type="image/png" href="mitra.png" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../equipe/equipe.css" />
+    <link rel="stylesheet" href="treinador_novo.css" />
+  </head>
+  <body>
+    <div class="conteudo">
+      <div class="menu"></div>
+      <div class="conteudoEquipe">
+        <div class="headerConteudo">
+          <h1>Treinadores</h1>
+          <div class="acoesHeaderTreinador">
+            <label for="filtroStatusTreinador">Status</label>
+            <select id="filtroStatusTreinador">
+              <option value="ativo" selected>Ativos</option>
+              <option value="inativo">Inativos</option>
+              <option value="todos">Todos</option>
+            </select>
+            <button id="btnAbrirModalTreinador" type="button">
+              + Adicionar treinador
+            </button>
+          </div>
+        </div>
+
+        <div class="cabecalhoTreinadores" aria-hidden="true">
+          <span></span>
+          <span>Nome</span>
+          <span>E-mail</span>
+          <span>Equipes responsável</span>
+          <span>Telefone</span>
+          <span>CREF</span>
+          <span>Status</span>
+        </div>
+        <div class="listViewEquipes listViewTreinadores" id="listViewTreinadores"></div>
+      </div>
+    </div>
+
+    <div class="modalEquipe" id="modalTreinador" aria-hidden="true">
+      <div class="modalEquipeOverlay" data-modal-close></div>
+      <div
+        class="modalEquipeCard cadastroTreinadorCard"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTreinadorTitulo"
+      >
+        <div class="modalEquipeHeader">
+          <h2 id="modalTreinadorTitulo">Cadastrar treinador</h2>
+          <button
+            class="modalEquipeFechar"
+            type="button"
+            aria-label="Fechar"
+            data-modal-close
+          >
+            x
+          </button>
+        </div>
+        <form action="cad.php" method="get" id="meuForm" class="modalEquipeForm">
+          <div class="blocoFormulario">
+            <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
+            <div class="camposGrid">
+              <label for="nome">
+                Nome Completo
+                <input type="text" name="nome" id="nome" />
+              </label>
+
+              <label for="data_nascimento">
+                Data de Nascimento
+                <input type="date" name="data_nascimento" id="data_nascimento" />
+              </label>
+
+              <label for="telefone">
+                Telefone
+                <input
+                  type="tel"
+                  name="telefone"
+                  placeholder="(DDD)00000-0000"
+                  maxlength="14"
+                  id="telefone"
+                />
+              </label>
+
+              <label for="cref">
+                CREF
+                <input type="text" name="cref" placeholder="012345-G/EX" id="cref" />
+              </label>
+
+              <label for="data_inicio">
+                Data de Início
+                <input
+                  type="date"
+                  name="data_inicio"
+                  id="data_inicio"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div class="blocoFormulario credenciaisUsuario">
+            <h2 class="tituloBlocoFormulario">Credenciais de usuário</h2>
+            <div class="camposGrid">
+              <label for="email">
+                E-mail
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="usuario@email.com"
+                />
+              </label>
+
+              <label for="senha">
+                Senha
+                <input type="password" name="senha" id="senha" minlength="6" />
+              </label>
+            </div>
+          </div>
+
+          <div class="statusTreinador">
+            <span>Status</span>
+            <div class="statusTreinadorOpcoes">
+              <label for="ativo">
+                <input type="radio" id="ativo" name="status" value="ativo" checked />
+                Ativo
+              </label>
+              <label for="inativo">
+                <input type="radio" id="inativo" name="status" value="inativo" />
+                Inativo
+              </label>
+            </div>
+          </div>
+
+          <div class="modalEquipeAcoes">
+            <button id="enviar" class="btnPrimario" type="button">Cadastrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modalEquipe modalEquipeEdicao" id="modalTreinadorEdicao" aria-hidden="true">
+      <div class="modalEquipeOverlay" data-modal-close-edit></div>
+      <div
+        class="modalEquipeCard cadastroTreinadorCard"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTreinadorEdicaoTitulo"
+      >
+        <div class="modalEquipeHeader">
+          <h2 id="modalTreinadorEdicaoTitulo">Editar treinador</h2>
+          <button
+            class="modalEquipeFechar"
+            type="button"
+            aria-label="Fechar"
+            data-modal-close-edit
+          >
+            x
+          </button>
+        </div>
+        <form id="formTreinadorEdicao" class="modalEquipeForm modalTreinadorFormEdicao">
+          <input type="hidden" name="id" />
+
+          <div class="blocoFormulario">
+            <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
+            <div class="camposGrid">
+              <label for="nomeEditar">
+                Nome Completo
+                <input type="text" name="nome" id="nomeEditar" />
+              </label>
+
+              <label for="dataNascimentoEditar">
+                Data de Nascimento
+                <input type="date" name="data_nascimento" id="dataNascimentoEditar" />
+              </label>
+
+              <label for="telefoneEditar">
+                Telefone
+                <input
+                  type="tel"
+                  name="telefone"
+                  placeholder="(DDD)00000-0000"
+                  maxlength="14"
+                  id="telefoneEditar"
+                />
+              </label>
+
+              <label for="crefEditar">
+                CREF
+                <input type="text" name="cref" placeholder="012345-G/EX" id="crefEditar" />
+              </label>
+
+              <label for="dataInicioEditar">
+                Data de Início
+                <input type="date" name="data_inicio" id="dataInicioEditar" />
+              </label>
+            </div>
+          </div>
+
+          <div class="blocoFormulario credenciaisUsuario">
+            <h2 class="tituloBlocoFormulario">Credenciais de usuário</h2>
+            <div class="camposGrid">
+              <label for="emailEditar">
+                E-mail
+                <input
+                  type="email"
+                  name="email"
+                  id="emailEditar"
+                  placeholder="usuario@email.com"
+                />
+              </label>
+
+              <label for="senhaEditar">
+                Nova senha
+                <input
+                  type="password"
+                  name="senha"
+                  id="senhaEditar"
+                  placeholder="Deixe em branco para manter"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div class="statusTreinador">
+            <span>Status</span>
+            <div class="statusTreinadorOpcoes">
+              <label for="ativoEditar">
+                <input type="radio" id="ativoEditar" name="status" value="ativo" />
+                Ativo
+              </label>
+              <label for="inativoEditar">
+                <input type="radio" id="inativoEditar" name="status" value="inativo" />
+                Inativo
+              </label>
+            </div>
+          </div>
+
+          <div class="modalEquipeAcoes">
+            <button class="btnPrimario" type="submit">Salvar alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script
+      src="../js/menu_lateral.js"
+      data-menuHtml="../componentes/menuLateral.html"
+      data-menuCss="../componentes/menuLateral.css"
+      data-menuTarget=".menu"
+    ></script>
+    <script src="../js/treinador/treinador_novo.js"></script>
+  </body>
+</html>

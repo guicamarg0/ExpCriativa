@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Layout HTML</title>
+    <title>Equipes</title>
     <link rel="stylesheet" href="equipe.css" />
   </head>
   <body>
@@ -12,11 +12,29 @@
       <div class="conteudoEquipe">
         <div class="headerConteudo">
           <h1>Equipes</h1>
-          <button id="btnAbrirModalEquipe" type="button">
-            + Adicionar Equipe
-          </button>
+          <div class="acoesHeaderEquipe">
+            <label for="filtroStatusEquipe">Status</label>
+            <select id="filtroStatusEquipe">
+              <option value="ativa" selected>Ativas</option>
+              <option value="inativa">Inativas</option>
+              <option value="todos">Todas</option>
+            </select>
+            <button id="btnAbrirModalEquipe" type="button">
+              + Adicionar Equipe
+            </button>
+          </div>
         </div>
-        <div class="listViewEquipes"></div>
+        <div class="cabecalhoEquipes" aria-hidden="true">
+          <span></span>
+          <span>Nome</span>
+          <span>Modalidade</span>
+          <span>Categoria</span>
+          <span>Gênero</span>
+          <span>Treinador responsável</span>
+          <span>Integrantes</span>
+          <span>Status</span>
+        </div>
+        <div class="listViewEquipes listaEquipesGrid"></div>
       </div>
     </div>
 
@@ -40,40 +58,52 @@
           </button>
         </div>
         <form class="modalEquipeForm" action="#">
-          <label>
-            Nome
-            <input type="text" name="nome" maxlength="100" required />
-          </label>
-          <label>
-            Descricao
-            <textarea name="descricao" rows="3"></textarea>
-          </label>
-          <label>
-            Modalidade (id)
-            <input type="number" name="id_modalidade" min="1" />
-          </label>
-          <label>
-            Genero (id)
-            <input type="number" name="id_genero" min="1" />
-          </label>
-          <label>
-            Categoria
-            <input type="text" name="categoria" maxlength="50" />
-          </label>
-          <label>
-            Status
-            <select name="status">
-              <option value="ativa" selected>Ativa</option>
-              <option value="inativa">Inativa</option>
-            </select>
-          </label>
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Dados da equipe</h3>
+            <div class="camposGridEquipe">
+              <label>
+                Nome
+                <input type="text" name="nome" maxlength="100" required />
+              </label>
+              <label>
+                Categoria
+                <input type="text" name="categoria" maxlength="50" />
+              </label>
+              <label>
+                Modalidade (id)
+                <input type="number" name="id_modalidade" min="1" />
+              </label>
+              <label>
+                Gênero
+                <select name="id_genero" class="selectGenero">
+                  <option value="">Selecione</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select name="status">
+                  <option value="ativa" selected>Ativa</option>
+                  <option value="inativa">Inativa</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Descricao
+              <textarea name="descricao" rows="3"></textarea>
+            </label>
+          </div>
+
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Treinador responsável</h3>
+            <label>
+              Treinador ativo
+              <select name="id_treinador_responsavel" class="selectTreinadorResponsavel">
+                <option value="">Sem treinador responsável</option>
+              </select>
+            </label>
+          </div>
+
           <div class="modalEquipeAcoes">
-            <button class="btnSecundario" type="button">
-              Vincular atletas
-            </button>
-            <button class="btnSecundario" type="button">
-              Vincular treinadores
-            </button>
             <button class="btnPrimario" type="submit">Cadastrar</button>
           </div>
         </form>
@@ -105,40 +135,52 @@
         </div>
         <form class="modalEquipeForm modalEquipeFormEditar" action="#">
           <input type="hidden" name="id" />
-          <label>
-            Nome
-            <input type="text" name="nome" maxlength="100" required />
-          </label>
-          <label>
-            Descricao
-            <textarea name="descricao" rows="3"></textarea>
-          </label>
-          <label>
-            Modalidade (id)
-            <input type="number" name="id_modalidade" min="1" />
-          </label>
-          <label>
-            Genero (id)
-            <input type="number" name="id_genero" min="1" />
-          </label>
-          <label>
-            Categoria
-            <input type="text" name="categoria" maxlength="50" />
-          </label>
-          <label>
-            Status
-            <select name="status">
-              <option value="ativa">Ativa</option>
-              <option value="inativa">Inativa</option>
-            </select>
-          </label>
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Dados da equipe</h3>
+            <div class="camposGridEquipe">
+              <label>
+                Nome
+                <input type="text" name="nome" maxlength="100" required />
+              </label>
+              <label>
+                Categoria
+                <input type="text" name="categoria" maxlength="50" />
+              </label>
+              <label>
+                Modalidade (id)
+                <input type="number" name="id_modalidade" min="1" />
+              </label>
+              <label>
+                Gênero
+                <select name="id_genero" class="selectGenero">
+                  <option value="">Selecione</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select name="status">
+                  <option value="ativa">Ativa</option>
+                  <option value="inativa">Inativa</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Descricao
+              <textarea name="descricao" rows="3"></textarea>
+            </label>
+          </div>
+
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Treinador responsável</h3>
+            <label>
+              Treinador ativo
+              <select name="id_treinador_responsavel" class="selectTreinadorResponsavel">
+                <option value="">Sem treinador responsável</option>
+              </select>
+            </label>
+          </div>
+
           <div class="modalEquipeAcoes">
-            <button class="btnSecundario" type="button">
-              Vincular atletas
-            </button>
-            <button class="btnSecundario" type="button">
-              Vincular treinadores
-            </button>
             <button class="btnExcluir" type="button">Excluir</button>
             <button class="btnPrimario" type="submit">Salvar alteracoes</button>
           </div>

@@ -44,6 +44,28 @@
 
 }
 
+.acoesHeaderEquipe{
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: wrap;
+    row-gap: 0.6em;
+}
+
+.acoesHeaderEquipe label{
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.acoesHeaderEquipe select{
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+    border: 2px solid var(--cor-primaria);
+    color: var(--cor-primaria);
+    font-weight: 600;
+    background: var(--cor-branco);
+}
+
 .listViewEquipes{
     display: flex;
     flex-wrap: wrap;
@@ -51,23 +73,78 @@
     margin-top: 2em;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
-    padding: 1em    ;
+    padding: 1em;
+}
+
+.listaEquipesGrid{
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+}
+
+.cabecalhoEquipes,
+.linhaEquipe{
+    display: grid;
+    grid-template-columns: 36px minmax(160px, 1.4fr) minmax(130px, 1fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) minmax(180px, 1.6fr) minmax(120px, 0.9fr) minmax(90px, 0.8fr);
+    column-gap: 1em;
+    align-items: center;
+}
+
+.cabecalhoEquipes{
+    margin-top: 2em;
+    padding: 0.2em 1em 0.7em;
+    border-bottom: 2px solid rgba(34, 28, 105, 0.35);
+    color: var(--cor-primaria);
+    font-weight: 700;
+}
+
+.cabecalhoEquipes span:first-child{
+    visibility: hidden;
 }
 
 .linhaEquipe{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1em;
+    padding: 0.9em 1em;
     width: 100%;
-    border-bottom: solid 2px var(--cor-primaria);  ;
+    border-bottom: 1px solid rgba(34, 28, 105, 0.25);
 }
 
-.linhaEquipe button{
+.linhaEquipe:last-child{
+    border-bottom: none;
+}
+
+.linhaEquipe p{
+    color: var(--cor-primaria);
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btnEditarEquipe{
+    width: 2em;
+    height: 2em;
     background-color: var(--cor-branco);
     color: var(--cor-primaria);
     cursor: pointer;
     border: none;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnEditarEquipe:hover{
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    transition: .3s;
+}
+
+.estadoListaVazia{
+    color: var(--cor-primaria);
+    font-weight: 600;
+    padding: 1em;
 }
 
 .modalEquipe{
@@ -94,7 +171,7 @@
     background: var(--cor-branco);
     border-radius: 12px;
     padding: 1.5em;
-    width: min(560px, 92vw);
+    width: min(760px, 92vw);
     max-height: 90vh;
     overflow: auto;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
@@ -147,12 +224,46 @@
     resize: vertical;
 }
 
+.blocoEquipeForm{
+    border: 2px solid rgba(34, 28, 105, 0.2);
+    border-radius: 10px;
+    padding: 1em;
+}
+
+.tituloBlocoEquipeForm{
+    color: var(--cor-primaria);
+    font-size: 1.1em;
+    margin-bottom: 0.8em;
+}
+
+.camposGridEquipe{
+    display: grid;
+    gap: 0.9em;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .modalEquipeAcoes{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.8em;
     margin-top: 0.5em;
+}
+
+#btnAbrirModalEquipe{
+    min-height: 2.4em;
+}
+
+#modalEquipe .modalEquipeAcoes,
+#modalEquipeEdicao .modalEquipeAcoes{
+    margin-top: 0.8em;
+    gap: 0.8em;
+}
+
+#modalEquipe .modalEquipeAcoes .btnPrimario,
+#modalEquipeEdicao .modalEquipeAcoes .btnPrimario,
+#modalEquipeEdicao .modalEquipeAcoes .btnExcluir{
+    min-width: 140px;
 }
 
 .btnPrimario,
@@ -196,5 +307,27 @@
     color: var(--cor-primaria);
     line-height: 1.4;
     margin-bottom: 1em;
+}
+
+@media (max-width: 1200px){
+    .cabecalhoEquipes{
+        display: none;
+    }
+
+    .acoesHeaderEquipe{
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .linhaEquipe{
+        grid-template-columns: 36px 1fr;
+        row-gap: 0.35em;
+    }
+
+    .linhaEquipe p{
+        white-space: normal;
+        overflow: visible;
+        text-overflow: initial;
+    }
 }
 
