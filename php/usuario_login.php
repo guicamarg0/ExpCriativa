@@ -1,5 +1,5 @@
 <?php
-    include_once('conexao.php');
+    include_once('../php/conexao.php');
     // Configurando o padrão de retorno em todas
     // as situações
     $retorno = [
@@ -8,14 +8,8 @@
         'data'      => []
     ];
 
-    if(isset($_GET['id'])){
-        // Segunda situação - RECEBENDO O ID por GET
-        $stmt = $conexao->prepare("SELECT * FROM cliente WHERE id = ?");
-        $stmt->bind_param("i",$_GET['id']);
-    }else{
-        // Primeira situação - SEM RECEBER O ID por GET
-        $stmt = $conexao->prepare("SELECT * FROM cliente");
-    }
+    $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE email = ? AND senha = ?");
+    $stmt->bind_param("ss",$_POST['email'],$_POST['senha']);
     
     // Recuperando informações do banco de dados
     // Vou executar a query
@@ -28,6 +22,9 @@
         while($linha = $resultado->fetch_assoc()){
             $tabela[] = $linha;
         }
+
+        session_start();
+        $_SESSION['email'] = $tabela;
 
         $retorno = [
             'status'    => 'ok', // ok - nok

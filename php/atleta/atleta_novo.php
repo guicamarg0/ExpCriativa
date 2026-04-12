@@ -20,11 +20,10 @@
     }
 
     $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
-    $datadenasc = isset($_POST['datadenasc']) && $_POST['datadenasc'] !== '' ? (int) $_POST['datadenasc'] : null;
-    $genero = isset($_POST['genero']) && $_POST['genero'] !== '' ? (int) $_POST['genero'] : null;
-    $esporte = isset($_POST['esporte']) ? trim($_POST['esporte']) : '';
-    $status = isset($_POST['status']) && $_POST['status'] !== '' ? trim($_POST['status']) : 'ativa';
+    $descricao = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : '';
+    $datadenasc = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
+    $genero = isset($_POST['altura']) && $_POST['altura'] !== '' ? (int) $_POST['altura'] : null;
+    $esporte = isset($_POST['peso']) ? trim($_POST['peso']) : '';
 
     if($nome === ''){
         $retorno = [
@@ -39,7 +38,7 @@
     }
 
     $stmt = $conexao->prepare(
-        "INSERT INTO atletas (nome, descricao, datadenasc, genero, esporte, status) VALUES(?,?,?,?,?,?)"
+        "INSERT INTO atletas (nome, datadenasc, id_genero, altura, peso) VALUES(?,?,?,?,?)"
     );
 
     if(!$stmt){
@@ -54,7 +53,7 @@
         exit;
     }
 
-    $stmt->bind_param("ssiiss", $nome, $descricao, $datadenasc, $genero, $esporte, $status);
+    $stmt->bind_param("ssiiss", $nome, $datadenasc, $id_genero, $altura, $peso);
     $stmt->execute();
 
     if($stmt->affected_rows > 0){

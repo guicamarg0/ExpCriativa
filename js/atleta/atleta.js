@@ -110,11 +110,10 @@ function preencherTabela(tabela){
             <div class="linhaAtleta">
                 <button class="btnEditarAtleta" data-id="${atleta.id}"><i class="bi bi-pencil-square"></i></button>
                 <p><b>${atleta.nome || "Sem nome"}</b></p>
-                <p>Modalidade: ${atleta.modalidade || "-"}</p>
-                <p>Categoria: ${atleta.categoria || "-"}</p>
-                <p>Genero: ${atleta.genero || "-"}</p>
-                <p>Numero de integrantes: ${integrantes}</p>
-                <p>Status: ${formatStatus(atleta.status)}</p>
+                <p>Data de nascimento: ${atleta.datadenasc || "-"}</p>
+                <p>Genero: ${formatStatus(atleta.id_genero) || "-"}</p>
+                <p>Altura: ${atleta.altura || "-"}</p>
+                <p>Peso: ${atleta.peso || "-"}</p>
             </div>
         `;
     }
@@ -305,9 +304,8 @@ function preencherModalEdicao(atleta, form){
 
     form.id.value = atleta.id || "";
     form.nome.value = atleta.nome || "";
-    form.descricao.value = atleta.descricao || "";
-    form.id_modalidade.value = atleta.id_modalidade || "";
+    form.datadenasc.value = atleta.datadenasc || "";
     form.id_genero.value = atleta.id_genero || "";
-    form.categoria.value = atleta.categoria || "";
-    form.status.value = atleta.status || "ativa";
+    form.altura.value = atleta.alturao || "";
+    form.peso.value = atleta.peso || "";
 }

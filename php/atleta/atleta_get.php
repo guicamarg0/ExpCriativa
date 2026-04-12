@@ -23,17 +23,16 @@
             "SELECT
                 atletas.id,
                 atletas.nome,
-                atletas.descricao,
-                atletas.id_modalidade,
+                atletas.datadenasc,
                 atletas.id_genero,
-                atletas.status,
-                atletas.categoria,
-                genero.nome AS genero,
+                atletas.altura,
+                atletas.peso,
+                id_genero.nome AS id_genero,
                 modalidades.nome AS modalidade,
                 (SELECT COUNT(*) FROM equipes WHERE equipes.id_atleta = atletas.id) AS integrantes
             FROM atletas
             LEFT JOIN modalidades ON modalidades.id = atletas.id_modalidade
-            LEFT JOIN genero ON genero.id = atletas.id_genero
+            LEFT JOIN genero ON id_genero.id = atletas.id_genero
             WHERE atletas.id = ?"
         );
         $stmt->bind_param("i",$_GET['id']);
@@ -42,17 +41,14 @@
             "SELECT
                 atletas.id,
                 atletas.nome,
-                atletas.descricao,
-                atletas.id_modalidade,
+                atletas.datadenasc,
                 atletas.id_genero,
-                atletas.status,
-                atletas.categoria,
-                genero.nome AS genero,
-                modalidades.nome AS modalidade,
+                atletas.altura,
+                atletas.peso,
+                id_genero.nome AS id_genero,
                 (SELECT COUNT(*) FROM equipes WHERE equipes.id_atleta = atletas.id) AS integrantes
             FROM atletas
-            LEFT JOIN modalidades ON modalidades.id = atletas.id_modalidade
-            LEFT JOIN genero ON genero.id = atletas.id_genero"
+            LEFT JOIN id_genero ON id_genero.id = atletas.id_genero"
         );
     }
 
