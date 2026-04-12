@@ -70,20 +70,15 @@
                 <input type="text" name="categoria" maxlength="50" />
               </label>
               <label>
-                Modalidade (id)
-                <input type="number" name="id_modalidade" min="1" />
+                Modalidade
+                <select name="id_modalidade" class="selectModalidade">
+                  <option value="">Selecione</option>
+                </select>
               </label>
               <label>
                 Gênero
                 <select name="id_genero" class="selectGenero">
                   <option value="">Selecione</option>
-                </select>
-              </label>
-              <label>
-                Status
-                <select name="status">
-                  <option value="ativa" selected>Ativa</option>
-                  <option value="inativa">Inativa</option>
                 </select>
               </label>
             </div>
@@ -101,6 +96,17 @@
                 <option value="">Sem treinador responsável</option>
               </select>
             </label>
+          </div>
+
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Vínculo de atletas</h3>
+            <div class="acoesVinculoAtletas">
+              <button class="btnSecundario btnAbrirVinculoAtletas" type="button">
+                Vincular atletas
+              </button>
+              <p class="resumoAtletasVinculados">Nenhum atleta selecionado.</p>
+            </div>
+            <input type="hidden" name="atletas_ids" value="" />
           </div>
 
           <div class="modalEquipeAcoes">
@@ -135,6 +141,7 @@
         </div>
         <form class="modalEquipeForm modalEquipeFormEditar" action="#">
           <input type="hidden" name="id" />
+          <input type="hidden" name="status" value="ativa" />
           <div class="blocoEquipeForm">
             <h3 class="tituloBlocoEquipeForm">Dados da equipe</h3>
             <div class="camposGridEquipe">
@@ -147,20 +154,15 @@
                 <input type="text" name="categoria" maxlength="50" />
               </label>
               <label>
-                Modalidade (id)
-                <input type="number" name="id_modalidade" min="1" />
+                Modalidade
+                <select name="id_modalidade" class="selectModalidade">
+                  <option value="">Selecione</option>
+                </select>
               </label>
               <label>
                 Gênero
                 <select name="id_genero" class="selectGenero">
                   <option value="">Selecione</option>
-                </select>
-              </label>
-              <label>
-                Status
-                <select name="status">
-                  <option value="ativa">Ativa</option>
-                  <option value="inativa">Inativa</option>
                 </select>
               </label>
             </div>
@@ -180,11 +182,59 @@
             </label>
           </div>
 
+          <div class="blocoEquipeForm">
+            <h3 class="tituloBlocoEquipeForm">Vínculo de atletas</h3>
+            <div class="acoesVinculoAtletas">
+              <button class="btnSecundario btnAbrirVinculoAtletas" type="button">
+                Vincular atletas
+              </button>
+              <p class="resumoAtletasVinculados">Nenhum atleta selecionado.</p>
+            </div>
+            <input type="hidden" name="atletas_ids" value="" />
+          </div>
+
           <div class="modalEquipeAcoes">
-            <button class="btnExcluir" type="button">Excluir</button>
+            <button class="btnSecundario btnAlternarStatusEquipe" type="button">
+              Inativar
+            </button>
             <button class="btnPrimario" type="submit">Salvar alteracoes</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div
+      class="modalEquipe modalVinculoAtletas"
+      id="modalVinculoAtletas"
+      aria-hidden="true"
+    >
+      <div class="modalEquipeOverlay" data-modal-vinculo-close></div>
+      <div
+        class="modalEquipeCard"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalVinculoAtletasTitulo"
+      >
+        <div class="modalEquipeHeader">
+          <h2 id="modalVinculoAtletasTitulo">Vincular atletas</h2>
+          <button
+            class="modalEquipeFechar"
+            type="button"
+            aria-label="Fechar"
+            data-modal-vinculo-close
+          >
+            x
+          </button>
+        </div>
+        <div class="listaVinculoAtletas" id="listaVinculoAtletas"></div>
+        <div class="modalEquipeAcoes">
+          <button class="btnSecundario" type="button" data-vinculo-cancelar>
+            Cancelar
+          </button>
+          <button class="btnPrimario" type="button" data-vinculo-confirmar>
+            Confirmar
+          </button>
+        </div>
       </div>
     </div>
 

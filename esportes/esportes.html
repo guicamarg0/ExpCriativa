@@ -1,25 +1,100 @@
-<!-- onde vai ficar a tabela om os esportes-->
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modalidades</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="esportes.css">
 </head>
 <body>
-    <div>
-        <div>
-            <h1>Modalidades - Esportes</h1>
-        </div>
-        <hr>
-        <div>
-            <div><button id="novo">Nova modalidade</button></div>
-            <div><button id="logoff">Logoff</button></div>
-        </div>
-    </div>
-    <div id="lista">
+    <div class="conteudo">
+        <div class="menu"></div>
+        <div class="conteudoEsportes">
+            <div class="headerConteudo">
+                <h1>Modalidades</h1>
+                <div class="acoesHeaderEsportes">
+                    <label for="filtroStatusEsporte">Status</label>
+                    <select id="filtroStatusEsporte">
+                        <option value="ativo" selected>Ativas</option>
+                        <option value="inativo">Inativas</option>
+                        <option value="todos">Todas</option>
+                    </select>
+                    <button id="btnAbrirModalEsporte" type="button">+ Adicionar modalidade</button>
+                </div>
+            </div>
 
+            <div class="cabecalhoEsportes" aria-hidden="true">
+                <span></span>
+                <span>Nome</span>
+                <span>Equipes vinculadas</span>
+                <span>Status</span>
+            </div>
+
+            <div class="listViewEsportes"></div>
+        </div>
     </div>
+
+    <div class="modalEsporte" id="modalEsporte" aria-hidden="true">
+        <div class="modalEsporteOverlay" data-modal-close></div>
+        <div class="modalEsporteCard cadastroEsporteCard" role="dialog" aria-modal="true" aria-labelledby="modalEsporteTitulo">
+            <div class="modalEsporteHeader">
+                <h2 id="modalEsporteTitulo">Cadastrar modalidade</h2>
+                <button class="modalEsporteFechar" type="button" aria-label="Fechar" data-modal-close>x</button>
+            </div>
+            <form id="formEsporteNovo" class="modalEsporteForm" action="#">
+                <div class="blocoFormulario">
+                    <h2 class="tituloBlocoFormulario">Dados da modalidade</h2>
+                    <div class="camposGrid">
+                        <label for="nomeEsporteNovo">
+                            Nome da modalidade
+                            <input type="text" name="nome" id="nomeEsporteNovo" maxlength="50" required>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modalEsporteAcoes">
+                    <button class="btnPrimario" type="submit">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modalEsporte modalEsporteEdicao" id="modalEsporteEdicao" aria-hidden="true">
+        <div class="modalEsporteOverlay" data-modal-close-edit></div>
+        <div class="modalEsporteCard cadastroEsporteCard" role="dialog" aria-modal="true" aria-labelledby="modalEsporteEdicaoTitulo">
+            <div class="modalEsporteHeader">
+                <h2 id="modalEsporteEdicaoTitulo">Editar modalidade</h2>
+                <button class="modalEsporteFechar" type="button" aria-label="Fechar" data-modal-close-edit>x</button>
+            </div>
+            <form id="formEsporteEdicao" class="modalEsporteForm" action="#">
+                <input type="hidden" name="id">
+                <input type="hidden" name="status" value="ativo">
+
+                <div class="blocoFormulario">
+                    <h2 class="tituloBlocoFormulario">Dados da modalidade</h2>
+                    <div class="camposGrid">
+                        <label for="nomeEsporteEdicao">
+                            Nome da modalidade
+                            <input type="text" name="nome" id="nomeEsporteEdicao" maxlength="50" required>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modalEsporteAcoes">
+                    <button class="btnSecundario btnAlternarStatusEsporte" type="button">Inativar</button>
+                    <button class="btnPrimario" type="submit">Salvar alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script
+        src="../js/menu_lateral.js"
+        data-menuHtml="../componentes/menuLateral.html"
+        data-menuCss="../componentes/menuLateral.css"
+        data-menuTarget=".menu"
+    ></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/esportes/esportes_index.js"></script>
 </body>

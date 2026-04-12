@@ -121,20 +121,6 @@
             </div>
           </div>
 
-          <div class="statusTreinador">
-            <span>Status</span>
-            <div class="statusTreinadorOpcoes">
-              <label for="ativo">
-                <input type="radio" id="ativo" name="status" value="ativo" checked />
-                Ativo
-              </label>
-              <label for="inativo">
-                <input type="radio" id="inativo" name="status" value="inativo" />
-                Inativo
-              </label>
-            </div>
-          </div>
-
           <div class="modalEquipeAcoes">
             <button id="enviar" class="btnPrimario" type="button">Cadastrar</button>
           </div>
@@ -163,6 +149,7 @@
         </div>
         <form id="formTreinadorEdicao" class="modalEquipeForm modalTreinadorFormEdicao">
           <input type="hidden" name="id" />
+          <input type="hidden" name="status" value="ativo" />
 
           <div class="blocoFormulario">
             <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
@@ -225,21 +212,10 @@
             </div>
           </div>
 
-          <div class="statusTreinador">
-            <span>Status</span>
-            <div class="statusTreinadorOpcoes">
-              <label for="ativoEditar">
-                <input type="radio" id="ativoEditar" name="status" value="ativo" />
-                Ativo
-              </label>
-              <label for="inativoEditar">
-                <input type="radio" id="inativoEditar" name="status" value="inativo" />
-                Inativo
-              </label>
-            </div>
-          </div>
-
           <div class="modalEquipeAcoes">
+            <button class="btnSecundario btnAlternarStatusTreinador" type="button">
+              Inativar
+            </button>
             <button class="btnPrimario" type="submit">Salvar alterações</button>
           </div>
         </form>
@@ -252,6 +228,7 @@
       data-menuCss="../componentes/menuLateral.css"
       data-menuTarget=".menu"
     ></script>
+    <script src="../js/valida_sessao.js"></script>
     <script src="../js/treinador/treinador_novo.js"></script>
   </body>
 </html>

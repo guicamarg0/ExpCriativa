@@ -38,6 +38,20 @@ function formatStatus(valor) {
     return normalizarStatus(valor) === "inativo" ? "Inativo" : "Ativo";
 }
 
+function atualizarBotaoAlternarStatusTreinador(form) {
+    if (!form || !form.elements.status) {
+        return;
+    }
+
+    const botao = form.querySelector(".btnAlternarStatusTreinador");
+    if (!botao) {
+        return;
+    }
+
+    const statusAtual = normalizarStatus(form.elements.status.value);
+    botao.textContent = statusAtual === "ativo" ? "Inativar" : "Ativar";
+}
+
 function formatarDataParaInput(valor) {
     if (!valor) {
         return "";
@@ -198,17 +212,15 @@ function preencherModalEdicaoTreinador(treinador, form) {
     form.elements.data_inicio.value = formatarDataParaInput(treinador.data_inicio);
     form.elements.email.value = treinador.email || "";
     form.elements.senha.value = "";
-    const status = normalizarStatus(treinador.status);
-    const radioStatus = form.querySelector(`input[name="status"][value="${status}"]`);
-    if (radioStatus) {
-        radioStatus.checked = true;
-    }
+    form.elements.status.value = normalizarStatus(treinador.status);
+    atualizarBotaoAlternarStatusTreinador(form);
 }
 
 function prepararModalEdicaoTreinador() {
     const lista = document.getElementById("listViewTreinadores");
     const modal = document.getElementById("modalTreinadorEdicao");
     const form = document.getElementById("formTreinadorEdicao");
+    const btnAlternarStatus = form ? form.querySelector(".btnAlternarStatusTreinador") : null;
 
     if (!lista || !modal || !form) {
         return;
@@ -253,12 +265,12 @@ function prepararModalEdicaoTreinador() {
         }
     });
 
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
+    const enviarFormularioEdicao = async (statusForcado = "") => {
         const formData = new FormData(form);
-        const statusSelecionado = form.querySelector('input[name="status"]:checked');
-        formData.set("status", statusSelecionado ? statusSelecionado.value : "ativo");
+        const statusAtual = statusForcado
+            ? normalizarStatus(statusForcado)
+            : normalizarStatus(formData.get("status"));
+        formData.set("status", statusAtual);
 
         const senha = String(formData.get("senha") || "").trim();
         if (senha === "") {
@@ -275,14 +287,30 @@ function prepararModalEdicaoTreinador() {
                 fecharModalTreinadorEdicao();
                 await getTreinadores();
                 alert("SUCESSO: " + resposta.mensagem);
+                return true;
             } else {
                 alert("ERRO: " + resposta.mensagem);
+                return false;
             }
         } catch (erro) {
             alert("Erro ao alterar treinador.");
             console.error(erro);
+            return false;
         }
+    };
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await enviarFormularioEdicao();
     });
+
+    if (btnAlternarStatus) {
+        btnAlternarStatus.addEventListener("click", async () => {
+            const statusAtual = normalizarStatus(form.elements.status.value);
+            const proximoStatus = statusAtual === "ativo" ? "inativo" : "ativo";
+            await enviarFormularioEdicao(proximoStatus);
+        });
+    }
 }
 
 async function novo() {
@@ -298,8 +326,6 @@ async function novo() {
     const data_inicio = document.getElementById("data_inicio").value;
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
-    const statusSelecionado = formNovo.querySelector('input[name="status"]:checked');
-    const status = statusSelecionado ? statusSelecionado.value : "ativo";
 
     const fd = new FormData();
     fd.append("nome", nome);
@@ -309,7 +335,7 @@ async function novo() {
     fd.append("data_inicio", data_inicio);
     fd.append("email", email);
     fd.append("senha", senha);
-    fd.append("status", status);
+    fd.append("status", "ativo");
 
     try {
         const retorno = await fetch("../php/treinador/treinador_novo.php", {
@@ -319,11 +345,6 @@ async function novo() {
         const resposta = await retorno.json();
         if (resposta.status == "ok") {
             formNovo.reset();
-
-            const radioAtivo = document.getElementById("ativo");
-            if (radioAtivo) {
-                radioAtivo.checked = true;
-            }
 
             await getTreinadores();
             fecharModalTreinador();

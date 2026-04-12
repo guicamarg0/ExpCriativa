@@ -1,5 +1,16 @@
 // Validação de nível de acesso: só permite admin (id_nivel == 1)
-fetch("../php/valida_sessao.php")
+const chaveSessao = localStorage.getItem("mitraSessionKey") || "";
+
+if (!chaveSessao) {
+  window.location.href = "../login/index.html";
+}
+
+fetch("../php/valida_sessao.php", {
+  cache: "no-store",
+  headers: {
+    "X-Session-Key": chaveSessao,
+  },
+})
   .then((response) => response.json())
   .then((data) => {
     if (data.status !== "ok") {

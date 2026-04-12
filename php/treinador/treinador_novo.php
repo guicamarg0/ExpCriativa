@@ -26,11 +26,7 @@
     $data_inicio = isset($_POST['data_inicio']) ? trim($_POST['data_inicio']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $senha = isset($_POST['senha']) ? trim($_POST['senha']) : '';
-    $status = isset($_POST['status']) ? strtolower(trim($_POST['status'])) : 'ativo';
-
-    if($status !== 'ativo' && $status !== 'inativo'){
-        $status = 'ativo';
-    }
+    $status = 'ativo';
 
     if($nome === '' || $cref === '' || $email === '' || $senha === ''){
         $retorno = [

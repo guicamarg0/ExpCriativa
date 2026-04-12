@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: inherit;
+    background: linear-gradient(140deg, #f3f4ff 0%, #e6e8ff 100%);
+    min-height: 100vh;
+}
+
+.paginaLogin {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5em;
+}
+
+.cardLogin {
+    width: min(430px, 100%);
+    background: var(--cor-branco);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(34, 28, 105, 0.18);
+    border: 1px solid rgba(34, 28, 105, 0.14);
+    padding: 2em;
+    display: grid;
+    gap: 0.9em;
+    text-align: center;
+}
+
+.logoLogin {
+    width: min(190px, 60%);
+    margin: 0 auto 0.2em;
+}
+
+.cardLogin h1 {
+    color: var(--cor-primaria);
+    font-size: 1.65em;
+}
+
+.subtituloLogin {
+    color: rgba(34, 28, 105, 0.85);
+    font-weight: 500;
+}
+
+.formLogin {
+    display: grid;
+    gap: 0.9em;
+    margin-top: 0.6em;
+    text-align: left;
+}
+
+.formLogin label {
+    display: grid;
+    gap: 0.35em;
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.formLogin input {
+    border: 2px solid var(--cor-primaria);
+    border-radius: 8px;
+    padding: 0.65em 0.8em;
+    font-size: 1em;
+    color: var(--cor-primaria);
+}
+
+.formLogin button {
+    margin-top: 0.4em;
+    border: 2px solid var(--cor-primaria);
+    border-radius: 8px;
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+    font-weight: 700;
+    padding: 0.72em 1em;
+    cursor: pointer;
+}
+
+.formLogin button:hover {
+    filter: brightness(0.95);
+}

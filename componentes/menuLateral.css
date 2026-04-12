@@ -7,7 +7,9 @@
 
 
 .menu{
-    height: 100%;
+    min-height: 100vh;
+    height: auto;
+    align-self: stretch;
     width: 300px;
     background-color: var(--cor-branco);
     float: left;
@@ -27,6 +29,12 @@
     text-decoration: none;
     color : var(--cor-primaria);
 }
+
+.menu .links{
+    display: flex;
+    flex-direction: column;
+}
+
 .links a:hover{
     background-color:var(--cor-primaria);
     color: var(--cor-branco);
@@ -48,4 +56,32 @@
 .menu img{
     width: 200px;
     margin: 1em auto;
+}
+
+.btnSairMenu{
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1em;
+    padding: 0.8em 0;
+    border: none;
+    border-top: 2px solid var(--cor-primaria);
+    width: 100%;
+    background: var(--cor-branco);
+    color: var(--cor-primaria);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnSairMenu i,
+.btnSairMenu .bi{
+    margin-left: 1em;
+    font-size: 2em;
+}
+
+.btnSairMenu:hover{
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    transition: .3s;
 }

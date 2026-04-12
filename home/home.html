@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
+    <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="home.css" />
   </head>
   <body>
     <div class="conteudo">
       <div class="menu"></div>
-      <h1>Bem-vindo ao Mitra</h1>
+      <div class="conteudoHome">
+        <h1 id="tituloBoasVindas">Bem-vindo ao Mitra</h1>
+        <p id="tipoUsuarioHome" class="tipoUsuarioHome">Tipo de usuário: -</p>
+        <div id="painelHome" class="painelHome"></div>
+      </div>
     </div>
 
     <script
@@ -18,6 +23,7 @@
       data-menuCss="../componentes/menuLateral.css"
       data-menuTarget=".menu"
     ></script>
+    <script src="../js/valida_sessao.js"></script>
     <script src="../js/home.js"></script>
   </body>
 </html>

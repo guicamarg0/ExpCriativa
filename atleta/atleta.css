@@ -44,30 +44,98 @@
 
 }
 
+.acoesHeaderAtleta{
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+
+.acoesHeaderAtleta label{
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.acoesHeaderAtleta select{
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+    border: 2px solid var(--cor-primaria);
+    color: var(--cor-primaria);
+    font-weight: 600;
+    background: var(--cor-branco);
+}
+
 .listViewAtletas{
     display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
+    flex-direction: column;
+    gap: 0;
     margin-top: 2em;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
-    padding: 1em    ;
+    padding: 0;
+}
+
+.cabecalhoAtletas,
+.linhaAtleta{
+    display: grid;
+    grid-template-columns: 36px minmax(180px, 1.5fr) minmax(150px, 1.2fr) minmax(120px, 1fr) minmax(100px, 0.8fr) minmax(100px, 0.8fr) minmax(90px, 0.8fr);
+    column-gap: 1em;
+    align-items: center;
+}
+
+.cabecalhoAtletas{
+    margin-top: 2em;
+    padding: 0.2em 1em 0.7em;
+    border-bottom: 2px solid rgba(34, 28, 105, 0.35);
+    color: var(--cor-primaria);
+    font-weight: 700;
+}
+
+.cabecalhoAtletas span:first-child{
+    visibility: hidden;
 }
 
 .linhaAtleta{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1em;
+    padding: 0.9em 1em;
     width: 100%;
-    border-bottom: solid 2px var(--cor-primaria);  ;
+    border-bottom: 1px solid rgba(34, 28, 105, 0.25);
 }
 
-.linhaAtleta button{
+.linhaAtleta:last-child{
+    border-bottom: none;
+}
+
+.linhaAtleta p{
+    color: var(--cor-primaria);
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btnEditarAtleta{
+    width: 2em;
+    height: 2em;
     background-color: var(--cor-branco);
     color: var(--cor-primaria);
     cursor: pointer;
     border: none;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnEditarAtleta:hover{
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    transition: .3s;
+}
+
+.estadoListaVazia{
+    color: var(--cor-primaria);
+    font-weight: 600;
+    padding: 1em;
 }
 
 .modalAtleta{
@@ -94,11 +162,15 @@
     background: var(--cor-branco);
     border-radius: 12px;
     padding: 1.5em;
-    width: min(560px, 92vw);
+    width: min(760px, 92vw);
     max-height: 90vh;
     overflow: auto;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
     z-index: 1;
+}
+
+.cadastroAtletaCard{
+    width: min(780px, 92vw);
 }
 
 .modalAtletaHeader{
@@ -145,6 +217,54 @@
 
 .modalAtletaForm textarea{
     resize: vertical;
+}
+
+.blocoFormulario {
+    border: 2px solid rgba(34, 28, 105, 0.2);
+    border-radius: 10px;
+    padding: 1em;
+}
+
+.tituloBlocoFormulario {
+    color: var(--cor-primaria);
+    font-size: 1.1em;
+    margin-bottom: 0.8em;
+}
+
+.camposGrid {
+    display: grid;
+    gap: 0.9em;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.credenciaisUsuario {
+    border-color: rgba(34, 28, 105, 0.35);
+}
+
+.statusAtleta {
+    display: grid;
+    gap: 0.4em;
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.statusAtletaOpcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2em;
+}
+
+.statusAtletaOpcoes label {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--cor-primaria);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.statusAtletaOpcoes input[type="radio"] {
+    accent-color: var(--cor-primaria);
 }
 
 .modalAtletaAcoes{
@@ -196,5 +316,27 @@
     color: var(--cor-primaria);
     line-height: 1.4;
     margin-bottom: 1em;
+}
+
+@media (max-width: 1200px){
+    .acoesHeaderAtleta{
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .cabecalhoAtletas{
+        display: none;
+    }
+
+    .linhaAtleta{
+        grid-template-columns: 36px 1fr;
+        row-gap: 0.35em;
+    }
+
+    .linhaAtleta p{
+        white-space: normal;
+        overflow: visible;
+        text-overflow: initial;
+    }
 }
 

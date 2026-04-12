@@ -1,20 +1,21 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
-.conteudo{
+.conteudo {
     display: flex;
     height: 100vh;
     width: 100%;
 }
-.conteudoEquipe{
+
+.conteudoEsportes {
     flex: 1;
     padding: 2em;
     background-color: var(--cor-fundo);
 }
 
-.headerConteudo{
+.headerConteudo {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -22,12 +23,12 @@
     width: 100%;
 }
 
-.headerConteudo h1{
+.headerConteudo h1 {
     font-size: 2em;
     color: var(--cor-primaria);
 }
 
-.headerConteudo button{
+.headerConteudo button {
     padding: 0.5em 1em;
     background-color: var(--cor-branco);
     font-weight: bold;
@@ -37,14 +38,13 @@
     cursor: pointer;
 }
 
-.headerConteudo button:hover{
+.headerConteudo button:hover {
     background-color: var(--cor-primaria);
     color: var(--cor-branco);
     transition: .5s;
-
 }
 
-.acoesHeaderEquipe{
+.acoesHeaderEsportes {
     display: flex;
     align-items: center;
     gap: 0.8em;
@@ -52,12 +52,12 @@
     row-gap: 0.6em;
 }
 
-.acoesHeaderEquipe label{
+.acoesHeaderEsportes label {
     color: var(--cor-primaria);
     font-weight: 600;
 }
 
-.acoesHeaderEquipe select{
+.acoesHeaderEsportes select {
     padding: 0.5em 0.8em;
     border-radius: 6px;
     border: 2px solid var(--cor-primaria);
@@ -66,32 +66,25 @@
     background: var(--cor-branco);
 }
 
-.listViewEquipes{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    margin-top: 2em;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
-    padding: 1em;
-}
-
-.listaEquipesGrid{
+.listViewEsportes {
     display: flex;
     flex-direction: column;
     gap: 0;
+    margin-top: 2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
     padding: 0;
 }
 
-.cabecalhoEquipes,
-.linhaEquipe{
+.cabecalhoEsportes,
+.linhaEsporte {
     display: grid;
-    grid-template-columns: 36px minmax(160px, 1.4fr) minmax(130px, 1fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) minmax(180px, 1.6fr) minmax(120px, 0.9fr) minmax(90px, 0.8fr);
+    grid-template-columns: 36px minmax(180px, 1.4fr) minmax(150px, 1.1fr) minmax(110px, 0.8fr);
     column-gap: 1em;
     align-items: center;
 }
 
-.cabecalhoEquipes{
+.cabecalhoEsportes {
     margin-top: 2em;
     padding: 0.2em 1em 0.7em;
     border-bottom: 2px solid rgba(34, 28, 105, 0.35);
@@ -99,21 +92,21 @@
     font-weight: 700;
 }
 
-.cabecalhoEquipes span:first-child{
+.cabecalhoEsportes span:first-child {
     visibility: hidden;
 }
 
-.linhaEquipe{
+.linhaEsporte {
     padding: 0.9em 1em;
     width: 100%;
     border-bottom: 1px solid rgba(34, 28, 105, 0.25);
 }
 
-.linhaEquipe:last-child{
+.linhaEsporte:last-child {
     border-bottom: none;
 }
 
-.linhaEquipe p{
+.linhaEsporte p {
     color: var(--cor-primaria);
     margin: 0;
     min-width: 0;
@@ -122,7 +115,7 @@
     white-space: nowrap;
 }
 
-.btnEditarEquipe{
+.btnEditarEsporte {
     width: 2em;
     height: 2em;
     background-color: var(--cor-branco);
@@ -135,19 +128,19 @@
     justify-content: center;
 }
 
-.btnEditarEquipe:hover{
+.btnEditarEsporte:hover {
     background-color: var(--cor-primaria);
     color: var(--cor-branco);
     transition: .3s;
 }
 
-.estadoListaVazia{
+.estadoListaVazia {
     color: var(--cor-primaria);
     font-weight: 600;
     padding: 1em;
 }
 
-.modalEquipe{
+.modalEsporte {
     position: fixed;
     inset: 0;
     display: none;
@@ -156,17 +149,17 @@
     z-index: 999;
 }
 
-.modalEquipe.ativo{
+.modalEsporte.ativo {
     display: flex;
 }
 
-.modalEquipeOverlay{
+.modalEsporteOverlay {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
 }
 
-.modalEquipeCard{
+.modalEsporteCard {
     position: relative;
     background: var(--cor-branco);
     border-radius: 12px;
@@ -178,19 +171,23 @@
     z-index: 1;
 }
 
-.modalEquipeHeader{
+.cadastroEsporteCard {
+    width: min(640px, 92vw);
+}
+
+.modalEsporteHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1em;
 }
 
-.modalEquipeHeader h2{
+.modalEsporteHeader h2 {
     font-size: 1.4em;
     color: var(--cor-primaria);
 }
 
-.modalEquipeFechar{
+.modalEsporteFechar {
     background: transparent;
     border: none;
     font-size: 1.6em;
@@ -198,21 +195,21 @@
     color: var(--cor-primaria);
 }
 
-.modalEquipeForm{
+.modalEsporteForm {
     display: grid;
     gap: 0.9em;
 }
 
-.modalEquipeForm label{
+.modalEsporteForm label {
     display: grid;
     gap: 0.4em;
     color: var(--cor-primaria);
     font-weight: 600;
 }
 
-.modalEquipeForm input,
-.modalEquipeForm select,
-.modalEquipeForm textarea{
+.modalEsporteForm input,
+.modalEsporteForm select,
+.modalEsporteForm textarea {
     padding: 0.6em 0.8em;
     border-radius: 6px;
     border: 2px solid var(--cor-primaria);
@@ -220,44 +217,25 @@
     font-family: inherit;
 }
 
-.modalEquipeForm textarea{
-    resize: vertical;
-}
-
-.blocoEquipeForm{
+.blocoFormulario {
     border: 2px solid rgba(34, 28, 105, 0.2);
     border-radius: 10px;
     padding: 1em;
 }
 
-.tituloBlocoEquipeForm{
+.tituloBlocoFormulario {
     color: var(--cor-primaria);
     font-size: 1.1em;
     margin-bottom: 0.8em;
 }
 
-.camposGridEquipe{
+.camposGrid {
     display: grid;
     gap: 0.9em;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.acoesVinculoAtletas{
-    display: grid;
-    gap: 0.6em;
-}
-
-.acoesVinculoAtletas .btnSecundario{
-    justify-self: start;
-}
-
-.resumoAtletasVinculados{
-    color: var(--cor-primaria);
-    font-weight: 500;
-    margin: 0;
-}
-
-.modalEquipeAcoes{
+.modalEsporteAcoes {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -265,25 +243,23 @@
     margin-top: 0.5em;
 }
 
-#btnAbrirModalEquipe{
+#btnAbrirModalEsporte {
     min-height: 2.4em;
 }
 
-#modalEquipe .modalEquipeAcoes,
-#modalEquipeEdicao .modalEquipeAcoes{
+#modalEsporte .modalEsporteAcoes,
+#modalEsporteEdicao .modalEsporteAcoes {
     margin-top: 0.8em;
     gap: 0.8em;
 }
 
-#modalEquipe .modalEquipeAcoes .btnPrimario,
-#modalEquipeEdicao .modalEquipeAcoes .btnPrimario,
-#modalEquipeEdicao .modalEquipeAcoes .btnExcluir{
+#modalEsporte .modalEsporteAcoes .btnPrimario,
+#modalEsporteEdicao .modalEsporteAcoes .btnPrimario {
     min-width: 140px;
 }
 
 .btnPrimario,
-.btnSecundario,
-.btnExcluir{
+.btnSecundario {
     padding: 0.6em 1.2em;
     border-radius: 6px;
     border: 2px solid var(--cor-primaria);
@@ -293,126 +269,33 @@
     color: var(--cor-primaria);
 }
 
-.btnPrimario{
+.btnPrimario {
     background: var(--cor-primaria);
     color: var(--cor-branco);
 }
 
 .btnPrimario:hover,
-.btnSecundario:hover,
-.btnExcluir:hover{
+.btnSecundario:hover {
     filter: brightness(0.95);
 }
 
-.btnExcluir{
-    border-color: var(--cor-vermelho);
-    color: var(--cor-vermelho);
-}
-
-.btnExcluir:hover{
-    background: var(--cor-vermelho);
-    color: var(--cor-branco);
-}
-
-.modalConfirmacao .modalEquipeCard{
-    width: min(440px, 92vw);
-}
-
-.modalConfirmacaoTexto{
-    color: var(--cor-primaria);
-    line-height: 1.4;
-    margin-bottom: 1em;
-}
-
-.modalVinculoAtletas .modalEquipeCard{
-    width: min(900px, 96vw);
-}
-
-.listaVinculoAtletas{
-    max-height: 52vh;
-    overflow: auto;
-    border: 2px solid rgba(34, 28, 105, 0.22);
-    border-radius: 10px;
-}
-
-.cabecalhoVinculoAtletas,
-.linhaVinculoAtleta{
-    display: grid;
-    grid-template-columns: 42px minmax(170px, 1.4fr) minmax(95px, 0.8fr) minmax(95px, 0.8fr) minmax(170px, 1.3fr);
-    align-items: center;
-    column-gap: 0.9em;
-}
-
-.cabecalhoVinculoAtletas{
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: #f4f5ff;
-    border-bottom: 2px solid rgba(34, 28, 105, 0.25);
-    padding: 0.55em 0.8em;
-    color: var(--cor-primaria);
-    font-weight: 700;
-}
-
-.linhaVinculoAtleta{
-    padding: 0.6em 0.8em;
-    border-bottom: 1px solid rgba(34, 28, 105, 0.18);
-}
-
-.linhaConflitoVinculo{
-    background: rgba(176, 0, 32, 0.08);
-}
-
-.linhaVinculoAtleta:last-child{
-    border-bottom: none;
-}
-
-.linhaVinculoAtleta p{
-    margin: 0;
-    color: var(--cor-primaria);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.linhaVinculoAtleta input[type="checkbox"]{
-    width: 18px;
-    height: 18px;
-    accent-color: var(--cor-primaria);
-}
-
-@media (max-width: 1200px){
-    .cabecalhoEquipes{
+@media (max-width: 1200px) {
+    .cabecalhoEsportes {
         display: none;
     }
 
-    .acoesHeaderEquipe{
-        flex-wrap: wrap;
+    .acoesHeaderEsportes {
         justify-content: flex-end;
     }
 
-    .linhaEquipe{
+    .linhaEsporte {
         grid-template-columns: 36px 1fr;
         row-gap: 0.35em;
     }
 
-    .linhaEquipe p{
+    .linhaEsporte p {
         white-space: normal;
         overflow: visible;
         text-overflow: initial;
     }
-
-    .cabecalhoVinculoAtletas{
-        display: none;
-    }
-
-    .linhaVinculoAtleta{
-        grid-template-columns: 42px 1fr;
-        row-gap: 0.35em;
-    }
-
-    .linhaVinculoAtleta p{
-        white-space: normal;
-    }
 }
-

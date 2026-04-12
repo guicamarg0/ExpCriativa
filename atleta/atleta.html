@@ -13,7 +13,24 @@
         <div class="conteudoAtleta">
             <div class="headerConteudo">
                 <h1>Atletas</h1>
-                <button id="btnAbrirModalAtleta" type="button">+ Adicionar Atleta</button>
+                <div class="acoesHeaderAtleta">
+                    <label for="filtroStatusAtleta">Status</label>
+                    <select id="filtroStatusAtleta">
+                        <option value="ativo" selected>Ativos</option>
+                        <option value="inativo">Inativos</option>
+                        <option value="todos">Todos</option>
+                    </select>
+                    <button id="btnAbrirModalAtleta" type="button">+ Adicionar Atleta</button>
+                </div>
+            </div>
+            <div class="cabecalhoAtletas" aria-hidden="true">
+                <span></span>
+                <span>Nome</span>
+                <span>Data de nascimento</span>
+                <span>Gênero</span>
+                <span>Altura</span>
+                <span>Peso</span>
+                <span>Status</span>
             </div>
             <div class="listViewAtletas"></div>
         </div>
@@ -21,38 +38,75 @@
 
     <div class="modalAtleta" id="modalAtleta" aria-hidden="true">
         <div class="modalAtletaOverlay" data-modal-close></div>
-        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaTitulo">
+        <div class="modalAtletaCard cadastroAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaTitulo">
             <div class="modalAtletaHeader">
                 <h2 id="modalAtletaTitulo">Cadastrar atleta</h2>
                 <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-modal-close>x</button>
             </div>
-            <form class="modalAtletaForm" action="#">
-                <label>
-                    Nome Completo
-                    <input type="text" name="nome" maxlength="100" required>
-                </label>
-                <label>
-                    Data de Nascimento
-                    <input type="date" name="datadenasc">
-                </label>
-                <label>
-                    Gênero
-                    <select name="genero">
-                        <option value="feminino">Feminino</option>
-                        <option value="masculino">Masculino</option>
-                    </select>
-                </label>
-                <label>
-                    Altura
-                    <input type="number" name="altura">
-                </label>
-                <label>
-                    Peso
-                    <input type="number" name="Peso">
-                </label>
+            <form class="modalAtletaForm" id="formAtletaNovo" action="#">
+                <div class="blocoFormulario">
+                    <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
+                    <div class="camposGrid">
+                        <label for="nomeAtleta">
+                            Nome Completo
+                            <input type="text" name="nome" id="nomeAtleta" maxlength="100" required>
+                        </label>
+                        <label for="dataNascimentoAtleta">
+                            Data de Nascimento
+                            <input type="date" name="data_nascimento" id="dataNascimentoAtleta">
+                        </label>
+                        <label for="generoAtleta">
+                            Gênero
+                            <select name="id_genero" id="generoAtleta" class="selectGeneroAtleta">
+                                <option value="">Selecione</option>
+                            </select>
+                        </label>
+                        <label for="alturaAtleta">
+                            Altura
+                            <input
+                                type="text"
+                                name="altura"
+                                id="alturaAtleta"
+                                inputmode="decimal"
+                                maxlength="6"
+                                placeholder="Ex: 1,75"
+                            >
+                        </label>
+                        <label for="pesoAtleta">
+                            Peso
+                            <input
+                                type="text"
+                                name="peso"
+                                id="pesoAtleta"
+                                inputmode="decimal"
+                                maxlength="6"
+                                placeholder="Ex: 75,50"
+                            >
+                        </label>
+                    </div>
+                </div>
+
+                <div class="blocoFormulario credenciaisUsuario">
+                    <h2 class="tituloBlocoFormulario">Credenciais de usuário</h2>
+                    <div class="camposGrid">
+                        <label for="emailAtleta">
+                            E-mail
+                            <input
+                                type="email"
+                                name="email"
+                                id="emailAtleta"
+                                placeholder="usuario@email.com"
+                                required
+                            >
+                        </label>
+                        <label for="senhaAtleta">
+                            Senha
+                            <input type="password" name="senha" id="senhaAtleta" minlength="6" required>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="modalAtletaAcoes">
-                    <button class="btnSecundario" type="button">Vincular equipes</button>
-                    <button class="btnSecundario" type="button">Vincular treinadores</button>
                     <button class="btnPrimario" type="submit">Cadastrar</button>
                 </div>
             </form>
@@ -68,33 +122,50 @@
             </div>
             <form class="modalAtletaForm modalAtletaFormEditar" action="#">
                 <input type="hidden" name="id">
-                <label>
-                    Nome Completo
-                    <input type="text" name="nome" maxlength="100" required>
-                </label>
-                <label>
-                    Data de Nascimento
-                    <input type="date" name="datadenasc">
-                </label>
-                <label>
-                    Gênero
-                    <select name="id_genero">
-                        <option value="feminino">Feminino</option>
-                        <option value="masculino">Masculino</option>
-                    </select>
-                </label>
-                <label>
-                    Altura
-                    <input type="number" name="altura">
-                </label>
-                <label>
-                    Peso
-                    <input type="number" name="Peso">
-                </label>
+                <input type="hidden" name="status" value="ativo">
+
+                <div class="blocoFormulario">
+                    <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
+                    <div class="camposGrid">
+                        <label>
+                            Nome Completo
+                            <input type="text" name="nome" maxlength="100" required>
+                        </label>
+                        <label>
+                            Data de Nascimento
+                            <input type="date" name="data_nascimento">
+                        </label>
+                        <label>
+                            Gênero
+                            <select name="id_genero" class="selectGeneroAtletaEdicao">
+                                <option value="">Selecione</option>
+                            </select>
+                        </label>
+                        <label>
+                            Altura
+                            <input
+                                type="text"
+                                name="altura"
+                                inputmode="decimal"
+                                maxlength="6"
+                                placeholder="Ex: 1,75"
+                            >
+                        </label>
+                        <label>
+                            Peso
+                            <input
+                                type="text"
+                                name="peso"
+                                inputmode="decimal"
+                                maxlength="6"
+                                placeholder="Ex: 75,50"
+                            >
+                        </label>
+                    </div>
+                </div>
+
                 <div class="modalAtletaAcoes">
-                    <button class="btnSecundario" type="button">Vincular equipes</button>
-                    <button class="btnSecundario" type="button">Vincular treinadores</button>
-                    <button class="btnExcluir" type="button">Excluir</button>
+                    <button class="btnSecundario btnAlternarStatusAtleta" type="button">Inativar</button>
                     <button class="btnPrimario" type="submit">Salvar alteracoes</button>
                 </div>
             </form>
@@ -120,6 +191,7 @@
     data-menuHtml="../componentes/menuLateral.html"
     data-menuCss="../componentes/menuLateral.css"
     data-menuTarget=".menu"></script>
+      <script src="../js/valida_sessao.js"></script>
       <script src="../js/atleta/atleta.js"></script>
 
 </body>

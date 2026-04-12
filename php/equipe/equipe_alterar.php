@@ -40,6 +40,39 @@
         exit;
     }
 
+    $stmtValidaEquipe = $conexao->prepare(
+        "SELECT id FROM equipes WHERE id = ? LIMIT 1"
+    );
+
+    if(!$stmtValidaEquipe){
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Erro ao preparar validacao de equipe.',
+            'data'      => []
+        ];
+
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
+    }
+
+    $stmtValidaEquipe->bind_param("i", $id);
+    $stmtValidaEquipe->execute();
+    $resultadoEquipe = $stmtValidaEquipe->get_result();
+    $stmtValidaEquipe->close();
+
+    if($resultadoEquipe->num_rows === 0){
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Equipe nao encontrada.',
+            'data'      => []
+        ];
+
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
+    }
+
     if($nome === ''){
         $retorno = [
             'status'    => 'nok',
@@ -100,6 +133,53 @@
         }
     }
 
+    if($id_modalidade !== null){
+        if($id_modalidade <= 0){
+            $retorno = [
+                'status'    => 'nok',
+                'mensagem'  => 'Modalidade invalida.',
+                'data'      => []
+            ];
+
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+
+        $stmtValidaModalidade = $conexao->prepare(
+            "SELECT id FROM modalidades WHERE id = ? AND status = 'ativo' LIMIT 1"
+        );
+
+        if(!$stmtValidaModalidade){
+            $retorno = [
+                'status'    => 'nok',
+                'mensagem'  => 'Erro ao preparar validacao de modalidade.',
+                'data'      => []
+            ];
+
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+
+        $stmtValidaModalidade->bind_param("i", $id_modalidade);
+        $stmtValidaModalidade->execute();
+        $resultadoModalidade = $stmtValidaModalidade->get_result();
+        $stmtValidaModalidade->close();
+
+        if($resultadoModalidade->num_rows === 0){
+            $retorno = [
+                'status'    => 'nok',
+                'mensagem'  => 'Selecione uma modalidade ativa valida.',
+                'data'      => []
+            ];
+
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+    }
+
     $stmt = $conexao->prepare(
         "UPDATE equipes SET
             nome = ?,
@@ -137,7 +217,7 @@
     );
     $stmt->execute();
 
-    if($stmt->affected_rows > 0){
+    if($stmt->errno === 0){
         $retorno = [
             'status'    => 'ok',
             'mensagem'  => 'Equipe alterada com sucesso.',

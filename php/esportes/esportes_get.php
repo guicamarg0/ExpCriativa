@@ -1,26 +1,118 @@
 <?php
 include_once('../conexao.php');
-// Configurando o padrão de retorno
+
 $retorno = [
-    'status' => '', // ok - nok
-    'mensagem' => '', // mensagem que envio para o front
+    'status' => '',
+    'mensagem' => '',
     'data' => []
 ];
 
-if (isset($_GET['id'])) { // se veio um id pela url
-    // Segunda situação - RECEBENDO O ID por GET
-    $stmt = $conexao->prepare("SELECT * FROM modalidades WHERE id = ?");
-    $stmt->bind_param("i", $_GET['id']);
-}
-else {
-    // Primeira situação - SEM RECEBER O ID por GET
-    $stmt = $conexao->prepare("SELECT * FROM modalidades");
+if (!empty($conexao_error)) {
+    $retorno = [
+        'status' => 'nok',
+        'mensagem' => 'Erro de conexão com o banco.',
+        'data' => []
+    ];
+
+    header("Content-type:application/json;charset:utf-8");
+    echo json_encode($retorno);
+    exit;
 }
 
-// Executando a query
+$statusFiltro = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : 'ativo';
+$filtrarStatus = true;
+$statusBanco = 'ativo';
+
+if ($statusFiltro === 'todos') {
+    $filtrarStatus = false;
+} elseif ($statusFiltro === 'inativo') {
+    $statusBanco = 'inativo';
+}
+
+if (isset($_GET['id'])) {
+    $id = (int) $_GET['id'];
+
+    if ($id <= 0) {
+        $retorno = [
+            'status' => 'nok',
+            'mensagem' => 'ID inválido.',
+            'data' => []
+        ];
+
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
+    }
+
+    if ($filtrarStatus) {
+        $stmt = $conexao->prepare(
+            "SELECT
+                modalidades.id,
+                modalidades.nome,
+                modalidades.status,
+                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
+            FROM modalidades
+            WHERE modalidades.id = ? AND modalidades.status = ?"
+        );
+        if ($stmt) {
+            $stmt->bind_param("is", $id, $statusBanco);
+        }
+    } else {
+        $stmt = $conexao->prepare(
+            "SELECT
+                modalidades.id,
+                modalidades.nome,
+                modalidades.status,
+                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
+            FROM modalidades
+            WHERE modalidades.id = ?"
+        );
+        if ($stmt) {
+            $stmt->bind_param("i", $id);
+        }
+    }
+} else {
+    if ($filtrarStatus) {
+        $stmt = $conexao->prepare(
+            "SELECT
+                modalidades.id,
+                modalidades.nome,
+                modalidades.status,
+                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
+            FROM modalidades
+            WHERE modalidades.status = ?
+            ORDER BY modalidades.nome ASC"
+        );
+        if ($stmt) {
+            $stmt->bind_param("s", $statusBanco);
+        }
+    } else {
+        $stmt = $conexao->prepare(
+            "SELECT
+                modalidades.id,
+                modalidades.nome,
+                modalidades.status,
+                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
+            FROM modalidades
+            ORDER BY modalidades.nome ASC"
+        );
+    }
+}
+
+if (!isset($stmt) || !$stmt) {
+    $retorno = [
+        'status' => 'nok',
+        'mensagem' => 'Erro ao preparar consulta.',
+        'data' => []
+    ];
+
+    header("Content-type:application/json;charset:utf-8");
+    echo json_encode($retorno);
+    exit;
+}
+
 $stmt->execute();
 $resultado = $stmt->get_result();
-// Criando um array vazio para receber o resultado do bd
 $tabela = [];
 
 if ($resultado->num_rows > 0) {
@@ -30,22 +122,19 @@ if ($resultado->num_rows > 0) {
 
     $retorno = [
         'status' => 'ok',
-        'mensagem' => 'Sucesso, consulta efetuada no bd.', // mensagem que envio para o front
+        'mensagem' => 'Sucesso, consulta efetuada.',
         'data' => $tabela
     ];
-}
-else {
+} else {
     $retorno = [
         'status' => 'nok',
-        'mensagem' => 'Não há registros no bd', // mensagem que envio para o front
+        'mensagem' => 'Não há registros.',
         'data' => []
     ];
 }
-// Fechamento do estado e conexão.
+
 $stmt->close();
 $conexao->close();
 
-// Estou enviando para o fronted o array RETORNO
-// mas no formato JSON
 header("Content-type:application/json;charset:utf-8");
 echo json_encode($retorno);
