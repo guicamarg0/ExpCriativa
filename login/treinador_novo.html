@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Treinador</title>
+    <link rel="icon" type="image/png" href="mitra.png">
+</head>
+<body>
+    <header>
+        <h1>Cadastro de um novo <strong>Treinador</strong></h1>
+    </header>
+    <hr>
+    <section>
+        <form action="cad.php" method="get" id="meuForm">
+                <div>
+                    <label for="nome">Nome Completo: </label>
+                    <input type="text" name="nome" id="nome">
+                </div>       
+
+                <div>
+                     <label for="id_usuario">ID de Usuário: </label>
+                    <input type="number" name="id_usuario" id="id_usuario">
+                </div>
+           
+                <div>
+                    <label for="id_equipe">ID da Equipe: </label>
+                    <input type="number" name="id_equipe" id="id_equipe">
+                </div>
+            
+                <div>
+                    <label for="data_nascimento">Data de Nascimento: </label>
+                    <input type="date" id="data_nascimento">
+                </div>
+            
+                <div>
+                    <label for="telefone">Telefone: </label>
+                    <input type="tel" placeholder="(ddd)00000-0000" maxlength="14" id="telefone">
+                </div>
+            
+                <div>
+                    <label for="cref">CREF: </label>
+                    <input type="text" placeholder="012345-G/EX" id="cref">
+                </div>
+
+                <div>
+                     <label for="data_inicio">Data de Início: </label>
+                    <input type="text" placeholder="DD/MM/AAAA" maxlength="10" id="data_inicio">
+                </div>
+            
+                <div>
+                    <p>Status: </p>
+                    <input type="radio" id="ativo" name="grupo" value="1">
+                    <label for="opcao1">Ativo</label><br>
+                </div>
+            
+                <div id="opcoes">
+                    <input type="radio" id="inativo" name="grupo" value="2">
+                    <label for="opcao2">Inativo</label>
+                </div>
+            
+                <div>
+                    <button id="enviar">Enviar</button>
+                </div>
+            
+        </form>
+
+    </section>
+
+    <script src="treinador_novo.js"></script>
+
+</body>
+</html>
