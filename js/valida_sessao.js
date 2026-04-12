@@ -7,19 +7,20 @@
   else if (path.includes("/js/") || path.includes("/componentes/"))
     phpPath = "../../php/valida_sessao.php";
   else if (path.includes("/login/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("/esportes/")) phpPath = "../php/valida_sessao.php";
   else if (path.includes("/exemplo/")) phpPath = "../php/valida_sessao.php";
   else if (path.includes("/equipe/")) phpPath = "../php/valida_sessao.php";
-  else phpPath = "php/valida_sessao.php";
+  else phpPath = "../php/valida_sessao.php";
 
   fetch(phpPath, { cache: "no-store" }) // força a não usar cache
     .then((response) => response.json())
     .then((data) => {
       if (data.status !== "ok") {
         // Sempre redireciona para a página de login absoluta
-        window.location.replace("/login/index.html");
+        window.location.replace("../login/index.html");
       }
     })
     .catch(() => {
-      window.location.replace("/login/index.html");
+      window.location.replace("../login/index.html");
     });
 })();

@@ -11,8 +11,8 @@
 
     // Preparando para inserção no banco de dados
     $stmt = $conexao->prepare("
-    INSERT INTO usuario(nome, email, usuario, senha, instagram, ativo) VALUES(?,?,?,?,?,?)");
-    $stmt->bind_param("sssssi",$nome, $email, $usuario, $senha, $instagram, $ativo);
+    INSERT INTO modalidades(nome, status) VALUES(?,?)");
+    $stmt->bind_param("ss",$nome, $status);
     $stmt->execute();
 
     if($stmt->affected_rows > 0){

@@ -10,7 +10,7 @@
 
     if(isset($_GET['id'])){
         // Segunda situação - RECEBENDO O ID por GET
-        $stmt = $conexao->prepare("DELETE FROM usuario WHERE id = ?");
+        $stmt = $conexao->prepare("DELETE FROM modalidades WHERE id = ?");
         $stmt->bind_param("i",$_GET['id']);
         $stmt->execute();
 
