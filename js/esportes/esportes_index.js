@@ -4,11 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.getElementById("novo").addEventListener("click", () => {
-<<<<<<< HEAD:js/esportes/esportes_index.js
     window.location.href = 'esportes_novo.html';
-=======
-  window.location.href = "usuario_novo.html";
->>>>>>> 98daac1f06bce6814783b8d304e869b2fb3385df:js/index.js
 });
 
 document.getElementById("logoff").addEventListener("click", () => {
@@ -22,7 +18,6 @@ async function logoff() {
     window.location.href = "../login/";
   }
 }
-<<<<<<< HEAD:js/esportes/esportes_index.js
 
 async function buscar(){
     const retorno = await fetch("../php/esportes/esportes_get.php");
@@ -41,25 +36,6 @@ async function excluir(id){
     }else{
         alert(resposta.mensagem);
     }
-=======
-async function buscar() {
-  const retorno = await fetch("../php/usuario_get.php");
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    preencherTabela(resposta.data);
-  }
-}
-
-async function excluir(id) {
-  const retorno = await fetch("../php/usuario_excluir.php?id=" + id);
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    alert(resposta.mensagem);
-    window.location.reload();
-  } else {
-    alert(resposta.mensagem);
-  }
->>>>>>> 98daac1f06bce6814783b8d304e869b2fb3385df:js/index.js
 }
 
 function preencherTabela(tabela) {
@@ -78,23 +54,12 @@ function preencherTabela(tabela) {
                 <td>${tabela[i].nome}</td>
                 <td>${tabela[i].status}</td>
                 <td>
-<<<<<<< HEAD:js/esportes/esportes_index.js
                     <a href='esportes_alterar.html?id=${tabela[i].id}'>Alterar</a>
-=======
-                    <a href='usuario_alterar.html?id=${tabela[i].id}'>Alterar</a>
->>>>>>> 98daac1f06bce6814783b8d304e869b2fb3385df:js/index.js
                     <a href='#' onclick='excluir(${tabela[i].id})'>Excluir</a>
                 </td>
             </tr>
         `;
-<<<<<<< HEAD:js/esportes/esportes_index.js
-    }
-    html += '</table>';
-    document.getElementById("lista").innerHTML = html;
-}
-=======
   }
   html += "</table>";
   document.getElementById("lista").innerHTML = html;
 }
->>>>>>> 98daac1f06bce6814783b8d304e869b2fb3385df:js/index.js

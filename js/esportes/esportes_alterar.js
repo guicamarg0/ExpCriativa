@@ -23,7 +23,7 @@ async function buscar(id){
         document.getElementById("id").value = id;
     }else{
         alert("ERRO:" + resposta.mensagem);
-        window.location.href = "../exemplo/";
+        window.location.href = "../esportes/esportes.html";
     }
 }
 

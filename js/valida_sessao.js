@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-async function valida_sessao(){
-    const retorno = await fetch("../php/valida_sessao.php");
-    const resposta = await retorno.json();
-    if(resposta.status == "nok"){
-        window.location.href = '../login/index.html';
-    }
-}
-=======
 // valida_sessao.js - Redireciona para login se não houver sessão válida
 (function () {
   // Caminho relativo para o PHP, ajusta automaticamente para subpastas
@@ -25,11 +16,10 @@ async function valida_sessao(){
     .then((data) => {
       if (data.status !== "ok") {
         // Sempre redireciona para a página de login absoluta
-        window.location.replace("/login/index.html");
+        window.location.replace("../login/index.html");
       }
     })
     .catch(() => {
-      window.location.replace("/login/index.html");
+      window.location.replace("../login/index.html");
     });
 })();
->>>>>>> 98daac1f06bce6814783b8d304e869b2fb3385df
