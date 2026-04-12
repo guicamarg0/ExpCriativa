@@ -69,6 +69,13 @@ function atualizarBotaoAlternarStatusEsporte(form) {
     botao.textContent = statusAtual === "ativo" ? "Inativar" : "Ativar";
 }
 
+async function perguntarConfirmacao(mensagem) {
+    if (window.mitraToast && typeof window.mitraToast.confirm === "function") {
+        return window.mitraToast.confirm(mensagem);
+    }
+    return window.confirm(mensagem);
+}
+
 function preencherTabelaEsportes() {
     const lista = document.querySelector(".listViewEsportes");
     if (!lista) {
@@ -311,7 +318,7 @@ function prepararModalEdicaoEsporte() {
             const statusAtual = normalizarStatusEsporte(form.elements.status.value);
             const proximoStatus = statusAtual === "ativo" ? "inativo" : "ativo";
             const acao = proximoStatus === "ativo" ? "ativar" : "inativar";
-            const confirmou = window.confirm(`Deseja ${acao} esta modalidade?`);
+            const confirmou = await perguntarConfirmacao(`Deseja ${acao} esta modalidade?`);
             if (!confirmou) {
                 return;
             }

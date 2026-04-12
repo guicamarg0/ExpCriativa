@@ -209,6 +209,11 @@ async function carregarGenerosAtivos() {
 }
 
 function prepararModalConfirmacao() {
+    if (window.mitraToast && typeof window.mitraToast.confirm === "function") {
+        window.confirmarModal = (mensagem) => window.mitraToast.confirm(mensagem);
+        return;
+    }
+
     const modal = document.querySelector("#modalConfirmacao");
     if (!modal) {
         return;
