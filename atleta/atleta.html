@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout HTML</title>
+    <link rel="stylesheet" href="atleta.css">
+</head>
+<body>
+
+    <div class="conteudo">
+        <div class="menu"></div>
+        <div class="conteudoAtleta">
+            <div class="headerConteudo">
+                <h1>Atletas</h1>
+                <button id="btnAbrirModalAtleta" type="button">+ Adicionar Atleta</button>
+            </div>
+            <div class="listViewAtletas"></div>
+        </div>
+    </div>
+
+    <div class="modalAtleta" id="modalAtleta" aria-hidden="true">
+        <div class="modalAtletaOverlay" data-modal-close></div>
+        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaTitulo">
+            <div class="modalAtletaHeader">
+                <h2 id="modalAtletaTitulo">Cadastrar atleta</h2>
+                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-modal-close>x</button>
+            </div>
+            <form class="modalAtletaForm" action="#">
+                <label>
+                    Nome Completo
+                    <input type="text" name="nome" maxlength="100" required>
+                </label>
+                <label>
+                    Data de Nascimento
+                    <input type="date" name="datadenasc">
+                </label>
+                <label>
+                    Gênero
+                    <select name="genero">
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
+                </label>
+                <label>
+                    Altura
+                    <input type="number" name="altura">
+                </label>
+                <label>
+                    Peso
+                    <input type="number" name="Peso">
+                </label>
+                <div class="modalAtletaAcoes">
+                    <button class="btnSecundario" type="button">Vincular equipes</button>
+                    <button class="btnSecundario" type="button">Vincular treinadores</button>
+                    <button class="btnPrimario" type="submit">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modalAtleta modalAtletaEdicao" id="modalAtletaEdicao" aria-hidden="true">
+        <div class="modalAtletaOverlay" data-modal-close-edit></div>
+        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaEdicaoTitulo">
+            <div class="modalAtletaHeader">
+                <h2 id="modalAtletaEdicaoTitulo">Editar atleta</h2>
+                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-modal-close-edit>x</button>
+            </div>
+            <form class="modalAtletaForm modalAtletaFormEditar" action="#">
+                <input type="hidden" name="id">
+                <label>
+                    Nome Completo
+                    <input type="text" name="nome" maxlength="100" required>
+                </label>
+                <label>
+                    Data de Nascimento
+                    <input type="date" name="datadenasc">
+                </label>
+                <label>
+                    Gênero
+                    <select name="id_genero">
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
+                </label>
+                <label>
+                    Altura
+                    <input type="number" name="altura">
+                </label>
+                <label>
+                    Peso
+                    <input type="number" name="Peso">
+                </label>
+                <div class="modalAtletaAcoes">
+                    <button class="btnSecundario" type="button">Vincular equipes</button>
+                    <button class="btnSecundario" type="button">Vincular treinadores</button>
+                    <button class="btnExcluir" type="button">Excluir</button>
+                    <button class="btnPrimario" type="submit">Salvar alteracoes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modalAtleta modalConfirmacao" id="modalConfirmacao" aria-hidden="true">
+        <div class="modalAtletaOverlay" data-confirm-close></div>
+        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalConfirmacaoTitulo">
+            <div class="modalAtletaHeader">
+                <h2 id="modalConfirmacaoTitulo">Confirmar ação</h2>
+                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-confirm-close>x</button>
+            </div>
+            <p class="modalConfirmacaoTexto" id="modalConfirmacaoTexto">Tem certeza que deseja continuar?</p>
+            <div class="modalAtletaAcoes">
+                <button class="btnSecundario" type="button" data-confirm-cancelar>Cancelar</button>
+                <button class="btnExcluir" type="button" data-confirm-ok>Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/menu_lateral.js"
+    data-menuHtml="../componentes/menuLateral.html"
+    data-menuCss="../componentes/menuLateral.css"
+    data-menuTarget=".menu"></script>
+      <script src="../js/atleta/atleta.js"></script>
+
+</body>
+</html>
