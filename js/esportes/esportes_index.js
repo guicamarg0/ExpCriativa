@@ -1,6 +1,7 @@
 let esportesView = [];
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.esportesSessao.aplicarPermissoesTelaEsportes();
     prepararFiltroStatusEsporte();
     buscarEsportes();
     prepararModalEsporte();
@@ -113,8 +114,7 @@ async function buscarEsportes() {
     const status = obterFiltroStatusEsporte();
 
     try {
-        const retorno = await fetch(`../php/esportes/esportes_get.php?status=${encodeURIComponent(status)}`);
-        const resposta = await retorno.json();
+        const resposta = await window.esportesCRUD.listarEsportes(status);
         if (resposta.status === "ok" && Array.isArray(resposta.data)) {
             esportesView = resposta.data;
         } else {
@@ -195,11 +195,7 @@ function prepararModalEsporte() {
         formData.set("status", "ativo");
 
         try {
-            const retorno = await fetch("../php/esportes/esportes_novo.php", {
-                method: "POST",
-                body: formData
-            });
-            const resposta = await retorno.json();
+            const resposta = await window.esportesCRUD.criarEsporte(formData);
             if (resposta.status === "ok") {
                 form.reset();
                 fecharModalEsporte();
@@ -248,8 +244,7 @@ function prepararModalEdicaoEsporte() {
         }
 
         try {
-            const retorno = await fetch(`../php/esportes/esportes_get.php?id=${encodeURIComponent(id)}&status=todos`);
-            const resposta = await retorno.json();
+            const resposta = await window.esportesCRUD.buscarEsportePorId(id, "todos");
             if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
                 alert("Não foi possível carregar a modalidade.");
                 return;
@@ -287,11 +282,7 @@ function prepararModalEdicaoEsporte() {
         formData.set("status", status);
 
         try {
-            const retorno = await fetch(`../php/esportes/esportes_alterar.php?id=${encodeURIComponent(id)}`, {
-                method: "POST",
-                body: formData
-            });
-            const resposta = await retorno.json();
+            const resposta = await window.esportesCRUD.editarEsporte(id, formData);
             if (resposta.status === "ok") {
                 fecharModalEsporteEdicao();
                 await buscarEsportes();

@@ -1,6 +1,7 @@
 let treinadoresView = [];
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.treinadorSessao.aplicarPermissoesTelaTreinador();
     const botaoEnviar = document.getElementById("enviar");
     if (botaoEnviar) {
         botaoEnviar.addEventListener("click", () => {
@@ -124,8 +125,7 @@ async function getTreinadores() {
     const status = obterFiltroStatusSelecionado();
 
     try {
-        const retorno = await fetch(`../php/treinador/treinador_get.php?status=${encodeURIComponent(status)}`);
-        const resposta = await retorno.json();
+        const resposta = await window.treinadorCRUD.listarTreinadores(status);
         if (resposta.status === "ok" && Array.isArray(resposta.data)) {
             treinadoresView = resposta.data;
         } else {
@@ -238,8 +238,7 @@ function prepararModalEdicaoTreinador() {
         }
 
         try {
-            const retorno = await fetch(`../php/treinador/treinador_get.php?id=${encodeURIComponent(id)}&status=todos`);
-            const resposta = await retorno.json();
+            const resposta = await window.treinadorCRUD.buscarTreinadorPorId(id, "todos");
             if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
                 alert("Não foi possível carregar o treinador.");
                 return;
@@ -278,11 +277,7 @@ function prepararModalEdicaoTreinador() {
         }
 
         try {
-            const retorno = await fetch("../php/treinador/treinador_alterar.php", {
-                method: "POST",
-                body: formData,
-            });
-            const resposta = await retorno.json();
+            const resposta = await window.treinadorCRUD.editarTreinador(formData);
             if (resposta.status === "ok") {
                 fecharModalTreinadorEdicao();
                 await getTreinadores();
@@ -338,11 +333,7 @@ async function novo() {
     fd.append("status", "ativo");
 
     try {
-        const retorno = await fetch("../php/treinador/treinador_novo.php", {
-            method: "POST",
-            body: fd,
-        });
-        const resposta = await retorno.json();
+        const resposta = await window.treinadorCRUD.criarTreinador(fd);
         if (resposta.status == "ok") {
             formNovo.reset();
 

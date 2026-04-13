@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.atletaSessao.aplicarPermissoesTelaAtleta();
     prepararFiltroStatusAtleta();
     buscar();
     prepararModalAtleta();
@@ -269,8 +270,7 @@ function prepararModalConfirmacao() {
 async function buscar() {
     try {
         const status = obterFiltroStatusAtleta();
-        const retorno = await fetch(`../php/atleta/atleta_get.php?status=${encodeURIComponent(status)}`);
-        const resposta = await retorno.json();
+        const resposta = await window.atletaCRUD.listarAtletas(status);
         if (resposta.status === "ok") {
             preencherTabela(resposta.data);
         } else {
@@ -364,12 +364,7 @@ function prepararModalAtleta() {
         formData.set("peso", normalizarDecimalParaEnvio(formData.get("peso")));
 
         try {
-            const retorno = await fetch("../php/atleta/atleta_novo.php", {
-                method: "POST",
-                body: formData
-            });
-
-            const resposta = await retorno.json();
+            const resposta = await window.atletaCRUD.criarAtleta(formData);
             if (resposta.status === "ok") {
                 form.reset();
                 preencherSelectGenero(selectGenero, "");
@@ -415,12 +410,7 @@ function prepararModalEdicao() {
         formData.set("peso", normalizarDecimalParaEnvio(formData.get("peso")));
 
         try {
-            const retorno = await fetch("../php/atleta/atleta_alterar.php", {
-                method: "POST",
-                body: formData
-            });
-
-            const resposta = await retorno.json();
+            const resposta = await window.atletaCRUD.editarAtleta(formData);
             if (resposta.status === "ok") {
                 fecharModal();
                 buscar();
@@ -449,8 +439,7 @@ function prepararModalEdicao() {
 
         try {
             await carregarGenerosAtivos();
-            const retorno = await fetch(`../php/atleta/atleta_get.php?id=${encodeURIComponent(id)}`);
-            const resposta = await retorno.json();
+            const resposta = await window.atletaCRUD.buscarAtletaPorId(id, "todos");
             if (resposta.status !== "ok" || !resposta.data || !resposta.data[0]) {
                 alert("Nao foi possivel carregar o atleta.");
                 return;

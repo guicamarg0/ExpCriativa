@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  await aplicarPermissoesTelaEquipe();
+  await window.equipeSessao.aplicarPermissoesTelaEquipe();
   prepararFiltroStatusEquipe();
   buscar();
   carregarTreinadoresAtivos();
@@ -17,20 +17,11 @@ let treinadoresAtivos = [];
 let generosAtivos = [];
 let modalidadesAtivas = [];
 let atletasAtivos = [];
-const EQUIPE_STORAGE_SESSION_KEY = "mitraSessionKey";
-let sessaoEquipeAtual = null;
 let contextoVinculoAtletas = {
   formAlvo: null,
   equipeIdAtual: "",
   idsSelecionados: [],
 };
-
-document.addEventListener("mitra:sessao", (event) => {
-  if (event.detail && event.detail.status === "ok") {
-    sessaoEquipeAtual = event.detail;
-    atualizarVisibilidadeBotaoAdicionarEquipe(sessaoEquipeAtual);
-  }
-});
 
 function escaparHtml(valor) {
   return String(valor ?? "")
@@ -102,89 +93,6 @@ function normalizarStatusEquipe(valor) {
     return "inativa";
   }
   return "ativa";
-}
-
-function sessaoEhTreinador(sessao) {
-  return Number(sessao?.id_nivel || 0) === 2;
-}
-
-function obterIdTreinadorSessao(sessao) {
-  const valor = Number(sessao?.perfil?.id || 0);
-  return Number.isInteger(valor) && valor > 0 ? valor : 0;
-}
-
-async function obterSessaoEquipeAtual() {
-  if (window.mitraSessao && window.mitraSessao.status === "ok") {
-    sessaoEquipeAtual = window.mitraSessao;
-    return sessaoEquipeAtual;
-  }
-
-  if (sessaoEquipeAtual && sessaoEquipeAtual.status === "ok") {
-    return sessaoEquipeAtual;
-  }
-
-  const sessionKey = localStorage.getItem(EQUIPE_STORAGE_SESSION_KEY) || "";
-  if (!sessionKey) {
-    return null;
-  }
-
-  try {
-    const retorno = await fetch("../php/valida_sessao.php", {
-      cache: "no-store",
-      headers: {
-        "X-Session-Key": sessionKey,
-      },
-    });
-    if (!retorno.ok) {
-      return null;
-    }
-
-    const resposta = await retorno.json();
-    if (resposta.status === "ok") {
-      sessaoEquipeAtual = resposta;
-      window.mitraSessao = window.mitraSessao || resposta;
-      return resposta;
-    }
-  } catch (erro) {
-    console.error(erro);
-  }
-
-  return null;
-}
-
-function filtrarEquipesPorSessao(tabela, sessao) {
-  if (!Array.isArray(tabela)) {
-    return [];
-  }
-
-  if (!sessaoEhTreinador(sessao)) {
-    return tabela;
-  }
-
-  const idTreinador = obterIdTreinadorSessao(sessao);
-  if (!idTreinador) {
-    return [];
-  }
-
-  return tabela.filter(
-    (equipe) => Number(equipe.id_treinador_responsavel || 0) === idTreinador,
-  );
-}
-
-function atualizarVisibilidadeBotaoAdicionarEquipe(sessao) {
-  const botao = document.querySelector("#btnAbrirModalEquipe");
-  if (!botao) {
-    return;
-  }
-
-  const ocultar = sessaoEhTreinador(sessao);
-  botao.style.display = ocultar ? "none" : "";
-  botao.disabled = ocultar;
-}
-
-async function aplicarPermissoesTelaEquipe() {
-  const sessao = await obterSessaoEquipeAtual();
-  atualizarVisibilidadeBotaoAdicionarEquipe(sessao);
 }
 
 function obterFiltroStatusEquipe() {
@@ -671,14 +579,11 @@ async function perguntarConfirmacao(texto) {
 
 async function buscar() {
   const status = obterFiltroStatusEquipe();
-  const sessao = await obterSessaoEquipeAtual();
+  const sessao = await window.equipeSessao.obterSessaoEquipeAtual();
   try {
-    const retorno = await fetch(
-      `../php/equipe/equipe_get.php?status=${encodeURIComponent(status)}`,
-    );
-    const resposta = await retorno.json();
-    if (resposta.status == "ok") {
-      preencherTabela(filtrarEquipesPorSessao(resposta.data, sessao));
+    const resposta = await window.equipeCRUD.listarEquipes(status);
+    if (resposta.status === "ok") {
+      preencherTabela(window.equipeSessao.filtrarEquipesPorSessao(resposta.data, sessao));
     } else {
       preencherTabela([]);
     }
@@ -749,17 +654,12 @@ async function vincularAtletasNaEquipe(idEquipe, idsAtletas, forcarVinculo = fal
     return true;
   }
 
-  const fd = new FormData();
-  fd.append("id_equipe", String(idEquipe || ""));
-  fd.append("atletas_ids", ids.join(","));
-  fd.append("forcar_vinculo", forcarVinculo ? "1" : "0");
-
   try {
-    const retorno = await fetch("../php/equipe/equipe_vincular_atletas.php", {
-      method: "POST",
-      body: fd,
-    });
-    const resposta = await retorno.json();
+    const resposta = await window.equipeCRUD.vincularAtletasEquipe(
+      idEquipe,
+      ids,
+      forcarVinculo,
+    );
 
     if (resposta.status === "ok") {
       return true;
@@ -821,7 +721,11 @@ function prepararModalEquipe() {
   };
 
   botaoAbrir.addEventListener("click", () => {
-    if (sessaoEhTreinador(sessaoEquipeAtual || window.mitraSessao)) {
+    if (
+      window.equipeSessao.sessaoEhTreinador(
+        window.equipeSessao.obterSessaoAtual() || window.mitraSessao,
+      )
+    ) {
       return;
     }
     abrirModal();
@@ -842,7 +746,11 @@ function prepararModalEquipe() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (sessaoEhTreinador(sessaoEquipeAtual || window.mitraSessao)) {
+    if (
+      window.equipeSessao.sessaoEhTreinador(
+        window.equipeSessao.obterSessaoAtual() || window.mitraSessao,
+      )
+    ) {
       alert("Treinador nao pode cadastrar equipe.");
       return;
     }
@@ -854,12 +762,7 @@ function prepararModalEquipe() {
     formData.set("status", "ativa");
 
     try {
-      const retorno = await fetch("../php/equipe/equipe_novo.php", {
-        method: "POST",
-        body: formData,
-      });
-
-      const resposta = await retorno.json();
+      const resposta = await window.equipeCRUD.criarEquipe(formData);
       if (resposta.status !== "ok") {
         alert(resposta.mensagem || "Falha ao cadastrar equipe.");
         return;
@@ -919,12 +822,7 @@ function prepararModalEdicao() {
     formData.set("status", status);
 
     try {
-      const retorno = await fetch("../php/equipe/equipe_alterar.php", {
-        method: "POST",
-        body: formData,
-      });
-
-      const resposta = await retorno.json();
+      const resposta = await window.equipeCRUD.editarEquipe(formData);
       if (resposta.status !== "ok") {
         alert(resposta.mensagem || "Falha ao alterar equipe.");
         return false;
@@ -961,18 +859,15 @@ function prepararModalEdicao() {
       await carregarGenerosAtivos();
       await carregarModalidadesAtivas();
       await carregarAtletasAtivos();
-      const retorno = await fetch(
-        `../php/equipe/equipe_get.php?id=${id}&status=todos`,
-      );
-      const resposta = await retorno.json();
+      const resposta = await window.equipeCRUD.buscarEquipePorId(id, "todos");
       if (resposta.status !== "ok" || !resposta.data || !resposta.data[0]) {
         alert("Nao foi possivel carregar a equipe.");
         return;
       }
 
-      const sessao = await obterSessaoEquipeAtual();
-      if (sessaoEhTreinador(sessao)) {
-        const idTreinadorSessao = obterIdTreinadorSessao(sessao);
+      const sessao = await window.equipeSessao.obterSessaoEquipeAtual();
+      if (window.equipeSessao.sessaoEhTreinador(sessao)) {
+        const idTreinadorSessao = window.equipeSessao.obterIdTreinadorSessao(sessao);
         const idTreinadorEquipe = Number(
           resposta.data[0].id_treinador_responsavel || 0,
         );
