@@ -20,13 +20,13 @@
     }
 
     $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
-    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
-    $id_modalidade = isset($_POST['id_modalidade']) && $_POST['id_modalidade'] !== '' ? (int) $_POST['id_modalidade'] : null;
-    $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
-    $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : '';
-    $status = isset($_POST['status']) && $_POST['status'] !== '' ? trim($_POST['status']) : 'ativa';
-    $id_treinador_responsavel = isset($_POST['id_treinador_responsavel']) ? trim($_POST['id_treinador_responsavel']) : '';
+    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
+    $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : '';
+    $id_modalidade = isset($_POST['id_modalidade']) ? $_POST['id_modalidade'] : '';
+    $id_genero = isset($_POST['id_genero']) ? $_POST['id_genero'] : '';
+    $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
+    $status = isset($_POST['status']) && $_POST['status'] !== '' ? $_POST['status'] : 'ativa';
+    $id_treinador_responsavel = isset($_POST['id_treinador_responsavel']) ? $_POST['id_treinador_responsavel'] : '';
 
     if($id <= 0){
         $retorno = [
@@ -97,95 +97,36 @@
         exit;
     }
 
-    if($id_treinador_responsavel !== ''){
-        $idTreinador = (int) $id_treinador_responsavel;
-        $stmtValidaTreinador = $conexao->prepare(
-            "SELECT id FROM treinadores WHERE id = ? AND status = 'ativo' LIMIT 1"
-        );
+    if($id_modalidade !== '' && !ctype_digit($id_modalidade)){
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Modalidade invalida.',
+            'data'      => []
+        ];
 
-        if(!$stmtValidaTreinador){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Erro ao preparar validacao de treinador.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
-
-        $stmtValidaTreinador->bind_param("i", $idTreinador);
-        $stmtValidaTreinador->execute();
-        $resultadoTreinador = $stmtValidaTreinador->get_result();
-        $stmtValidaTreinador->close();
-
-        if($resultadoTreinador->num_rows === 0){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Selecione um treinador ativo valido.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
     }
 
-    if($id_modalidade !== null){
-        if($id_modalidade <= 0){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Modalidade invalida.',
-                'data'      => []
-            ];
+    if($id_genero !== '' && !ctype_digit($id_genero)){
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Genero invalido.',
+            'data'      => []
+        ];
 
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
-
-        $stmtValidaModalidade = $conexao->prepare(
-            "SELECT id FROM modalidades WHERE id = ? AND status = 'ativo' LIMIT 1"
-        );
-
-        if(!$stmtValidaModalidade){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Erro ao preparar validacao de modalidade.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
-
-        $stmtValidaModalidade->bind_param("i", $id_modalidade);
-        $stmtValidaModalidade->execute();
-        $resultadoModalidade = $stmtValidaModalidade->get_result();
-        $stmtValidaModalidade->close();
-
-        if($resultadoModalidade->num_rows === 0){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Selecione uma modalidade ativa valida.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
+        header("Content-type:application/json;charset:utf-8");
+        echo json_encode($retorno);
+        exit;
     }
 
     $stmt = $conexao->prepare(
         "UPDATE equipes SET
             nome = ?,
             descricao = ?,
-            id_modalidade = ?,
-            id_genero = ?,
+            id_modalidade = NULLIF(?, ''),
+            id_genero = NULLIF(?, ''),
             categoria = ?,
             status = ?,
             id_treinador_responsavel = NULLIF(?, '')
@@ -205,7 +146,7 @@
     }
 
     $stmt->bind_param(
-        "ssiisssi",
+        "sssssssi",
         $nome,
         $descricao,
         $id_modalidade,

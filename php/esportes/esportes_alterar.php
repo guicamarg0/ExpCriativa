@@ -1,89 +1,58 @@
 <?php
 include_once('../conexao.php');
 
+// Configurando o padrão de retorno inicial
 $retorno = [
-    'status' => '',
-    'mensagem' => '',
-    'data' => []
+    'status'    => 'nok', // Default to 'nok' (not ok)
+    'mensagem'  => 'Falha ao processar a requisição.', // Default error message
+    'data'      => []
 ];
 
-if (!empty($conexao_error)) {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Erro de conexão com o banco.',
-        'data' => []
-    ];
+// Verifica se o ID foi fornecido via GET e os dados necessários via POST
+if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
+    $id      = $_GET['id'];
+    $nome    = $_POST['nome'];
+    $status  = $_POST['status'];
 
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
+    // Prepara a declaração SQL para atualização no banco de dados
+    // Usando prepared statements para prevenir SQL injection
+    $stmt = $conexao->prepare("UPDATE modalidades SET nome = ?, status = ? WHERE id = ?");
+    // Vincula os parâmetros: "ssi" indica string, string, integer
+    $stmt->bind_param("ssi", $nome, $status, $id);
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$nome = trim($_POST['nome'] ?? '');
-$status = strtolower(trim($_POST['status'] ?? 'ativo'));
-
-if ($id <= 0) {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'É necessário informar um ID válido.',
-        'data' => []
-    ];
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-
-if ($nome === '') {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Informe o nome da modalidade.',
-        'data' => []
-    ];
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-
-if ($status !== 'inativo') {
-    $status = 'ativo';
-}
-
-$stmt = $conexao->prepare("UPDATE modalidades SET nome = ?, status = ? WHERE id = ?");
-
-if (!$stmt) {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Falha ao preparar alteração.',
-        'data' => []
-    ];
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-
-$stmt->bind_param("ssi", $nome, $status, $id);
-$stmt->execute();
-
-if ($stmt->affected_rows > 0) {
-    $retorno = [
-        'status' => 'ok',
-        'mensagem' => 'Registro alterado com sucesso.',
-        'data' => []
-    ];
+    // Executa a declaração
+    if ($stmt->execute()) {
+        // Verifica se alguma linha foi afetada pela atualização
+        if ($stmt->affected_rows > 0) {
+            $retorno = [
+                'status'    => 'ok',
+                'mensagem'  => 'Registro alterado com sucesso.',
+                'data'      => []
+            ];
+        } else {
+            // Query executada, mas nenhuma linha foi afetada (pode ser ID não encontrado ou dados idênticos)
+            $retorno['mensagem'] = 'Nenhum registro foi alterado (verifique o ID e os dados fornecidos).';
+        }
+    } else {
+        // Erro durante a execução da query
+        $retorno['mensagem'] = 'Erro ao executar a consulta de atualização: ' . $stmt->error;
+    }
+    // Fecha a declaração preparada
+    $stmt->close();
 } else {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Não houve alterações no registro.',
-        'data' => []
-    ];
+    // ID via GET ausente ou dados POST insuficientes
+    if (!isset($_GET['id'])) {
+        $retorno['mensagem'] = 'Não é possível alterar um registro sem um ID informado.';
+    } else {
+        $retorno['mensagem'] = 'Dados insuficientes para alterar o registro (nome e status são obrigatórios).';
+    }
 }
 
-$stmt->close();
+// Fecha a conexão com o banco de dados
 $conexao->close();
 
-header("Content-type:application/json;charset:utf-8");
+// Define o cabeçalho para indicar que o conteúdo é JSON
+header("Content-type:application/json;charset=utf-8");
+// Codifica o array de retorno para JSON e o exibe
 echo json_encode($retorno);
+?>

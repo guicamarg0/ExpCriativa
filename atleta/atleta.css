@@ -50,6 +50,26 @@
     gap: 0.8em;
 }
 
+.acoesHeaderAtleta a,
+.modalAtletaAcoes a,
+.modalAtletaAcoes button{
+    padding: 0.6em 1.2em;
+    background: #221C69;
+    color: #FFFFFF;
+    border: 2px solid #221C69;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acoesHeaderAtleta a:hover,
+.modalAtletaAcoes a:hover,
+.modalAtletaAcoes button:hover{
+    background: #1A154F;
+    border-color: #1A154F;
+}
+
 .acoesHeaderAtleta label{
     color: var(--cor-primaria);
     font-weight: 600;

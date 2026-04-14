@@ -1,14 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("formEsporteNovo");
+    const form = document.getElementById("formAtletaNovo");
     if (!form) {
         return;
     }
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
-
         const formData = new FormData(form);
-        await window.esportesCRUD.criarEsporte(formData);
-        window.location.href = "esportes.html";
+        await window.atletaCRUD.criarAtleta(formData);
+        window.location.href = "atleta.html";
     });
 });

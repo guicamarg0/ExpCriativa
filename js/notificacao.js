@@ -8,7 +8,7 @@
     if (value === null || typeof value === "undefined") {
       return "";
     }
-    return String(value).trim();
+    return String(value);
   }
 
   function normalizeForMatch(value) {

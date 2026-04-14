@@ -1,140 +1,65 @@
 <?php
 include_once('../conexao.php');
 
+// Configurando o padrão de retorno inicial
 $retorno = [
-    'status' => '',
-    'mensagem' => '',
-    'data' => []
+    'status'    => 'nok', // Default to 'nok' (not ok)
+    'mensagem'  => 'Falha ao processar a requisição.', // Default error message
+    'data'      => []
 ];
 
-if (!empty($conexao_error)) {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Erro de conexão com o banco.',
-        'data' => []
-    ];
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-
-$statusFiltro = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : 'ativo';
-$filtrarStatus = true;
-$statusBanco = 'ativo';
-
-if ($statusFiltro === 'todos') {
-    $filtrarStatus = false;
-} elseif ($statusFiltro === 'inativo') {
-    $statusBanco = 'inativo';
-}
+$stmt = null; // Inicializa a variável de declaração
 
 if (isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
+    // Situação 1: Busca por um registro específico pelo ID
+    $id = $_GET['id'];
+    // Seleciona colunas específicas para clareza e eficiência
+    $stmt = $conexao->prepare("SELECT id, nome, status FROM modalidades WHERE id = ?");
+    // Vincula o parâmetro: "i" indica integer
+    $stmt->bind_param("i", $id);
+} else {
+    // Situação 2: Busca por todos os registros
+    // Seleciona colunas específicas para clareza e eficiência
+    $stmt = $conexao->prepare("SELECT id, nome, status FROM modalidades");
+}
 
-    if ($id <= 0) {
+// Executa a query preparada
+if ($stmt->execute()) {
+    // Obtém o resultado da query
+    $resultado = $stmt->get_result();
+    $tabela = []; // Array para armazenar os resultados
+
+    if ($resultado->num_rows > 0) {
+        // Se houver resultados, preenche o array $tabela
+        while ($linha = $resultado->fetch_assoc()) {
+            $tabela[] = $linha;
+        }
+
         $retorno = [
-            'status' => 'nok',
-            'mensagem' => 'ID inválido.',
-            'data' => []
+            'status'    => 'ok',
+            'mensagem'  => 'Registros consultados com sucesso.',
+            'data'      => $tabela
         ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if ($filtrarStatus) {
-        $stmt = $conexao->prepare(
-            "SELECT
-                modalidades.id,
-                modalidades.nome,
-                modalidades.status,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
-            FROM modalidades
-            WHERE modalidades.id = ? AND modalidades.status = ?"
-        );
-        if ($stmt) {
-            $stmt->bind_param("is", $id, $statusBanco);
-        }
     } else {
-        $stmt = $conexao->prepare(
-            "SELECT
-                modalidades.id,
-                modalidades.nome,
-                modalidades.status,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
-            FROM modalidades
-            WHERE modalidades.id = ?"
-        );
-        if ($stmt) {
-            $stmt->bind_param("i", $id);
+        // Nenhum registro encontrado
+        if (isset($_GET['id'])) {
+            $retorno['mensagem'] = 'Nenhum registro encontrado com o ID informado.';
+        } else {
+            $retorno['mensagem'] = 'Não há registros de modalidades no banco de dados.';
         }
     }
+    // Fecha a declaração preparada
+    $stmt->close();
 } else {
-    if ($filtrarStatus) {
-        $stmt = $conexao->prepare(
-            "SELECT
-                modalidades.id,
-                modalidades.nome,
-                modalidades.status,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
-            FROM modalidades
-            WHERE modalidades.status = ?
-            ORDER BY modalidades.nome ASC"
-        );
-        if ($stmt) {
-            $stmt->bind_param("s", $statusBanco);
-        }
-    } else {
-        $stmt = $conexao->prepare(
-            "SELECT
-                modalidades.id,
-                modalidades.nome,
-                modalidades.status,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
-            FROM modalidades
-            ORDER BY modalidades.nome ASC"
-        );
-    }
+    // Erro durante a execução da query
+    $retorno['mensagem'] = 'Erro ao executar a consulta: ' . $stmt->error;
 }
 
-if (!isset($stmt) || !$stmt) {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Erro ao preparar consulta.',
-        'data' => []
-    ];
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-
-$stmt->execute();
-$resultado = $stmt->get_result();
-$tabela = [];
-
-if ($resultado->num_rows > 0) {
-    while ($linha = $resultado->fetch_assoc()) {
-        $tabela[] = $linha;
-    }
-
-    $retorno = [
-        'status' => 'ok',
-        'mensagem' => 'Sucesso, consulta efetuada.',
-        'data' => $tabela
-    ];
-} else {
-    $retorno = [
-        'status' => 'nok',
-        'mensagem' => 'Não há registros.',
-        'data' => []
-    ];
-}
-
-$stmt->close();
+// Fecha a conexão com o banco de dados
 $conexao->close();
 
-header("Content-type:application/json;charset:utf-8");
+// Define o cabeçalho para indicar que o conteúdo é JSON
+header("Content-type:application/json;charset=utf-8");
+// Codifica o array de retorno para JSON e o exibe
 echo json_encode($retorno);
+?>

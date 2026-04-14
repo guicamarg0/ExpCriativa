@@ -20,7 +20,7 @@ if (!empty($conexao_error)) {
 }
 
 $idEquipe = isset($_POST['id_equipe']) ? (int) $_POST['id_equipe'] : 0;
-$idsTexto = isset($_POST['atletas_ids']) ? trim($_POST['atletas_ids']) : '';
+$idsTexto = isset($_POST['atletas_ids']) ? $_POST['atletas_ids'] : '';
 $forcarVinculo = isset($_POST['forcar_vinculo']) && $_POST['forcar_vinculo'] === '1';
 
 if ($idEquipe <= 0) {
@@ -39,7 +39,7 @@ $ids = [];
 if ($idsTexto !== '') {
     $partes = explode(',', $idsTexto);
     foreach ($partes as $parte) {
-        $valor = (int) trim($parte);
+        $valor = (int) $parte;
         if ($valor > 0) {
             $ids[] = $valor;
         }

@@ -20,8 +20,8 @@ if (!empty($conexao_error)) {
     exit;
 }
 
-$email = trim($_POST['email'] ?? '');
-$senha = trim($_POST['senha'] ?? '');
+$email = $_POST['email'] ?? '';
+$senha = $_POST['senha'] ?? '';
 
 if ($email === '' || $senha === '') {
     $retorno = [
@@ -73,7 +73,7 @@ if ($resultado->num_rows === 0) {
 }
 
 $usuario = $resultado->fetch_assoc();
-$statusUsuario = strtolower(trim($usuario['status'] ?? ''));
+$statusUsuario = strtolower(($usuario['status'] ?? ''));
 
 if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
     $retorno = [

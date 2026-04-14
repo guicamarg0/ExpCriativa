@@ -19,13 +19,13 @@
         exit;
     }
 
-    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $data_nascimento = isset($_POST['data_nascimento']) ? trim($_POST['data_nascimento']) : '';
-    $telefone = isset($_POST['telefone']) ? trim($_POST['telefone']) : '';
-    $cref = isset($_POST['cref']) ? trim($_POST['cref']) : '';
-    $data_inicio = isset($_POST['data_inicio']) ? trim($_POST['data_inicio']) : '';
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $senha = isset($_POST['senha']) ? trim($_POST['senha']) : '';
+    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
+    $data_nascimento = isset($_POST['data_nascimento']) ? $_POST['data_nascimento'] : '';
+    $telefone = isset($_POST['telefone']) ? $_POST['telefone'] : '';
+    $cref = isset($_POST['cref']) ? $_POST['cref'] : '';
+    $data_inicio = isset($_POST['data_inicio']) ? $_POST['data_inicio'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
     $status = 'ativo';
 
     if($nome === '' || $cref === '' || $email === '' || $senha === ''){

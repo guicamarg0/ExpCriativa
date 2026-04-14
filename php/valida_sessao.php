@@ -88,7 +88,7 @@ if (!$usuario) {
     ]);
 }
 
-$statusUsuario = strtolower(trim($usuario['status'] ?? ''));
+$statusUsuario = strtolower(($usuario['status'] ?? ''));
 if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
     encerrar_sessao();
     resposta_json([

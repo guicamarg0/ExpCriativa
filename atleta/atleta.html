@@ -3,24 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout HTML</title>
+    <title>Atletas</title>
     <link rel="stylesheet" href="atleta.css">
 </head>
 <body>
-
     <div class="conteudo">
         <div class="menu"></div>
         <div class="conteudoAtleta">
             <div class="headerConteudo">
                 <h1>Atletas</h1>
                 <div class="acoesHeaderAtleta">
-                    <label for="filtroStatusAtleta">Status</label>
-                    <select id="filtroStatusAtleta">
-                        <option value="ativo" selected>Ativos</option>
-                        <option value="inativo">Inativos</option>
-                        <option value="todos">Todos</option>
-                    </select>
-                    <button id="btnAbrirModalAtleta" type="button">+ Adicionar Atleta</button>
+                    <a href="atleta_novo.html">+ Adicionar Atleta</a>
                 </div>
             </div>
             <div class="cabecalhoAtletas" aria-hidden="true">
@@ -36,166 +29,13 @@
         </div>
     </div>
 
-    <div class="modalAtleta" id="modalAtleta" aria-hidden="true">
-        <div class="modalAtletaOverlay" data-modal-close></div>
-        <div class="modalAtletaCard cadastroAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaTitulo">
-            <div class="modalAtletaHeader">
-                <h2 id="modalAtletaTitulo">Cadastrar atleta</h2>
-                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-modal-close>x</button>
-            </div>
-            <form class="modalAtletaForm" id="formAtletaNovo" action="#">
-                <div class="blocoFormulario">
-                    <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
-                    <div class="camposGrid">
-                        <label for="nomeAtleta">
-                            Nome Completo
-                            <input type="text" name="nome" id="nomeAtleta" maxlength="100" required>
-                        </label>
-                        <label for="dataNascimentoAtleta">
-                            Data de Nascimento
-                            <input type="date" name="data_nascimento" id="dataNascimentoAtleta">
-                        </label>
-                        <label for="generoAtleta">
-                            Gênero
-                            <select name="id_genero" id="generoAtleta" class="selectGeneroAtleta">
-                                <option value="">Selecione</option>
-                            </select>
-                        </label>
-                        <label for="alturaAtleta">
-                            Altura
-                            <input
-                                type="text"
-                                name="altura"
-                                id="alturaAtleta"
-                                inputmode="decimal"
-                                maxlength="6"
-                                placeholder="Ex: 1,75"
-                            >
-                        </label>
-                        <label for="pesoAtleta">
-                            Peso
-                            <input
-                                type="text"
-                                name="peso"
-                                id="pesoAtleta"
-                                inputmode="decimal"
-                                maxlength="6"
-                                placeholder="Ex: 75,50"
-                            >
-                        </label>
-                    </div>
-                </div>
-
-                <div class="blocoFormulario credenciaisUsuario">
-                    <h2 class="tituloBlocoFormulario">Credenciais de usuário</h2>
-                    <div class="camposGrid">
-                        <label for="emailAtleta">
-                            E-mail
-                            <input
-                                type="email"
-                                name="email"
-                                id="emailAtleta"
-                                placeholder="usuario@email.com"
-                                required
-                            >
-                        </label>
-                        <label for="senhaAtleta">
-                            Senha
-                            <input type="password" name="senha" id="senhaAtleta" minlength="6" required>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="modalAtletaAcoes">
-                    <button class="btnPrimario" type="submit">Cadastrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="modalAtleta modalAtletaEdicao" id="modalAtletaEdicao" aria-hidden="true">
-        <div class="modalAtletaOverlay" data-modal-close-edit></div>
-        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalAtletaEdicaoTitulo">
-            <div class="modalAtletaHeader">
-                <h2 id="modalAtletaEdicaoTitulo">Editar atleta</h2>
-                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-modal-close-edit>x</button>
-            </div>
-            <form class="modalAtletaForm modalAtletaFormEditar" action="#">
-                <input type="hidden" name="id">
-                <input type="hidden" name="status" value="ativo">
-
-                <div class="blocoFormulario">
-                    <h2 class="tituloBlocoFormulario">Informações pessoais</h2>
-                    <div class="camposGrid">
-                        <label>
-                            Nome Completo
-                            <input type="text" name="nome" maxlength="100" required>
-                        </label>
-                        <label>
-                            Data de Nascimento
-                            <input type="date" name="data_nascimento">
-                        </label>
-                        <label>
-                            Gênero
-                            <select name="id_genero" class="selectGeneroAtletaEdicao">
-                                <option value="">Selecione</option>
-                            </select>
-                        </label>
-                        <label>
-                            Altura
-                            <input
-                                type="text"
-                                name="altura"
-                                inputmode="decimal"
-                                maxlength="6"
-                                placeholder="Ex: 1,75"
-                            >
-                        </label>
-                        <label>
-                            Peso
-                            <input
-                                type="text"
-                                name="peso"
-                                inputmode="decimal"
-                                maxlength="6"
-                                placeholder="Ex: 75,50"
-                            >
-                        </label>
-                    </div>
-                </div>
-
-                <div class="modalAtletaAcoes">
-                    <button class="btnSecundario btnAlternarStatusAtleta" type="button">Inativar</button>
-                    <button class="btnPrimario" type="submit">Salvar alteracoes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="modalAtleta modalConfirmacao" id="modalConfirmacao" aria-hidden="true">
-        <div class="modalAtletaOverlay" data-confirm-close></div>
-        <div class="modalAtletaCard" role="dialog" aria-modal="true" aria-labelledby="modalConfirmacaoTitulo">
-            <div class="modalAtletaHeader">
-                <h2 id="modalConfirmacaoTitulo">Confirmar ação</h2>
-                <button class="modalAtletaFechar" type="button" aria-label="Fechar" data-confirm-close>x</button>
-            </div>
-            <p class="modalConfirmacaoTexto" id="modalConfirmacaoTexto">Tem certeza que deseja continuar?</p>
-            <div class="modalAtletaAcoes">
-                <button class="btnSecundario" type="button" data-confirm-cancelar>Cancelar</button>
-                <button class="btnExcluir" type="button" data-confirm-ok>Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/notificacao.js"></script>
     <script src="../js/menu_lateral.js"
     data-menuHtml="../componentes/menuLateral.html"
     data-menuCss="../componentes/menuLateral.css"
     data-menuTarget=".menu"></script>
-      <script src="../js/valida_sessao.js"></script>
-      <script src="../js/atleta/atletaSessao.js"></script>
-      <script src="../js/atleta/atletaCRUD.js"></script>
-      <script src="../js/atleta/atleta.js"></script>
-
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/atleta/atletaSessao.js"></script>
+    <script src="../js/atleta/atletaCRUD.js"></script>
+    <script src="../js/atleta/atleta_index.js"></script>
 </body>
 </html>

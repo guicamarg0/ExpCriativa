@@ -65,7 +65,7 @@ function renderizarHome(sessao) {
 
   const idNivel = Number(sessao.id_nivel || 0);
   const perfil = sessao.perfil || {};
-  const nome = (perfil.nome || sessao.usuario?.nome || "Usuário").trim();
+  const nome = perfil.nome || sessao.usuario?.nome || "Usuário";
   if (tipoUsuario) {
     tipoUsuario.textContent = `Tipo de usuário: ${obterTipoUsuario(sessao)}`;
   }

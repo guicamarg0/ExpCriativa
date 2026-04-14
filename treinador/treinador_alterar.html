@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Novo Treinador</title>
+    <title>Alterar Treinador</title>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../equipe/equipe.css" />
     <link rel="stylesheet" href="treinador_novo.css" />
@@ -12,8 +12,9 @@
     <div class="conteudo">
       <div class="menu"></div>
       <div class="conteudoEquipe">
-        <div class="headerConteudo"><h1>Novo Treinador</h1></div>
-        <form id="formTreinadorNovo" class="modalEquipeForm">
+        <div class="headerConteudo"><h1>Alterar Treinador</h1></div>
+        <form id="formTreinadorEdicao" class="modalEquipeForm">
+          <input type="hidden" name="id" />
           <div class="blocoFormulario">
             <div class="camposGrid">
               <label>Nome <input type="text" name="nome"></label>
@@ -25,7 +26,7 @@
               <label>Senha <input type="password" name="senha"></label>
               <label>Status
                 <select name="status">
-                  <option value="ativo" selected>Ativo</option>
+                  <option value="ativo">Ativo</option>
                   <option value="inativo">Inativo</option>
                 </select>
               </label>
@@ -45,6 +46,6 @@
       data-menuTarget=".menu"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/treinador/treinadorCRUD.js"></script>
-    <script src="../js/treinador/treinador_novo.js"></script>
+    <script src="../js/treinador/treinador_alterar.js"></script>
   </body>
 </html>

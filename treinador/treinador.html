@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treinadores</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../equipe/equipe.css" />
+    <link rel="stylesheet" href="treinador_novo.css" />
+  </head>
+  <body>
+    <div class="conteudo">
+      <div class="menu"></div>
+      <div class="conteudoEquipe">
+        <div class="headerConteudo">
+          <h1>Treinadores</h1>
+          <div class="acoesHeaderTreinador">
+            <a href="treinador_novo.html">+ Adicionar treinador</a>
+          </div>
+        </div>
+        <div class="cabecalhoTreinadores" aria-hidden="true">
+          <span></span>
+          <span>Nome</span>
+          <span>E-mail</span>
+          <span>Equipes responsável</span>
+          <span>Telefone</span>
+          <span>CREF</span>
+          <span>Status</span>
+        </div>
+        <div class="listViewEquipes listViewTreinadores" id="listViewTreinadores"></div>
+      </div>
+    </div>
+
+    <script src="../js/menu_lateral.js"
+      data-menuHtml="../componentes/menuLateral.html"
+      data-menuCss="../componentes/menuLateral.css"
+      data-menuTarget=".menu"></script>
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/treinador/treinadorSessao.js"></script>
+    <script src="../js/treinador/treinadorCRUD.js"></script>
+    <script src="../js/treinador/treinador_index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alterar Equipe</title>
+    <link rel="stylesheet" href="equipe.css" />
+  </head>
+  <body>
+    <div class="conteudo">
+      <div class="menu"></div>
+      <div class="conteudoEquipe">
+        <div class="headerConteudo"><h1>Alterar Equipe</h1></div>
+        <form id="formEquipeEdicao" class="modalEquipeForm">
+          <input type="hidden" name="id" />
+          <div class="blocoEquipeForm">
+            <div class="camposGridEquipe">
+              <label>Nome <input type="text" name="nome" required /></label>
+              <label>Categoria <input type="text" name="categoria" /></label>
+              <label>ID da modalidade <input type="number" name="id_modalidade" min="1" /></label>
+              <label>ID do genero <input type="number" name="id_genero" min="1" /></label>
+              <label>ID do treinador <input type="number" name="id_treinador_responsavel" min="1" /></label>
+              <label>IDs dos atletas <input type="text" name="atletas_ids" /></label>
+              <label>Status
+                <select name="status">
+                  <option value="ativa">Ativa</option>
+                  <option value="inativa">Inativa</option>
+                </select>
+              </label>
+            </div>
+            <label>Descricao <textarea name="descricao" rows="3"></textarea></label>
+          </div>
+          <div class="modalEquipeAcoes">
+            <a href="equipe.html">Voltar</a>
+            <button type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/menu_lateral.js"
+      data-menuHtml="../componentes/menuLateral.html"
+      data-menuCss="../componentes/menuLateral.css"
+      data-menuTarget=".menu"></script>
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/equipe/equipeCRUD.js"></script>
+    <script src="../js/equipe/equipe_alterar.js"></script>
+  </body>
+</html>

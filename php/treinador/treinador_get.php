@@ -19,7 +19,7 @@
         exit;
     }
 
-    $statusFiltro = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : 'ativo';
+    $statusFiltro = isset($_GET['status']) ? strtolower($_GET['status']) : 'ativo';
     $filtrarStatus = true;
     $statusBanco = 'ativo';
 

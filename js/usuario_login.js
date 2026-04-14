@@ -16,8 +16,8 @@ function limparStorageLogin() {
 }
 
 async function login() {
-  const email = (document.getElementById("email")?.value || "").trim();
-  const senha = (document.getElementById("senha")?.value || "").trim();
+  const email = document.getElementById("email")?.value || "";
+  const senha = document.getElementById("senha")?.value || "";
 
   if (!email || !senha) {
     alert("Informe e-mail e senha.");

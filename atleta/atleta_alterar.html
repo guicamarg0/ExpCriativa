@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Atleta</title>
+    <link rel="stylesheet" href="atleta.css">
+</head>
+<body>
+    <div class="conteudo">
+        <div class="menu"></div>
+        <div class="conteudoAtleta">
+            <div class="headerConteudo">
+                <h1>Alterar Atleta</h1>
+            </div>
+            <form id="formAtletaEdicao" class="modalAtletaForm">
+                <input type="hidden" name="id">
+                <div class="blocoFormulario">
+                    <div class="camposGrid">
+                        <label>Nome <input type="text" name="nome" required></label>
+                        <label>Data de nascimento <input type="date" name="data_nascimento"></label>
+                        <label>ID do gênero <input type="number" name="id_genero" min="1"></label>
+                        <label>Altura <input type="text" name="altura"></label>
+                        <label>Peso <input type="text" name="peso"></label>
+                        <label>Status
+                            <select name="status">
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="modalAtletaAcoes">
+                    <a href="atleta.html">Voltar</a>
+                    <button type="submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/menu_lateral.js"
+    data-menuHtml="../componentes/menuLateral.html"
+    data-menuCss="../componentes/menuLateral.css"
+    data-menuTarget=".menu"></script>
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/atleta/atletaCRUD.js"></script>
+    <script src="../js/atleta/atleta_alterar.js"></script>
+</body>
+</html>

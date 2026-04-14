@@ -52,6 +52,26 @@
     row-gap: 0.6em;
 }
 
+.acoesHeaderEsportes a,
+.modalEsporteAcoes a,
+.modalEsporteAcoes button {
+    padding: 0.6em 1.2em;
+    background: #221C69;
+    color: #FFFFFF;
+    border: 2px solid #221C69;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acoesHeaderEsportes a:hover,
+.modalEsporteAcoes a:hover,
+.modalEsporteAcoes button:hover {
+    background: #1A154F;
+    border-color: #1A154F;
+}
+
 .acoesHeaderEsportes label {
     color: var(--cor-primaria);
     font-weight: 600;

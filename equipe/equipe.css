@@ -52,6 +52,26 @@
     row-gap: 0.6em;
 }
 
+.acoesHeaderEquipe a,
+.modalEquipeAcoes a,
+.modalEquipeAcoes button{
+    padding: 0.6em 1.2em;
+    background: #221C69;
+    color: #FFFFFF;
+    border: 2px solid #221C69;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acoesHeaderEquipe a:hover,
+.modalEquipeAcoes a:hover,
+.modalEquipeAcoes button:hover{
+    background: #1A154F;
+    border-color: #1A154F;
+}
+
 .acoesHeaderEquipe label{
     color: var(--cor-primaria);
     font-weight: 600;
@@ -242,21 +262,6 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.acoesVinculoAtletas{
-    display: grid;
-    gap: 0.6em;
-}
-
-.acoesVinculoAtletas .btnSecundario{
-    justify-self: start;
-}
-
-.resumoAtletasVinculados{
-    color: var(--cor-primaria);
-    font-weight: 500;
-    margin: 0;
-}
-
 .modalEquipeAcoes{
     display: flex;
     flex-wrap: wrap;
@@ -314,73 +319,6 @@
     color: var(--cor-branco);
 }
 
-.modalConfirmacao .modalEquipeCard{
-    width: min(440px, 92vw);
-}
-
-.modalConfirmacaoTexto{
-    color: var(--cor-primaria);
-    line-height: 1.4;
-    margin-bottom: 1em;
-}
-
-.modalVinculoAtletas .modalEquipeCard{
-    width: min(900px, 96vw);
-}
-
-.listaVinculoAtletas{
-    max-height: 52vh;
-    overflow: auto;
-    border: 2px solid rgba(34, 28, 105, 0.22);
-    border-radius: 10px;
-}
-
-.cabecalhoVinculoAtletas,
-.linhaVinculoAtleta{
-    display: grid;
-    grid-template-columns: 42px minmax(170px, 1.4fr) minmax(95px, 0.8fr) minmax(95px, 0.8fr) minmax(170px, 1.3fr);
-    align-items: center;
-    column-gap: 0.9em;
-}
-
-.cabecalhoVinculoAtletas{
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: #f4f5ff;
-    border-bottom: 2px solid rgba(34, 28, 105, 0.25);
-    padding: 0.55em 0.8em;
-    color: var(--cor-primaria);
-    font-weight: 700;
-}
-
-.linhaVinculoAtleta{
-    padding: 0.6em 0.8em;
-    border-bottom: 1px solid rgba(34, 28, 105, 0.18);
-}
-
-.linhaConflitoVinculo{
-    background: rgba(176, 0, 32, 0.08);
-}
-
-.linhaVinculoAtleta:last-child{
-    border-bottom: none;
-}
-
-.linhaVinculoAtleta p{
-    margin: 0;
-    color: var(--cor-primaria);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.linhaVinculoAtleta input[type="checkbox"]{
-    width: 18px;
-    height: 18px;
-    accent-color: var(--cor-primaria);
-}
-
 @media (max-width: 1200px){
     .cabecalhoEquipes{
         display: none;
@@ -402,17 +340,5 @@
         text-overflow: initial;
     }
 
-    .cabecalhoVinculoAtletas{
-        display: none;
-    }
-
-    .linhaVinculoAtleta{
-        grid-template-columns: 42px 1fr;
-        row-gap: 0.35em;
-    }
-
-    .linhaVinculoAtleta p{
-        white-space: normal;
-    }
 }
 

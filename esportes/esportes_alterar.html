@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Modalidade</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="esportes.css">
+</head>
+<body>
+    <div class="conteudo">
+        <div class="menu"></div>
+        <div class="conteudoEsportes">
+            <div class="headerConteudo">
+                <h1>Alterar Modalidade</h1>
+            </div>
+            <form id="formEsporteEdicao" class="modalEsporteForm">
+                <input type="hidden" name="id">
+                <div class="blocoFormulario">
+                    <div class="camposGrid">
+                        <label>
+                            Nome
+                            <input type="text" name="nome" maxlength="50" required>
+                        </label>
+                        <label>
+                            Status
+                            <select name="status">
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="modalEsporteAcoes">
+                    <a href="esportes.html">Voltar</a>
+                    <button type="submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/menu_lateral.js"
+        data-menuHtml="../componentes/menuLateral.html"
+        data-menuCss="../componentes/menuLateral.css"
+        data-menuTarget=".menu"></script>
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/esportes/esportesCRUD.js"></script>
+    <script src="../js/esportes/esportes_alterar.js"></script>
+</body>
+</html>
