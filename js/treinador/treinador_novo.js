@@ -1,3 +1,5 @@
+treinador_novo.js 
+
 document.getElementById("enviar").addEventListener("click", () => {
     novo ();
 });
