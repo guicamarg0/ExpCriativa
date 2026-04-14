@@ -44,7 +44,8 @@ function preencherTabelaAtletas() {
 }
 
 async function buscarAtletas() {
-    const resposta = await window.atletaCRUD.listarAtletas("todos");
+    const retorno = await fetch("../php/atleta/atleta_get.php?status=todos");
+    const resposta = await retorno.json();
     atletasView = resposta.status === "ok" && Array.isArray(resposta.data) ? resposta.data : [];
     preencherTabelaAtletas();
 }

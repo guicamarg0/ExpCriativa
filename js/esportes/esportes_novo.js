@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
 
         const formData = new FormData(form);
-        await window.esportesCRUD.criarEsporte(formData);
+        await fetch("../php/esportes/esportes_novo.php", {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "esportes.html";
     });
 });

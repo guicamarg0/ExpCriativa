@@ -7,7 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        await window.treinadorCRUD.criarTreinador(formData);
+        await fetch("../php/treinador/treinador_novo.php", {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "treinador.html";
     });
 });

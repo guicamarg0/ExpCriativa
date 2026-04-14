@@ -40,7 +40,8 @@ function preencherTabelaTreinadores() {
 }
 
 async function buscarTreinadores() {
-    const resposta = await window.treinadorCRUD.listarTreinadores("todos");
+    const retorno = await fetch("../php/treinador/treinador_get.php?status=todos");
+    const resposta = await retorno.json();
     treinadoresView = resposta.status === "ok" && Array.isArray(resposta.data) ? resposta.data : [];
     preencherTabelaTreinadores();
 }

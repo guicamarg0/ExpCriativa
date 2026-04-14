@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const resposta = await window.atletaCRUD.buscarAtletaPorId(id, "todos");
+    const retorno = await fetch(`../php/atleta/atleta_get.php?id=${id}&status=todos`);
+    const resposta = await retorno.json();
     if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
         window.location.href = "atleta.html";
         return;
@@ -28,7 +29,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        await window.atletaCRUD.editarAtleta(formData);
+        await fetch("../php/atleta/atleta_alterar.php", {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "atleta.html";
     });
 });

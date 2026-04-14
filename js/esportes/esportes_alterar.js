@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const resposta = await window.esportesCRUD.buscarEsportePorId(id, "todos");
+    const retorno = await fetch(`../php/esportes/esportes_get.php?id=${id}&status=todos`);
+    const resposta = await retorno.json();
     if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
         window.location.href = "esportes.html";
         return;
@@ -24,7 +25,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        await window.esportesCRUD.editarEsporte(id, formData);
+        await fetch(`../php/esportes/esportes_alterar.php?id=${id}`, {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "esportes.html";
     });
 });

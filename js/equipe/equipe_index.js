@@ -39,7 +39,8 @@ function preencherTabelaEquipes() {
 
 async function buscarEquipes() {
     const sessao = await window.equipeSessao.obterSessaoEquipeAtual();
-    const resposta = await window.equipeCRUD.listarEquipes("todos");
+    const retorno = await fetch("../php/equipe/equipe_get.php?status=todos");
+    const resposta = await retorno.json();
     const data = resposta.status === "ok" && Array.isArray(resposta.data) ? resposta.data : [];
     equipesView = window.equipeSessao.filtrarEquipesPorSessao(data, sessao);
     preencherTabelaEquipes();

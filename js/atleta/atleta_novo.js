@@ -7,7 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        await window.atletaCRUD.criarAtleta(formData);
+        await fetch("../php/atleta/atleta_novo.php", {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "atleta.html";
     });
 });

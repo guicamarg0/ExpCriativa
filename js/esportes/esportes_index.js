@@ -34,7 +34,8 @@ function preencherTabelaEsportes() {
 }
 
 async function buscarEsportes() {
-    const resposta = await window.esportesCRUD.listarEsportes("todos");
+    const retorno = await fetch("../php/esportes/esportes_get.php?status=todos");
+    const resposta = await retorno.json();
     esportesView = resposta.status === "ok" && Array.isArray(resposta.data) ? resposta.data : [];
     preencherTabelaEsportes();
 }

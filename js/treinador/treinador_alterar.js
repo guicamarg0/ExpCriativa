@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const resposta = await window.treinadorCRUD.buscarTreinadorPorId(id, "todos");
+    const retorno = await fetch(`../php/treinador/treinador_get.php?id=${id}&status=todos`);
+    const resposta = await retorno.json();
     if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
         window.location.href = "treinador.html";
         return;
@@ -29,7 +30,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        await window.treinadorCRUD.editarTreinador(formData);
+        await fetch("../php/treinador/treinador_alterar.php", {
+            method: "POST",
+            body: formData
+        });
         window.location.href = "treinador.html";
     });
 });
