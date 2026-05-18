@@ -1,8 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formEsporteNovo");
-    if (!form) {
-        return;
-    }
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();

@@ -1,21 +1,9 @@
-document.addEventListener("DOMContentLoaded", async () => {
+﻿document.addEventListener("DOMContentLoaded", async () => {
     const form = document.getElementById("formTreinadorEdicao");
-    if (!form) {
-        return;
-    }
 
     const id = new URLSearchParams(window.location.search).get("id");
-    if (!id) {
-        window.location.href = "treinador.html";
-        return;
-    }
-
-    const retorno = await fetch(`../php/treinador/treinador_get.php?id=${id}&status=todos`);
+    const retorno = await fetch(`../php/treinador/treinador_get.php?id=${id}`);
     const resposta = await retorno.json();
-    if (resposta.status !== "ok" || !Array.isArray(resposta.data) || !resposta.data[0]) {
-        window.location.href = "treinador.html";
-        return;
-    }
 
     const treinador = resposta.data[0];
     form.elements.id.value = treinador.id || "";

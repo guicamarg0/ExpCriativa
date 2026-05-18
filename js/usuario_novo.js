@@ -1,36 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-  valida_sessao();
-});
+﻿document.addEventListener("DOMContentLoaded", () => {
+  const botao = document.getElementById("enviar");
 
-document.getElementById("enviar").addEventListener("click", () => {
-  novo();
-});
+  botao.addEventListener("click", async () => {
+    const fd = new FormData();
+    fd.append("nome", document.getElementById("nome")?.value || "");
+    fd.append("usuario", document.getElementById("usuario")?.value || "");
+    fd.append("senha", document.getElementById("senha")?.value || "");
+    fd.append("email", document.getElementById("email")?.value || "");
+    fd.append("instagram", document.getElementById("instagram")?.value || "");
+    fd.append("ativo", document.getElementById("ativo")?.value || "");
 
-async function novo() {
-  var nome = document.getElementById("nome").value;
-  var usuario = document.getElementById("usuario").value;
-  var senha = document.getElementById("senha").value;
-  var email = document.getElementById("email").value;
-  var instagram = document.getElementById("instagram").value;
-  var ativo = document.getElementById("ativo").value;
+    await fetch("../php/usuario_novo.php", {
+      method: "POST",
+      body: fd
+    });
 
-  const fd = new FormData();
-  fd.append("nome", nome);
-  fd.append("usuario", usuario);
-  fd.append("senha", senha);
-  fd.append("email", email);
-  fd.append("instagram", instagram);
-  fd.append("ativo", ativo);
-
-  const retorno = await fetch("../php/usuario_novo.php", {
-    method: "POST",
-    body: fd,
-  });
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    alert("SUCESSO: " + resposta.mensagem);
     window.location.href = "../exemplo/";
-  } else {
-    alert("ERRO: " + resposta.mensagem);
-  }
-}
+  });
+});

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -15,14 +15,17 @@
             </div>
             <form id="formAtletaNovo" class="modalAtletaForm">
                 <div class="blocoFormulario">
+                    <h2 class="tituloBlocoFormulario">Dados do Atleta</h2>
                     <div class="camposGrid">
-                        <label>Nome <input type="text" name="nome" required></label>
+                        <label>Nome <input type="text" name="nome"></label>
                         <label>Data de nascimento <input type="date" name="data_nascimento"></label>
-                        <label>ID do gênero <input type="number" name="id_genero" min="1"></label>
+                        <label>GÃªnero
+                            <select name="id_genero" id="id_genero">
+                                <option value="">Selecione um gÃªnero</option>
+                            </select>
+                        </label>
                         <label>Altura <input type="text" name="altura"></label>
                         <label>Peso <input type="text" name="peso"></label>
-                        <label>E-mail <input type="email" name="email" required></label>
-                        <label>Senha <input type="password" name="senha" required></label>
                         <label>Status
                             <select name="status">
                                 <option value="ativo" selected>Ativo</option>
@@ -31,9 +34,19 @@
                         </label>
                     </div>
                 </div>
+            </form>
+
+            <form id="formUsuarioAtletaNovo" class="modalAtletaForm">
+                <div class="blocoFormulario credenciaisUsuario">
+                    <h2 class="tituloBlocoFormulario">Cadastro de Usuario</h2>
+                    <div class="camposGrid">
+                        <label>E-mail <input type="text" name="email"></label>
+                        <label>Senha <input type="password" name="senha"></label>
+                    </div>
+                </div>
                 <div class="modalAtletaAcoes">
-                    <a href="atleta.html">Voltar</a>
-                    <button type="submit">Salvar</button>
+                    <a href="atleta.html"><i class="bi bi-arrow-left"></i> Voltar</a>
+                    <button type="submit"><i class="bi bi-check-circle"></i> Salvar</button>
                 </div>
             </form>
         </div>
@@ -44,6 +57,10 @@
     data-menuCss="../componentes/menuLateral.css"
     data-menuTarget=".menu"></script>
     <script src="../js/valida_sessao.js"></script>
+    <script src="../js/select_loader.js"></script>
     <script src="../js/atleta/atleta_novo.js"></script>
 </body>
 </html>
+
+
+

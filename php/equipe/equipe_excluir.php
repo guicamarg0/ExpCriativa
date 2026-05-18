@@ -1,79 +1,20 @@
-<?php
-    include_once('../conexao.php');
+﻿<?php
+include_once('../conexao.php');
 
-    $retorno = [
-        'status'    => '',
-        'mensagem'  => '',
-        'data'      => []
-    ];
+$id = (int) $_GET['id'];
 
-    if(!empty($conexao_error)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro de conexao com o banco.',
-            'data'      => []
-        ];
+$stmt = $conexao->prepare("DELETE FROM equipes WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
 
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
+$retorno = [
+    'status' => 'ok',
+    'mensagem' => 'Equipe excluida com sucesso.',
+    'data' => []
+];
 
-    if(isset($_GET['id'])){
-        $id = (int) $_GET['id'];
+$stmt->close();
+$conexao->close();
 
-        if($id <= 0){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'ID invalido.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
-
-        $stmt = $conexao->prepare("DELETE FROM equipes WHERE id = ?");
-        if(!$stmt){
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Erro ao preparar exclusao.',
-                'data'      => []
-            ];
-
-            header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
-            exit;
-        }
-
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-
-        if($stmt->affected_rows > 0){
-            $retorno = [
-                'status'    => 'ok',
-                'mensagem'  => 'Equipe excluida com sucesso.',
-                'data'      => []
-            ];
-        }else{
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Equipe nao excluida.',
-                'data'      => []
-            ];
-        }
-
-        $stmt->close();
-    }else{
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'E necessario informar um ID para exclusao.',
-            'data'      => []
-        ];
-    }
-
-    $conexao->close();
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
+header("Content-type:application/json;charset:utf-8");
+echo json_encode($retorno);

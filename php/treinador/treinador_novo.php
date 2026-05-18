@@ -1,151 +1,66 @@
-<?php
-    include_once('../conexao.php');
+﻿<?php
+include_once('../conexao.php');
 
-    $retorno = [
-        'status'    => '',
-        'mensagem'  => '',
-        'data'      => []
-    ];
+$nome = $_POST['nome'];
+$data_nascimento = $_POST['data_nascimento'] ?? '';
+$telefone = $_POST['telefone'] ?? '';
+$cref = $_POST['cref'] ?? '';
+$data_inicio = $_POST['data_inicio'] ?? '';
+$email = $_POST['email'];
+$senha = $_POST['senha'];
+$status = 'ativo';
 
-    if(!empty($conexao_error)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro de conexao com o banco.',
-            'data'      => []
-        ];
+$stmtUsuario = $conexao->prepare(
+    "INSERT INTO usuarios (email, senha, id_nivel, status) VALUES (?, ?, 2, ?)"
+);
+$stmtUsuario->bind_param("sss", $email, $senha, $status);
+$stmtUsuario->execute();
+$idUsuario = (int) $stmtUsuario->insert_id;
 
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
+$stmtTreinador = $conexao->prepare(
+    "INSERT INTO treinadores (
+        id_usuario,
+        nome,
+        cref,
+        telefone,
+        data_nascimento,
+        data_inicio,
+        status
+    ) VALUES (
+        ?,
+        ?,
+        ?,
+        ?,
+        NULLIF(?, ''),
+        NULLIF(?, ''),
+        ?
+    )"
+);
 
-    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
-    $data_nascimento = isset($_POST['data_nascimento']) ? $_POST['data_nascimento'] : '';
-    $telefone = isset($_POST['telefone']) ? $_POST['telefone'] : '';
-    $cref = isset($_POST['cref']) ? $_POST['cref'] : '';
-    $data_inicio = isset($_POST['data_inicio']) ? $_POST['data_inicio'] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
-    $status = 'ativo';
+$stmtTreinador->bind_param(
+    "issssss",
+    $idUsuario,
+    $nome,
+    $cref,
+    $telefone,
+    $data_nascimento,
+    $data_inicio,
+    $status
+);
+$stmtTreinador->execute();
 
-    if($nome === '' || $cref === '' || $email === '' || $senha === ''){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Nome, CREF, e-mail e senha são obrigatórios.',
-            'data'      => []
-        ];
+$retorno = [
+    'status' => 'ok',
+    'mensagem' => 'Treinador cadastrado com sucesso.',
+    'data' => [
+        'id' => $stmtTreinador->insert_id,
+        'id_usuario' => $idUsuario
+    ]
+];
 
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
+$stmtTreinador->close();
+$stmtUsuario->close();
+$conexao->close();
 
-    $stmtUsuario = $conexao->prepare(
-        "INSERT INTO usuarios (email, senha, id_nivel, status) VALUES (?, ?, 2, ?)"
-    );
-
-    if(!$stmtUsuario){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar cadastro de usuário.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $stmtTreinador = $conexao->prepare(
-        "INSERT INTO treinadores (
-            id_usuario,
-            nome,
-            cref,
-            telefone,
-            data_nascimento,
-            data_inicio,
-            status
-        ) VALUES (
-            ?,
-            ?,
-            ?,
-            ?,
-            NULLIF(?, ''),
-            NULLIF(?, ''),
-            ?
-        )"
-    );
-
-    if(!$stmtTreinador){
-        $stmtUsuario->close();
-
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar cadastro de treinador.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $conexao->begin_transaction();
-    $mensagemErro = '';
-    $idUsuario = 0;
-
-    $stmtUsuario->bind_param("sss", $email, $senha, $status);
-    if(!$stmtUsuario->execute()){
-        if($conexao->errno === 1062){
-            $mensagemErro = 'E-mail já cadastrado.';
-        }else{
-            $mensagemErro = 'Falha ao cadastrar credenciais do usuário.';
-        }
-    }else{
-        $idUsuario = (int) $stmtUsuario->insert_id;
-
-        $stmtTreinador->bind_param(
-            "issssss",
-            $idUsuario,
-            $nome,
-            $cref,
-            $telefone,
-            $data_nascimento,
-            $data_inicio,
-            $status
-        );
-
-        if(!$stmtTreinador->execute()){
-            if($conexao->errno === 1062){
-                $mensagemErro = 'CREF já cadastrado.';
-            }else{
-                $mensagemErro = 'Falha ao cadastrar treinador.';
-            }
-        }
-    }
-
-    if($mensagemErro !== ''){
-        $conexao->rollback();
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => $mensagemErro,
-            'data'      => []
-        ];
-    }else{
-        $conexao->commit();
-        $retorno = [
-            'status'    => 'ok',
-            'mensagem'  => 'Treinador cadastrado com sucesso.',
-            'data'      => [
-                'id' => $stmtTreinador->insert_id,
-                'id_usuario' => $idUsuario
-            ]
-        ];
-    }
-
-    $stmtTreinador->close();
-    $stmtUsuario->close();
-    $conexao->close();
-
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
+header("Content-type:application/json;charset:utf-8");
+echo json_encode($retorno);

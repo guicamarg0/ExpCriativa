@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -15,14 +15,13 @@
         <div class="headerConteudo"><h1>Novo Treinador</h1></div>
         <form id="formTreinadorNovo" class="modalEquipeForm">
           <div class="blocoFormulario">
+            <h2 class="tituloBlocoFormulario">Dados do Treinador</h2>
             <div class="camposGrid">
               <label>Nome <input type="text" name="nome"></label>
               <label>Data de nascimento <input type="date" name="data_nascimento"></label>
               <label>Telefone <input type="text" name="telefone"></label>
               <label>CREF <input type="text" name="cref"></label>
-              <label>Data de início <input type="date" name="data_inicio"></label>
-              <label>E-mail <input type="email" name="email"></label>
-              <label>Senha <input type="password" name="senha"></label>
+              <label>Data de inÃ­cio <input type="date" name="data_inicio"></label>
               <label>Status
                 <select name="status">
                   <option value="ativo" selected>Ativo</option>
@@ -31,9 +30,19 @@
               </label>
             </div>
           </div>
+        </form>
+
+        <form id="formUsuarioTreinadorNovo" class="modalEquipeForm">
+          <div class="blocoFormulario credenciaisUsuario">
+            <h2 class="tituloBlocoFormulario">Cadastro de Usuario</h2>
+            <div class="camposGrid">
+              <label>E-mail <input type="text" name="email"></label>
+              <label>Senha <input type="password" name="senha"></label>
+            </div>
+          </div>
           <div class="modalEquipeAcoes">
-            <a href="treinador.html">Voltar</a>
-            <button type="submit">Salvar</button>
+            <a href="treinador.html"><i class="bi bi-arrow-left"></i> Voltar</a>
+            <button type="submit"><i class="bi bi-check-circle"></i> Salvar</button>
           </div>
         </form>
       </div>
@@ -47,3 +56,6 @@
     <script src="../js/treinador/treinador_novo.js"></script>
   </body>
 </html>
+
+
+

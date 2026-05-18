@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -15,11 +15,23 @@
           <input type="hidden" name="id" />
           <div class="blocoEquipeForm">
             <div class="camposGridEquipe">
-              <label>Nome <input type="text" name="nome" required /></label>
+              <label>Nome <input type="text" name="nome" /></label>
               <label>Categoria <input type="text" name="categoria" /></label>
-              <label>ID da modalidade <input type="number" name="id_modalidade" min="1" /></label>
-              <label>ID do genero <input type="number" name="id_genero" min="1" /></label>
-              <label>ID do treinador <input type="number" name="id_treinador_responsavel" min="1" /></label>
+              <label>Modalidade
+                <select name="id_modalidade" id="id_modalidade">
+                  <option value="">Selecione uma modalidade</option>
+                </select>
+              </label>
+              <label>Genero
+                <select name="id_genero" id="id_genero">
+                  <option value="">Selecione um genero</option>
+                </select>
+              </label>
+              <label>Treinador responsavel
+                <select name="id_treinador_responsavel" id="id_treinador_responsavel">
+                  <option value="">Selecione um treinador</option>
+                </select>
+              </label>
               <label>IDs dos atletas <input type="text" name="atletas_ids" /></label>
               <label>Status
                 <select name="status">
@@ -31,8 +43,8 @@
             <label>Descricao <textarea name="descricao" rows="3"></textarea></label>
           </div>
           <div class="modalEquipeAcoes">
-            <a href="equipe.html">Voltar</a>
-            <button type="submit">Salvar</button>
+            <a href="equipe.html"><i class="bi bi-arrow-left"></i> Voltar</a>
+            <button type="submit"><i class="bi bi-check-circle"></i> Salvar</button>
           </div>
         </form>
       </div>
@@ -43,6 +55,9 @@
       data-menuCss="../componentes/menuLateral.css"
       data-menuTarget=".menu"></script>
     <script src="../js/valida_sessao.js"></script>
+    <script src="../js/select_loader.js"></script>
     <script src="../js/equipe/equipe_alterar.js"></script>
   </body>
 </html>
+
+

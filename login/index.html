@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
 </head>
 <body>
     <main class="paginaLogin">
-        <section class="cardLogin" aria-label="Área de login">
+        <section class="cardLogin" aria-label="Ãrea de login">
             <img src="../assets/mitra_semfundo.png" alt="Logo Mitra" class="logoLogin">
             <h1>Bem-vindo ao Mitra</h1>
             <p class="subtituloLogin">Entre com suas credenciais</p>
@@ -17,20 +17,21 @@
             <form id="formLogin" class="formLogin" action="#">
                 <label for="email">
                     E-mail
-                    <input type="email" id="email" name="email" autocomplete="username" required>
+                    <input type="text" id="email" name="email" autocomplete="username">
                 </label>
 
                 <label for="senha">
                     Senha
-                    <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+                    <input type="password" id="senha" name="senha" autocomplete="current-password">
                 </label>
 
                 <button type="submit" id="entrar">Entrar</button>
             </form>
         </section>
     </main>
-
-    <script src="../js/notificacao.js"></script>
     <script src="../js/usuario_login.js"></script>
 </body>
 </html>
+
+
+
