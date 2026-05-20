@@ -8,7 +8,12 @@
         'data'      => []
     ];
 
-    $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE email = ? AND senha = ?");
+    $stmt = $conexao->prepare("
+    SELECT usuarios.*, treinadores.id AS id_treinador 
+    FROM usuarios 
+    LEFT JOIN treinadores ON treinadores.id_usuario = usuarios.id
+    WHERE usuarios.email = ? AND usuarios.senha = ?
+    ");
     $stmt->bind_param("ss",$_POST['email'],$_POST['senha']);
     
     // Recuperando informações do banco de dados

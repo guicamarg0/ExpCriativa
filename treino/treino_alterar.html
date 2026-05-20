@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nova modalidade</title>
+    <title>Novo treino</title>
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -113,7 +113,7 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-        <!--menu lateral-->
+        <!-- menu lateral -->
         <div class="col-12 col-md-3 col-lg-2 p-0 sidebar">
           <div class="logo-container">
             <img src="../assets/mitra.png" alt="Logo mitra" class="img-fluid" />
@@ -121,10 +121,18 @@
 
           <ul class="menu-lateral">
             <li class="menu-item">
-              <a href="esportes.html" class="menu-link">
+              <a href="../esportes/esportes.html" class="menu-link">
                 <i class="bi bi-dribbble"></i> Esportes
               </a>
             </li>
+
+            <li class="menu-item">
+              <a href="../treino/atletas_treino.html" class="menu-link">
+                <i class="bi-clipboard2-pulse"></i> Treinador - Planilhas de
+                Treino
+              </a>
+            </li>
+
             <li class="menu-item">
               <a href="#" class="menu-link">
                 <i class="bi bi-people"></i> Equipes
@@ -142,55 +150,77 @@
             </li>
           </ul>
         </div>
+        <!-- fim menu lateral -->
 
         <!--novo esporte - conteudo principal-->
         <div class="col-12 col-md-9 col-lg-10 conteudo-principal">
           <div>
-            <h1>Nova modalidade</h1>
+            <h1>Alteração de Treino</h1>
           </div>
           <hr class="mb-4" />
 
+          <div class="mb-3">
+            <input type="hidden" id="id" />
+            <input type="hidden" id="id_atleta" />
+            <input type="hidden" id="id_treinador" />
+          </div>
+
           <div class="form-container">
             <div class="mb-3">
-              <label for="nome" class="form-label fw-semibold text-secondary"
-                >Nome da modalidade</label
-              >
-              <input type="text" id="nome" class="form-control" />
-            </div>
-
-            <div class="mb-4">
-              <label for="status" class="form-label fw-semibold text-secondary"
-                >Status</label
-              >
-              <select id="status" name="status" class="form-select">
-                <option value="ativo">Ativo</option>
-                <option value="inativo">Inativo</option>
+              <label
+                for="modalidade"
+                class="form-label fw-semibold text-secondary"
+                >Modalidade do treino:
+              </label>
+              <select id="modalidade" class="form-select">
+                <option value="">Selecione uma modalidade</option>
               </select>
             </div>
 
-            <div class="mb-4">
-              <label
-                for="exercicios"
-                class="form-label fw-semibold text-secondary"
-                >Exercícios da modalidade</label
+            <div
+              class="mb-3"
+              id="lista_exercicios_container"
+              style="display: none"
+            >
+              <label class="form-label fw-semibold text-secondary"
+                >Exercícios vinculados</label
               >
-              <textarea
-                id="exercicios"
-                class="form-control"
-                rows="5"
-                placeholder="Digite um exercício por linha"
-              ></textarea>
+              <div id="lista_exercicios"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="data" class="form-label fw-semibold text-secondary"
+                >Data do treino:
+              </label>
+              <input type="date" id="data" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label
+                for="detalhes"
+                class="form-label fw-semibold text-secondary"
+                >Detalhes e informações do Treino:</label
+              >
+              <textarea id="detalhes" class="form-control" rows="5"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <!--Deve ser preenchido automaticamente -->
+              <label for="atleta" class="form-label fw-semibold text-secondary"
+                >O treino será vinculado ao Atleta:
+              </label>
+              <input type="text" id="atleta" class="form-control" readonly />
             </div>
 
             <div>
-              <button id="enviar" class="btn px-4">Enviar</button>
+              <button id="enviar" class="btn px-4">Salvar alterações</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="../js/esportes/esportes_novo.js"></script>
+    <script src="../js/treino/treino_alterar.js"></script>
     <script src="../js/valida_sessao.js"></script>
   </body>
 </html>

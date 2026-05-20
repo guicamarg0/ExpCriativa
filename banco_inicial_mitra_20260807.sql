@@ -33,7 +33,22 @@ DROP DATABASE IF EXISTS mitra_db;
      nome VARCHAR(50) NOT NULL UNIQUE,
      status VARCHAR(20) DEFAULT 'ativo'
  );
- 
+
+ -- Exercícios
+ CREATE TABLE exercicios (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     nome VARCHAR(150) NOT NULL UNIQUE
+ );
+
+ -- Associação Modalidade-Exercício
+ CREATE TABLE modalidade_exercicio (
+     modalidade_id INT NOT NULL,
+     exercicio_id INT NOT NULL,
+     PRIMARY KEY (modalidade_id, exercicio_id),
+     FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE,
+     FOREIGN KEY (exercicio_id) REFERENCES exercicios(id) ON DELETE CASCADE
+ );
+
  -- Treinadores
  CREATE TABLE treinadores (
      id INT AUTO_INCREMENT PRIMARY KEY,
@@ -94,7 +109,27 @@ DROP DATABASE IF EXISTS mitra_db;
      FOREIGN KEY (id_equipe) REFERENCES equipes(id) ON DELETE SET NULL,
      FOREIGN KEY (id_genero) REFERENCES genero(id)
  );
- 
+
+ CREATE TABLE treinos (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    id_atleta    INT NOT NULL,
+    id_treinador INT NOT NULL,
+    data         DATE NOT NULL,
+    modalidade   VARCHAR(100) NOT NULL,
+    detalhes     TEXT,
+    
+    -- chaves estrangeiras para garantir a integridade dos dados
+    FOREIGN KEY (id_atleta) REFERENCES atletas(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_treinador) REFERENCES treinadores(id) ON DELETE CASCADE
+);
+
+CREATE TABLE treino_exercicios (
+    treino_id INT NOT NULL,
+    exercicio_id INT NOT NULL,
+    PRIMARY KEY (treino_id, exercicio_id),
+    FOREIGN KEY (treino_id) REFERENCES treinos(id) ON DELETE CASCADE,
+    FOREIGN KEY (exercicio_id) REFERENCES exercicios(id) ON DELETE CASCADE
+);
  
  -- nível de acesso
  INSERT INTO nivel_acesso (nome) VALUES
