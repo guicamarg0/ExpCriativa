@@ -15,10 +15,32 @@ if (!empty($conexao_error)) {
         'data' => []
     ];
 
+<<<<<<< HEAD
     header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);
     exit;
 }
+=======
+    $stmt = $conexao->prepare("
+    SELECT usuarios.*, treinadores.id AS id_treinador 
+    FROM usuarios 
+    LEFT JOIN treinadores ON treinadores.id_usuario = usuarios.id
+    WHERE usuarios.email = ? AND usuarios.senha = ?
+    ");
+    $stmt->bind_param("ss",$_POST['email'],$_POST['senha']);
+    
+    // Recuperando informações do banco de dados
+    // Vou executar a query
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    // Criando um array vazio para receber o resultado
+    // do banco de Dados
+    $tabela = [];
+    if($resultado->num_rows > 0){
+        while($linha = $resultado->fetch_assoc()){
+            $tabela[] = $linha;
+        }
+>>>>>>> modalidade-esportes
 
 $email = $_POST['email'] ?? '';
 $senha = $_POST['senha'] ?? '';

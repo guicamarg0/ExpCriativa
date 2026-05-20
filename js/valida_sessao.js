@@ -1,7 +1,21 @@
 // valida_sessao.js - Redireciona para login se não houver sessão válida
 (function () {
+<<<<<<< HEAD
   const STORAGE_SESSION_KEY = "mitraSessionKey";
   const STORAGE_USER_KEY = "mitraUsuario";
+=======
+  // Caminho relativo para o PHP, ajusta automaticamente para subpastas
+  let phpPath = "php/valida_sessao.php";
+  const path = window.location.pathname;
+  if (path.includes("/home/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("/js/") || path.includes("/componentes/"))
+    phpPath = "../../php/valida_sessao.php";
+  else if (path.includes("../login/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../esportes/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../exemplo/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../equipe/")) phpPath = "../php/valida_sessao.php";
+  else phpPath = "../php/valida_sessao.php";
+>>>>>>> modalidade-esportes
 
   const scriptTag =
     document.currentScript ||

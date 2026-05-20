@@ -1,5 +1,10 @@
 <?php
+<<<<<<< HEAD
 include_once('../conexao.php');
+=======
+    header("Content-type:application/json;charset:utf-8");
+    include_once('../conexao.php');
+>>>>>>> modalidade-esportes
 
 // Configurando o padrão de retorno inicial
 $retorno = [
@@ -14,6 +19,7 @@ if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
     $nome    = $_POST['nome'];
     $status  = $_POST['status'];
 
+<<<<<<< HEAD
     // Prepara a declaração SQL para atualização no banco de dados
     // Usando prepared statements para prevenir SQL injection
     $stmt = $conexao->prepare("UPDATE modalidades SET nome = ?, status = ? WHERE id = ?");
@@ -24,6 +30,9 @@ if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
     if ($stmt->execute()) {
         // Verifica se alguma linha foi afetada pela atualização
         if ($stmt->affected_rows > 0) {
+=======
+        if($stmt->affected_rows >= 0){
+>>>>>>> modalidade-esportes
             $retorno = [
                 'status'    => 'ok',
                 'mensagem'  => 'Registro alterado com sucesso.',
@@ -48,6 +57,7 @@ if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
     }
 }
 
+<<<<<<< HEAD
 // Fecha a conexão com o banco de dados
 $conexao->close();
 
@@ -56,3 +66,6 @@ header("Content-type:application/json;charset=utf-8");
 // Codifica o array de retorno para JSON e o exibe
 echo json_encode($retorno);
 ?>
+=======
+    echo json_encode($retorno);
+>>>>>>> modalidade-esportes

@@ -1,4 +1,5 @@
 <?php
+    header("Content-Type: application/json; charset=utf-8");
     include_once('../conexao.php');
 
     $retorno = [
@@ -29,6 +30,7 @@
     }
 
     if(isset($_GET['id'])){
+<<<<<<< HEAD
         $id = (int) $_GET['id'];
         if($id <= 0){
             $retorno = [
@@ -133,6 +135,35 @@
                  ORDER BY atletas.nome ASC"
             );
         }
+=======
+        $stmt = $conexao->prepare(
+            "SELECT
+                atletas.id,
+                atletas.nome,
+                atletas.data_nascimento,
+                atletas.id_genero,
+                atletas.altura,
+                atletas.peso,
+                genero.nome AS nome_genero
+            FROM atletas
+            LEFT JOIN genero ON genero.id = atletas.id_genero
+            WHERE atletas.id = ?"
+        );
+        $stmt->bind_param("i",$_GET['id']);
+    }else{
+        $stmt = $conexao->prepare(
+            "SELECT
+                atletas.id,
+                atletas.nome,
+                atletas.data_nascimento,
+                atletas.id_genero,
+                atletas.altura,
+                atletas.peso,
+                genero.nome AS nome_genero
+            FROM atletas
+            LEFT JOIN genero ON genero.id = atletas.id_genero"
+        );
+>>>>>>> modalidade-esportes
     }
 
     if(!$stmt){
@@ -172,5 +203,9 @@
     $stmt->close();
     $conexao->close();
 
+<<<<<<< HEAD
     header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);
+=======
+    echo json_encode($retorno);
+>>>>>>> modalidade-esportes
