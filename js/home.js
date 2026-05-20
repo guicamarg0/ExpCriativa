@@ -1,6 +1,6 @@
 const HOME_STORAGE_SESSION_KEY = "mitraSessionKey";
 
-function escaparHtml(valor) {
+function escaparHtml(valor) { 
   return String(valor ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
