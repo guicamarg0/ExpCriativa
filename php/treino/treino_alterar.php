@@ -10,12 +10,13 @@
 
     if(isset($_GET['id'])){
         // Simulando as informações que vem do front
-        $nome        = $_POST['nome']; 
-        $status      = $_POST['status'];
+        $modalidade = $_POST['modalidade']; 
+        $data       = $_POST['data'];
+        $detalhes   = $_POST['detalhes'];
     
         // Preparando para inserção no banco de dados
-        $stmt = $conexao->prepare("UPDATE modalidades SET nome = ?,  status = ? WHERE id = ?");
-        $stmt->bind_param("ssi",$nome, $status, $_GET['id']);
+        $stmt = $conexao->prepare("UPDATE treinos SET modalidade = ?,  data = ?, detalhes = ? WHERE id = ?");
+        $stmt->bind_param("sssi",$modalidade, $data, $detalhes, $_GET['id']);
         $stmt->execute();
 
         if($stmt->affected_rows >= 0){

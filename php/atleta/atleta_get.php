@@ -1,4 +1,5 @@
 <?php
+    header("Content-Type: application/json; charset=utf-8");
     include_once('../conexao.php');
     $retorno = [
         'status'    => '', 
@@ -23,16 +24,13 @@
             "SELECT
                 atletas.id,
                 atletas.nome,
-                atletas.datadenasc,
+                atletas.data_nascimento,
                 atletas.id_genero,
                 atletas.altura,
                 atletas.peso,
-                id_genero.nome AS id_genero,
-                modalidades.nome AS modalidade,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_atleta = atletas.id) AS integrantes
+                genero.nome AS nome_genero
             FROM atletas
-            LEFT JOIN modalidades ON modalidades.id = atletas.id_modalidade
-            LEFT JOIN genero ON id_genero.id = atletas.id_genero
+            LEFT JOIN genero ON genero.id = atletas.id_genero
             WHERE atletas.id = ?"
         );
         $stmt->bind_param("i",$_GET['id']);
@@ -41,14 +39,13 @@
             "SELECT
                 atletas.id,
                 atletas.nome,
-                atletas.datadenasc,
+                atletas.data_nascimento,
                 atletas.id_genero,
                 atletas.altura,
                 atletas.peso,
-                id_genero.nome AS id_genero,
-                (SELECT COUNT(*) FROM equipes WHERE equipes.id_atleta = atletas.id) AS integrantes
+                genero.nome AS nome_genero
             FROM atletas
-            LEFT JOIN id_genero ON id_genero.id = atletas.id_genero"
+            LEFT JOIN genero ON genero.id = atletas.id_genero"
         );
     }
 
@@ -88,5 +85,4 @@
     $stmt->close();
     $conexao->close();
 
-    header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);

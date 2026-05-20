@@ -33,7 +33,7 @@ DROP DATABASE IF EXISTS mitra_db;
      nome VARCHAR(50) NOT NULL UNIQUE,
      status VARCHAR(20) DEFAULT 'ativo'
  );
- 
+
  -- Treinadores
  CREATE TABLE treinadores (
      id INT AUTO_INCREMENT PRIMARY KEY,
@@ -94,6 +94,19 @@ DROP DATABASE IF EXISTS mitra_db;
      FOREIGN KEY (id_equipe) REFERENCES equipes(id) ON DELETE SET NULL,
      FOREIGN KEY (id_genero) REFERENCES genero(id)
  );
+
+ CREATE TABLE treinos (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    id_atleta    INT NOT NULL,
+    id_treinador INT NOT NULL,
+    data         DATE NOT NULL,
+    modalidade   VARCHAR(100) NOT NULL,
+    detalhes     TEXT,
+    
+    -- chaves estrangeiras para garantir a integridade dos dados
+    FOREIGN KEY (id_atleta) REFERENCES atletas(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_treinador) REFERENCES treinadores(id) ON DELETE CASCADE
+);
  
  
  -- nível de acesso

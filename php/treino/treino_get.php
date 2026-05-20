@@ -8,14 +8,32 @@
         'data' => []
     ];
 
-    if (isset($_GET['id'])) { // se veio um id pela url
-        // Segunda situação - RECEBENDO O ID por GET
-        $stmt = $conexao->prepare("SELECT * FROM modalidades WHERE id = ?");
-        $stmt->bind_param("i", $_GET['id']);
+    if (isset($_GET['id'])) {
+    $stmt = $conexao->prepare("
+        SELECT treinos.*, treinadores.nome AS nome_treinador 
+        FROM treinos
+        LEFT JOIN treinadores ON treinadores.id = treinos.id_treinador
+        WHERE treinos.id = ?
+    ");
+    $stmt->bind_param("i", $_GET['id']);
     }
-    else {
-        // Primeira situação - SEM RECEBER O ID por GET
-        $stmt = $conexao->prepare("SELECT * FROM modalidades");
+
+    elseif (isset($_GET['id_atleta'])) { // se veio um id pela url
+        //RECEBENDO O ID por GET
+        $stmt = $conexao->prepare("
+        SELECT treinos.*, treinadores.nome AS nome_treinador 
+        FROM treinos
+        LEFT JOIN treinadores ON treinadores.id = treinos.id_treinador
+        WHERE treinos.id_atleta = ?
+    ");
+    $stmt->bind_param("i", $_GET['id_atleta']);
+    }
+    else{
+    $stmt = $conexao->prepare("
+        SELECT treinos.*, treinadores.nome AS nome_treinador
+        FROM treinos
+        LEFT JOIN treinadores ON treinadores.id = treinos.id_treinador
+    ");
     }
 
     // Executando a query
