@@ -1,24 +1,12 @@
-﻿<?php
+<?php
 include_once('../conexao.php');
 
-$simples = isset($_GET['simples']) && $_GET['simples'] === '1';
-
-if ($simples) {
-    $stmt = $conexao->prepare("SELECT id, nome FROM modalidades ORDER BY nome ASC");
-} elseif (isset($_GET['id'])) {
+if (isset($_GET['id'])) {
     $id = (int) $_GET['id'];
-    $stmt = $conexao->prepare("SELECT id, nome, status FROM modalidades WHERE id = ?");
+    $stmt = $conexao->prepare("SELECT * FROM modalidades WHERE id = ?");
     $stmt->bind_param("i", $id);
 } else {
-    $stmt = $conexao->prepare(
-        "SELECT
-            modalidades.id,
-            modalidades.nome,
-            modalidades.status,
-            (SELECT COUNT(*) FROM equipes WHERE equipes.id_modalidade = modalidades.id) AS equipes_vinculadas
-         FROM modalidades
-         ORDER BY modalidades.nome ASC"
-    );
+    $stmt = $conexao->prepare("SELECT * FROM modalidades");
 }
 
 $stmt->execute();
