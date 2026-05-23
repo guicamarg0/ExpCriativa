@@ -1,5 +1,6 @@
 <?php
-include_once('../conexao.php');
+    header("Content-Type: application/json; charset=utf-8");
+    include_once('../conexao.php');
 
 if (isset($_GET['id'])) {
     $id = (int) $_GET['id'];
@@ -26,5 +27,9 @@ $retorno = [
 $stmt->close();
 $conexao->close();
 
+<<<<<<< HEAD
 header("Content-type:application/json;charset:utf-8");
 echo json_encode($retorno);
+=======
+    echo json_encode($retorno);
+>>>>>>> modalidade-esportes

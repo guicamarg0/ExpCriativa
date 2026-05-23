@@ -19,6 +19,11 @@ async function login() {
   const email = document.getElementById("email")?.value || "";
   const senha = document.getElementById("senha")?.value || "";
 
+  if (!email || !senha) {
+    alert("Informe e-mail e senha.");
+    return;
+  }
+
   const fd = new FormData();
   fd.append("email", email);
   fd.append("senha", senha);

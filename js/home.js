@@ -1,4 +1,4 @@
-﻿function obterNomeUsuario() {
+function obterNomeUsuario() {
   const nomeSessao = window.mitraSessao?.perfil?.nome || window.mitraSessao?.usuario?.nome;
   if (nomeSessao) {
     return nomeSessao;
