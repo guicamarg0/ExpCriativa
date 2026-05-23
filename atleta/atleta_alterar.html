@@ -1,8 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="menu-tela-atual" content="ATLETA">
     <title>Alterar Atleta</title>
     <link rel="stylesheet" href="atleta.css">
 </head>
@@ -19,9 +22,9 @@
                     <div class="camposGrid">
                         <label>Nome <input type="text" name="nome"></label>
                         <label>Data de nascimento <input type="date" name="data_nascimento"></label>
-                        <label>GÃªnero
+                        <label>Gênero
                             <select name="id_genero" id="id_genero">
-                                <option value="">Selecione um gÃªnero</option>
+                                <option value="">Selecione um gênero</option>
                             </select>
                         </label>
                         <label>Altura <input type="text" name="altura"></label>
@@ -44,11 +47,14 @@
 
     <script src="../js/menu_lateral.js"
     data-menuHtml="../componentes/menuLateral.html"
-    data-menuCss="../componentes/menuLateral.css"
     data-menuTarget=".menu"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/atleta/atleta_alterar.js"></script>
 </body>
 </html>
+
+
+
+
 
 
