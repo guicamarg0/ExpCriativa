@@ -1,90 +1,42 @@
 <?php
+    header("Content-Type: application/json; charset=utf-8");
     include_once('../conexao.php');
 
-    $retorno = [
-        'status'    => '',
-        'mensagem'  => '',
-        'data'      => []
-    ];
+    $retorno = ['status' => '', 'mensagem' => '', 'data' => []];
 
-    if(!empty($conexao_error)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro de conexao com o banco.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
+    if (!empty($conexao_error)) {
+        echo json_encode(['status' => 'nok', 'mensagem' => 'Erro de conexao com o banco.', 'data' => []]); exit;
     }
 
-    $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
-    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $datadenasc = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : null;
-    $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
-    $altura = isset($_POST['altura']) && $_POST['altura'] !== '' ? (float) $_POST['altura'] : null;
-    $peso = isset($_POST['peso']) && $_POST['peso'] !== '' ? (float) $_POST['peso'] : null;
+    $id         = isset($_POST['id'])            ? (int)   $_POST['id']             : 0;
+    $nome       = isset($_POST['nome'])          ? trim($_POST['nome'])              : '';
+    // O form envia como 'data_nascimento' (name do input no HTML)
+    $datadenasc = isset($_POST['data_nascimento']) ? trim($_POST['data_nascimento']) : null;
+    $id_genero  = isset($_POST['id_genero'])  && $_POST['id_genero']  !== '' ? (int)   $_POST['id_genero']  : null;
+    $altura     = isset($_POST['altura'])     && $_POST['altura']     !== '' ? (float) $_POST['altura']     : null;
+    $peso       = isset($_POST['peso'])       && $_POST['peso']       !== '' ? (float) $_POST['peso']       : null;
+    $status     = isset($_POST['status'])        ? trim($_POST['status'])            : 'ativo';
 
-    if($id <= 0){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'ID obrigatorio.',
-            'data'      => []
-        ];
+    if ($id <= 0) { echo json_encode(['status' => 'nok', 'mensagem' => 'ID obrigatorio.', 'data' => []]); exit; }
+    if ($nome === '') { echo json_encode(['status' => 'nok', 'mensagem' => 'Nome obrigatorio.', 'data' => []]); exit; }
 
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if($nome === ''){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Nome obrigatorio.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
+    // Coluna real no banco é data_nascimento
     $stmt = $conexao->prepare(
-        "UPDATE atletas SET nome = ?, datadenasc = ?, id_genero = ?, altura = ?, peso = ? WHERE id = ?"
+        "UPDATE atletas SET nome = ?, data_nascimento = ?, id_genero = ?, altura = ?, peso = ?, status = ? WHERE id = ?"
     );
 
-    if(!$stmt){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar alteracao.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
+    if (!$stmt) {
+        echo json_encode(['status' => 'nok', 'mensagem' => 'Erro ao preparar alteracao.', 'data' => []]); exit;
     }
 
-    $stmt->bind_param("ssiddi", $nome, $datadenasc, $id_genero, $altura, $peso, $id);
+    // s=nome  s=data_nascimento  i=id_genero  d=altura  d=peso  s=status  i=id
+    $stmt->bind_param("ssiddsi", $nome, $datadenasc, $id_genero, $altura, $peso, $status, $id);
     $stmt->execute();
 
-    if($stmt->affected_rows > 0){
-        $retorno = [
-            'status'    => 'ok',
-            'mensagem'  => 'Cadastro do atleta alterado com sucesso.',
-            'data'      => []
-        ];
-    }else{
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Nao foi possivel alterar o cadastro do atleta.',
-            'data'      => []
-        ];
-    }
+    $retorno = $stmt->affected_rows >= 0
+        ? ['status' => 'ok',  'mensagem' => 'Cadastro do atleta alterado com sucesso.', 'data' => []]
+        : ['status' => 'nok', 'mensagem' => 'Nao foi possivel alterar o cadastro do atleta.', 'data' => []];
 
     $stmt->close();
     $conexao->close();
-
-    header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);

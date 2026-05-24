@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Todos os Treinos</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="admin">
+    <div class="adminTreinos">
+        <div class="headerAdmin">
+            <h1>Administração - Todos os Treinos</h1>
+        </div>
+            <ul class="menu-lateral">
+                <li class="menu-item">
+                    <a href="../esportes/esportes.html" class="menu-link">
+                        <i class="bi bi-dribbble"></i> Esportes
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="../equipe/equipe.html" class="menu-link">
+                        <i class="bi bi-people"></i> Equipes
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="admin_treinos.html" class="menu-link">
+                        <i class="bi bi-clipboard2-pulse"></i> Todos os Treinos
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="../atleta/atleta.html" class="menu-link">
+                        <i class="bi bi-person-walking"></i> Atletas
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 col-md-9 col-lg-10 conteudo-principal">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Todos os Treinos</h1>
+                <button id="logoff" class="btn px-4">Sair</button>
+            </div>
+            <hr>
+            <div id="conteudo">
+                <p class="text-muted">Carregando treinos...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="../js/menu_lateral.js"
+    data-menuHtml="../componentes/menuLateral.html"
+    data-menuCss="../componentes/menuLateral.css"
+    data-menuTarget=".menu"></script>
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/admin/admin_treinos.js"></script>
+</body>
+</html>

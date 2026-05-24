@@ -51,9 +51,7 @@ function setActiveLink(container) {
     link.classList.remove("active");
 
     const href = link.getAttribute("href") || "";
-    if (!href || href === "#") {
-      return;
-    }
+    if (!href || href === "#") return;
 
     if (href.startsWith("#")) {
       if (href === currentHash) {
@@ -79,12 +77,14 @@ function aplicarPermissoesMenu(container, idNivel) {
   const nivel = Number(idNivel || 0);
 
   let permitidos = [];
+
   if (nivel === 1) {
-    permitidos = ["esportes", "equipe", "treinador", "atleta"];
+    permitidos = ["esportes", "equipe", "treinador", "atleta", "admin_treinos"];
   } else if (nivel === 2) {
-    permitidos = ["equipe"];
+    permitidos = ["equipe", "planilha_treino"];
   } else if (nivel === 3) {
-    permitidos = [];
+    // 🔧 ajuste mínimo (igual comportamento esperado do sistema)
+    permitidos = ["meus_treinos"];
   }
 
   links.forEach((link) => {
@@ -195,6 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setActiveLink(target);
     window.addEventListener("hashchange", () => setActiveLink(target));
     window.addEventListener("popstate", () => setActiveLink(target));
+
   } catch (error) {
     console.error("Erro ao carregar o menu lateral:", error);
   }

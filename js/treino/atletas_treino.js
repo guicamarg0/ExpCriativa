@@ -1,64 +1,49 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    //Pega id_treinador da sessão no localStorage
-    let id_treinador = localStorage.getItem("id_treinador");
+    const sessionKey = localStorage.getItem("mitraSessionKey") || "";
 
-    // Se não existir ou estiver inválido, busca na sessão do PHP
-    if (!id_treinador || id_treinador === "null") {
-
-        const retSessao = await fetch("../php/valida_sessao.php");
-        const respSessao = await retSessao.json();
-
-        // Se a sessão não for válida, manda para login
-        if (respSessao.status !== "ok") {
-            window.location.href = "../login/";
-            return;
-        }
-
-        // Pega o id do treinador retornado pelo PHP
-        id_treinador = respSessao.data[0]?.id_treinador || null;
-
-        // Salva no localStorage para próximas páginas
-        if (id_treinador) {
-            localStorage.setItem("id_treinador", id_treinador);
-        }
+    // Se não tem chave, redireciona
+    if (!sessionKey) {
+        window.location.href = "../login/";
+        return;
     }
 
-    // Se ainda não existir treinador, mostra mensagem e para execução
-    if (!id_treinador || id_treinador === "null") {
+    // Valida sessão com header obrigatório
+    const retSessao  = await fetch("../php/valida_sessao.php", {
+        cache: "no-store",
+        headers: { "X-Session-Key": sessionKey }
+    });
+    const respSessao = await retSessao.json();
+
+    if (respSessao.status !== "ok") {
+        window.location.href = "../login/";
+        return;
+    }
+
+    // Pega o id do treinador do perfil retornado pela sessão
+    const id_treinador = respSessao.perfil?.id || null;
+
+    if (!id_treinador) {
         document.getElementById("lista").innerHTML =
             "<p>Nenhum treinador vinculado a este usuário.</p>";
         return;
     }
 
-    // Busca os atletas do treinador
+    // Salva para uso nas outras páginas
+    localStorage.setItem("id_treinador", id_treinador);
+
     buscar(id_treinador);
 });
 
+document.getElementById("logoff").addEventListener("click", async () => {
+    await fetch("../php/usuario_logoff.php");
+    localStorage.removeItem("mitraSessionKey");
+    localStorage.removeItem("mitraUsuario");
+    localStorage.removeItem("id_treinador");
+    window.location.href = "../login/";
+});
 
-// Botão de logoff
-document.getElementById("logoff").addEventListener("click", logoff);
-
-
-// Função de logout
-async function logoff() {
-    const retorno = await fetch("../php/usuario_logoff.php");
-    const resposta = await retorno.json();
-
-    if (resposta.status === "ok") {
-        // Limpa dados salvos no navegador
-        localStorage.removeItem("id_usuario");
-        localStorage.removeItem("id_treinador");
-
-        // Redireciona para login
-        window.location.href = "../login/";
-    }
-}
-
-
-// Busca atletas do treinador
 async function buscar(id_treinador) {
-
-    const retorno = await fetch("../php/atleta/atleta_get.php?id_treinador=" + id_treinador);
+    const retorno  = await fetch("../php/atleta/atleta_get.php?id_treinador=" + id_treinador);
     const resposta = await retorno.json();
 
     if (resposta.status === "ok") {
@@ -69,10 +54,7 @@ async function buscar(id_treinador) {
     }
 }
 
-
-// Monta tabela na tela
 function preencherTabela(tabela) {
-
     let html = `
         <table>
             <tr>
@@ -82,7 +64,6 @@ function preencherTabela(tabela) {
                 <th>Planilha</th>
             </tr>`;
 
-    // Percorre todos os atletas
     for (const atleta of tabela) {
         html += `
             <tr>
@@ -99,16 +80,11 @@ function preencherTabela(tabela) {
     }
 
     html += "</table>";
-
-    // Insere HTML na página
     document.getElementById("lista").innerHTML = html;
 }
 
-
-// Formata data de YYYY-MM-DD para DD/MM/YYYY
 function formatarData(data) {
     if (!data) return "-";
-
     const [ano, mes, dia] = data.split("-");
     return `${dia}/${mes}/${ano}`;
 }
