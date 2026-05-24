@@ -88,7 +88,7 @@
 
         const resposta = await retorno.json();
         if(resposta.status == "ok"){
-            window.location.href = '../treino/planilha_treino.html?id=${id_atleta}';
+            window.location.href = `../treino/planilha_treino.html?id=${id_atleta}`;
         //caso acontecer algum erro na requisição, exibe no console
         }else{
             alert("Erro... " + resposta.mensagem);
