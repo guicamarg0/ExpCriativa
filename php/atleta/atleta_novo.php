@@ -20,10 +20,10 @@
     }
 
     $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $descricao = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : '';
-    $datadenasc = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
-    $genero = isset($_POST['altura']) && $_POST['altura'] !== '' ? (int) $_POST['altura'] : null;
-    $esporte = isset($_POST['peso']) ? trim($_POST['peso']) : '';
+    $datadenasc = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : null;
+    $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
+    $altura = isset($_POST['altura']) && $_POST['altura'] !== '' ? (float) $_POST['altura'] : null;
+    $peso = isset($_POST['peso']) && $_POST['peso'] !== '' ? (float) $_POST['peso'] : null;
 
     if($nome === ''){
         $retorno = [

@@ -306,6 +306,6 @@ function preencherModalEdicao(atleta, form){
     form.nome.value = atleta.nome || "";
     form.datadenasc.value = atleta.datadenasc || "";
     form.id_genero.value = atleta.id_genero || "";
-    form.altura.value = atleta.alturao || "";
+    form.altura.value = atleta.altura || "";
     form.peso.value = atleta.peso || "";
 }

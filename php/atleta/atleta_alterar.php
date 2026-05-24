@@ -21,10 +21,10 @@
 
     $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
     $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
-    $datadenasc = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : '';
+    $datadenasc = isset($_POST['datadenasc']) ? trim($_POST['datadenasc']) : null;
     $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
-    $altura = isset($_POST['altura']) && $_POST['altura'] !== '' ? (int) $_POST['altura'] : null;
-    $peso = isset($_POST['peso']) && $_POST['peso'] !== '' ? (int) $_POST['peso'] : null;
+    $altura = isset($_POST['altura']) && $_POST['altura'] !== '' ? (float) $_POST['altura'] : null;
+    $peso = isset($_POST['peso']) && $_POST['peso'] !== '' ? (float) $_POST['peso'] : null;
 
     if($id <= 0){
         $retorno = [
@@ -66,7 +66,7 @@
         exit;
     }
 
-    $stmt->bind_param("ssiissi", $nome, $datadenasc, $id_genero, $altura, $peso, $id);
+    $stmt->bind_param("ssiddi", $nome, $datadenasc, $id_genero, $altura, $peso, $id);
     $stmt->execute();
 
     if($stmt->affected_rows > 0){

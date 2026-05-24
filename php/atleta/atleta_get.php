@@ -24,7 +24,7 @@
             "SELECT
                 atletas.id,
                 atletas.nome,
-                atletas.data_nascimento,
+                atletas.data_nascimento AS datadenasc,
                 atletas.id_genero,
                 atletas.altura,
                 atletas.peso,
