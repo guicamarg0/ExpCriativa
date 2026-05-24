@@ -1,4 +1,4 @@
-    //parte 1
+//parte 1
     document.addEventListener("DOMContentLoaded", async () => {
         // pega a URL e armazena em um const
         // busca nessa URL a variável id e armazana no const id.
@@ -12,8 +12,33 @@
             document.getElementById("atleta").value = resposta.data[0].nome;
         }
 
-        //const id_treinador = localStorage.getItem("id_treinador");
-        const id_treinador = 1; // Forçando para testar o banco
+        //caso acontecer algum erro na requisição, exibe no console
+        else {
+            console.log("Erro na requisição");
+        }
+
+    // Pega o id_treinador da sessão (salvo no login via localStorage)
+    // Fallback: busca no valida_sessao.php
+    let id_treinador = localStorage.getItem("id_treinador");
+ 
+    if (!id_treinador || id_treinador === "null") {
+            const retSessao  = await fetch("../php/valida_sessao.php");
+            const respSessao = await retSessao.json();
+            if (respSessao.status === "ok" && respSessao.data && respSessao.data[0]) {
+                id_treinador = respSessao.data[0].id_treinador || null;
+                if (id_treinador) {
+                    localStorage.setItem("id_treinador", id_treinador);
+                }
+            }else {
+                console.log("Erro na requisição", respSessao);
+            }
+    }
+    if (!id_treinador || id_treinador === "null") {
+        alert("Treinador não identificado na sessão. Faça login novamente.");
+        window.location.href = "../login/";
+        return;
+    }
+ 
         document.getElementById("id_treinador").value = id_treinador;
 
         document.getElementById("enviar").addEventListener("click", () => {
@@ -29,6 +54,8 @@
     const retorno = await fetch("../php/usuario_logoff.php");
     const resposta = await retorno.json();
     if (resposta.status == "ok") {
+        localStorage.removeItem("id_usuario");
+        localStorage.removeItem("id_treinador");
         window.location.href = "../login/";
     }
     }
@@ -40,6 +67,11 @@
         var modalidade    = document.getElementById("modalidade").value;
         var data   = document.getElementById("data").value;
         var detalhes   = document.getElementById("detalhes").value;
+
+        if (!modalidade || !data) {
+        alert("Preencha a modalidade e a data do treino.");
+        return;
+        }
 
         const fd = new FormData();
         fd.append("id_atleta", id_atleta);
@@ -56,7 +88,8 @@
 
         const resposta = await retorno.json();
         if(resposta.status == "ok"){
-            window.location.href = `../treino/planilha_treino.html?id=${id_atleta}`;
+            window.location.href = '../treino/planilha_treino.html?id=${id_atleta}';
+        //caso acontecer algum erro na requisição, exibe no console
         }else{
             alert("Erro... " + resposta.mensagem);
         }
