@@ -13,10 +13,35 @@ if (isset($_GET['id'])) {
 $stmt->execute();
 $resultado = $stmt->get_result();
 
-$tabela = [];
-while ($linha = $resultado->fetch_assoc()) {
-    $tabela[] = $linha;
-}
+    if(isset($_GET['id'])){
+        $stmt = $conexao->prepare(
+            "SELECT
+                atletas.id,
+                atletas.nome,
+                atletas.data_nascimento,
+                atletas.id_genero,
+                atletas.altura,
+                atletas.peso,
+                genero.nome AS nome_genero
+            FROM atletas
+            LEFT JOIN genero ON genero.id = atletas.id_genero
+            WHERE atletas.id = ?"
+        );
+        $stmt->bind_param("i",$_GET['id']);
+    }else{
+        $stmt = $conexao->prepare(
+            "SELECT
+                atletas.id,
+                atletas.nome,
+                atletas.data_nascimento,
+                atletas.id_genero,
+                atletas.altura,
+                atletas.peso,
+                genero.nome AS nome_genero
+            FROM atletas
+            LEFT JOIN genero ON genero.id = atletas.id_genero"
+        );
+    }
 
 $retorno = [
     'status' => 'ok',
@@ -27,5 +52,20 @@ $retorno = [
 $stmt->close();
 $conexao->close();
 
-header("Content-type:application/json;charset:utf-8");
-echo json_encode($retorno);
+        $retorno = [
+            'status'    => 'ok', // ok - nok
+            'mensagem'  => 'Sucesso, consulta efetuada.', 
+            'data'      => $tabela
+        ];
+    }else{
+        $retorno = [
+            'status'    => 'nok',
+            'mensagem'  => 'Não há registros', 
+            'data'      => []
+        ];
+    }
+
+    $stmt->close();
+    $conexao->close();
+
+    echo json_encode($retorno);

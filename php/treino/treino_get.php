@@ -10,10 +10,13 @@
 
     if (isset($_GET['id'])) {
     $stmt = $conexao->prepare("
-        SELECT treinos.*, treinadores.nome AS nome_treinador 
+        SELECT treinos.*, treinadores.nome AS nome_treinador,
+            GROUP_CONCAT(treino_exercicios.exercicio_id) AS exercicio_ids
         FROM treinos
         LEFT JOIN treinadores ON treinadores.id = treinos.id_treinador
+        LEFT JOIN treino_exercicios ON treino_exercicios.treino_id = treinos.id
         WHERE treinos.id = ?
+        GROUP BY treinos.id
     ");
     $stmt->bind_param("i", $_GET['id']);
     }
