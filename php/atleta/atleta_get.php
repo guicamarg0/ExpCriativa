@@ -27,9 +27,5 @@ $retorno = [
 $stmt->close();
 $conexao->close();
 
-<<<<<<< HEAD
 header("Content-type:application/json;charset:utf-8");
 echo json_encode($retorno);
-=======
-    echo json_encode($retorno);
->>>>>>> modalidade-esportes
