@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  valida_sessao();
-});
+  const btn = document.getElementById("enviar");
 
-document.getElementById("enviar").addEventListener("click", () => {
-  novo();
+  if (btn) {
+    btn.addEventListener("click", () => {
+      novo();
+    });
+  }
 });
 
 async function novo() {
@@ -13,6 +15,10 @@ async function novo() {
   var email = document.getElementById("email").value;
   var instagram = document.getElementById("instagram").value;
   var ativo = document.getElementById("ativo").value;
+  if (!nome || !usuario || !senha || !email) {
+    alert("Preencha os campos obrigatórios");
+    return;
+  }
 
   const fd = new FormData();
   fd.append("nome", nome);
@@ -29,7 +35,7 @@ async function novo() {
   const resposta = await retorno.json();
   if (resposta.status == "ok") {
     alert("SUCESSO: " + resposta.mensagem);
-    window.location.href = "../exemplo/";
+    window.location.href = "../login/index.html";
   } else {
     alert("ERRO: " + resposta.mensagem);
   }
