@@ -15,12 +15,6 @@ if (!empty($conexao_error)) {
         'data' => []
     ];
 
-<<<<<<< HEAD
-    header("Content-type:application/json;charset:utf-8");
-    echo json_encode($retorno);
-    exit;
-}
-=======
     $stmt = $conexao->prepare("
     SELECT usuarios.*, treinadores.id AS id_treinador 
     FROM usuarios 

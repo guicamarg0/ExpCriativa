@@ -1,68 +1,39 @@
 <?php
-<<<<<<< HEAD
+header("Content-type:application/json;charset=utf-8");
 include_once('../conexao.php');
-=======
-    header("Content-type:application/json;charset:utf-8");
-    include_once('../conexao.php');
-    // Configurando o padrão de retorno em todas
-    // as situações
-    $retorno = [
-        'status'    => '', // ok - nok
-        'mensagem'  => '', // mensagem que envio para o front
-        'data'      => []
-    ];
->>>>>>> modalidade-esportes
 
-// Configurando o padrão de retorno inicial
 $retorno = [
-    'status'    => 'nok', // Default to 'nok' (not ok)
-    'mensagem'  => 'Falha ao processar a requisição.', // Default error message
-    'data'      => []
+    'status' => 'nok',
+    'mensagem' => 'Falha ao processar a requisição.',
+    'data' => []
 ];
 
-// Verifica se o ID foi fornecido via GET
-if (isset($_GET['id'])) {
+if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
+
     $id = $_GET['id'];
+    $nome = $_POST['nome'];
+    $status = $_POST['status'];
 
-    // Prepara a declaração SQL para exclusão do banco de dados
-    // Usando prepared statements para prevenir SQL injection
-    $stmt = $conexao->prepare("DELETE FROM modalidades WHERE id = ?");
-    // Vincula o parâmetro: "i" indica integer
-    $stmt->bind_param("i", $id);
+    $stmt = $conexao->prepare("UPDATE modalidades SET nome = ?, status = ? WHERE id = ?");
+    $stmt->bind_param("ssi", $nome, $status, $id);
 
-    // Executa a declaração
     if ($stmt->execute()) {
-        // Verifica se alguma linha foi afetada pela exclusão
-        if ($stmt->affected_rows > 0) {
+        if ($stmt->affected_rows >= 0) {
             $retorno = [
-                'status'    => 'ok',
-                'mensagem'  => 'Registro excluído com sucesso.',
-                'data'      => []
+                'status' => 'ok',
+                'mensagem' => 'Registro alterado com sucesso.',
+                'data' => []
             ];
         } else {
-            // Query executada, mas nenhuma linha foi afetada (ID não encontrado)
-            $retorno['mensagem'] = 'Nenhum registro com o ID informado foi encontrado para exclusão.';
+            $retorno['mensagem'] = 'Nenhum registro foi alterado.';
         }
     } else {
-        // Erro durante a execução da query
-        $retorno['mensagem'] = 'Erro ao executar a consulta de exclusão: ' . $stmt->error;
+        $retorno['mensagem'] = 'Erro: ' . $stmt->error;
     }
-    // Fecha a declaração preparada
+
     $stmt->close();
-} else {
-    // ID via GET não fornecido
-    $retorno['mensagem'] = 'É necessário informar um ID para exclusão.';
 }
 
-<<<<<<< HEAD
-// Fecha a conexão com o banco de dados
 $conexao->close();
-
-// Define o cabeçalho para indicar que o conteúdo é JSON
-header("Content-type:application/json;charset=utf-8");
-// Codifica o array de retorno para JSON e o exibe
 echo json_encode($retorno);
 ?>
-=======
-    echo json_encode($retorno);
->>>>>>> modalidade-esportes

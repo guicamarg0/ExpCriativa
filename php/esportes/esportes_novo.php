@@ -1,7 +1,4 @@
 <?php
-<<<<<<< HEAD
-include_once('../conexao.php');
-=======
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
     $retorno = [

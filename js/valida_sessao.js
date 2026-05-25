@@ -1,21 +1,6 @@
-// valida_sessao.js - Redireciona para login se não houver sessão válida
 (function () {
-<<<<<<< HEAD
   const STORAGE_SESSION_KEY = "mitraSessionKey";
   const STORAGE_USER_KEY = "mitraUsuario";
-=======
-  // Caminho relativo para o PHP, ajusta automaticamente para subpastas
-  let phpPath = "php/valida_sessao.php";
-  const path = window.location.pathname;
-  if (path.includes("/home/")) phpPath = "../php/valida_sessao.php";
-  else if (path.includes("/js/") || path.includes("/componentes/"))
-    phpPath = "../../php/valida_sessao.php";
-  else if (path.includes("../login/")) phpPath = "../php/valida_sessao.php";
-  else if (path.includes("../esportes/")) phpPath = "../php/valida_sessao.php";
-  else if (path.includes("../exemplo/")) phpPath = "../php/valida_sessao.php";
-  else if (path.includes("../equipe/")) phpPath = "../php/valida_sessao.php";
-  else phpPath = "../php/valida_sessao.php";
->>>>>>> modalidade-esportes
 
   const scriptTag =
     document.currentScript ||
@@ -53,29 +38,20 @@
   }
 
   function redirecionarLogin(encerrarServidor = false) {
-    if (encerrarServidor) {
-      encerrarSessaoServidor();
-    }
+    if (encerrarServidor) encerrarSessaoServidor();
     limparSessaoLocal();
     window.location.replace(loginPath);
   }
 
   function usuarioTemAcesso(idNivel, caminhoAtual) {
-    if (caminhoAtual.includes("/home/home.html") || caminhoAtual.endsWith("/home/")) {
-      return true;
-    }
-
-    if (idNivel === 1) {
-      return true;
-    }
+    if (caminhoAtual.includes("/home/")) return true;
+    if (idNivel === 1) return true;
 
     if (idNivel === 2) {
-      return caminhoAtual.includes("/equipe/equipe.html") || caminhoAtual.endsWith("/equipe/");
+      return caminhoAtual.includes("/equipe/");
     }
 
-    if (idNivel === 3) {
-      return false;
-    }
+    if (idNivel === 3) return false;
 
     return false;
   }
@@ -94,11 +70,9 @@
       "X-Session-Key": sessionKey,
     },
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Falha ao validar sessão (${response.status})`);
-      }
-      return response.json();
+    .then((r) => {
+      if (!r.ok) throw new Error();
+      return r.json();
     })
     .then((data) => {
       if (data.status !== "ok") {
@@ -114,11 +88,10 @@
       document.dispatchEvent(new CustomEvent("mitra:sessao", { detail: data }));
 
       const idNivel = Number(data.id_nivel || 0);
+
       if (!usuarioTemAcesso(idNivel, caminhoAtual)) {
         window.location.replace(homePath);
       }
     })
-    .catch(() => {
-      redirecionarLogin();
-    });
+    .catch(() => redirecionarLogin());
 })();
