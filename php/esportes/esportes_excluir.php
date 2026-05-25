@@ -1,39 +1,66 @@
 <?php
+// Retorno JSON
 header("Content-type:application/json;charset=utf-8");
+// Conexão
 include_once('../conexao.php');
-
+// Estrutura padrão
 $retorno = [
     'status' => 'nok',
-    'mensagem' => 'Falha ao processar a requisição.',
+    'mensagem' => 'Erro ao processar requisição.',
     'data' => []
 ];
 
-if (isset($_GET['id']) && isset($_POST['nome']) && isset($_POST['status'])) {
-
-    $id = $_GET['id'];
-    $nome = $_POST['nome'];
-    $status = $_POST['status'];
-
-    $stmt = $conexao->prepare("UPDATE modalidades SET nome = ?, status = ? WHERE id = ?");
-    $stmt->bind_param("ssi", $nome, $status, $id);
-
-    if ($stmt->execute()) {
-        if ($stmt->affected_rows >= 0) {
-            $retorno = [
-                'status' => 'ok',
-                'mensagem' => 'Registro alterado com sucesso.',
-                'data' => []
-            ];
-        } else {
-            $retorno['mensagem'] = 'Nenhum registro foi alterado.';
-        }
-    } else {
-        $retorno['mensagem'] = 'Erro: ' . $stmt->error;
-    }
-
-    $stmt->close();
+// Verifica ID
+if (!isset($_GET['id']) || (int)$_GET['id'] <= 0) {
+    $retorno = [
+        'status' => 'nok',
+        'mensagem' => 'ID é obrigatório para exclusão.',
+        'data' => []
+    ];
+    echo json_encode($retorno);
+    exit;
 }
 
+// ID seguro
+$id = (int) $_GET['id'];
+// Prepara DELETE
+$stmt = $conexao->prepare("
+    DELETE FROM modalidades
+    WHERE id = ?
+");
+
+if (!$stmt) {
+    $retorno = [
+        'status' => 'nok',
+        'mensagem' => 'Erro ao preparar exclusão.',
+        'data' => []
+    ];
+    echo json_encode($retorno);
+    exit;
+}
+
+// Bind
+$stmt->bind_param("i", $id);
+// Executa
+$stmt->execute();
+
+// Resultado
+if ($stmt->affected_rows > 0) {
+    $retorno = [
+        'status' => 'ok',
+        'mensagem' => 'Registro excluído com sucesso.',
+        'data' => []
+    ];
+} else {
+    $retorno = [
+        'status' => 'nok',
+        'mensagem' => 'Nenhum registro encontrado para excluir.',
+        'data' => []
+    ];
+}
+// Fecha
+$stmt->close();
 $conexao->close();
+// Retorno
 echo json_encode($retorno);
 ?>

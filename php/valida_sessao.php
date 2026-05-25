@@ -1,13 +1,17 @@
 <?php
+// Inicia a sessão
 session_start();
+// Inclui conexão com banco
 include_once(__DIR__ . '/conexao.php');
 
+// Função para retornar JSON
 function resposta_json($payload) {
     header("Content-type:application/json;charset:utf-8");
     echo json_encode($payload);
     exit;
 }
 
+// Função para encerrar sessão
 function encerrar_sessao() {
     if (session_status() === PHP_SESSION_ACTIVE) {
         session_unset();
@@ -15,6 +19,7 @@ function encerrar_sessao() {
     }
 }
 
+// Verifica se os dados principais da sessão existem
 if (
     !isset($_SESSION['usuario_id']) ||
     !isset($_SESSION['id_nivel']) ||
@@ -26,9 +31,12 @@ if (
     ]);
 }
 
+// Captura chave enviada no header
 $chaveCabecalho = $_SERVER['HTTP_X_SESSION_KEY'] ?? '';
+// Captura chave salva na sessão
 $chaveSessao = (string) ($_SESSION['session_key'] ?? '');
 
+// Verifica se a chave da sessão é válida
 if ($chaveCabecalho === '' || $chaveCabecalho !== $chaveSessao) {
     encerrar_sessao();
     resposta_json([
@@ -37,6 +45,7 @@ if ($chaveCabecalho === '' || $chaveCabecalho !== $chaveSessao) {
     ]);
 }
 
+// Verifica conexão com banco
 if (!empty($conexao_error)) {
     resposta_json([
         'status' => 'nok',
@@ -44,8 +53,10 @@ if (!empty($conexao_error)) {
     ]);
 }
 
+// Obtém ID do usuário logado
 $usuarioId = (int) $_SESSION['usuario_id'];
 
+// Verifica se ID é válido
 if ($usuarioId <= 0) {
     encerrar_sessao();
     resposta_json([
@@ -54,6 +65,7 @@ if ($usuarioId <= 0) {
     ]);
 }
 
+// Consulta dados principais do usuário
 $stmtUsuario = $conexao->prepare(
     "SELECT
         usuarios.id,
@@ -67,6 +79,7 @@ $stmtUsuario = $conexao->prepare(
      LIMIT 1"
 );
 
+// Verifica se query foi preparada
 if (!$stmtUsuario) {
     resposta_json([
         'status' => 'nok',
@@ -74,12 +87,18 @@ if (!$stmtUsuario) {
     ]);
 }
 
+// Vincula ID na query
 $stmtUsuario->bind_param("i", $usuarioId);
+// Executa consulta
 $stmtUsuario->execute();
+// Obtém resultado
 $resultadoUsuario = $stmtUsuario->get_result();
+// Converte resultado em array
 $usuario = $resultadoUsuario->fetch_assoc();
+// Fecha statement
 $stmtUsuario->close();
 
+// Verifica se usuário existe
 if (!$usuario) {
     encerrar_sessao();
     resposta_json([
@@ -88,7 +107,9 @@ if (!$usuario) {
     ]);
 }
 
+// Obtém status do usuário
 $statusUsuario = strtolower(($usuario['status'] ?? ''));
+// Verifica se usuário está ativo
 if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
     encerrar_sessao();
     resposta_json([
@@ -97,18 +118,25 @@ if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
     ]);
 }
 
+// Obtém nível de acesso
 $idNivel = (int) ($usuario['id_nivel'] ?? 0);
+
+// Perfil padrão
 $perfil = [
     'tipo' => 'usuario',
     'nome' => $usuario['email'] ?? 'Usuário'
 ];
 
+// Perfil administrador
 if ($idNivel === 1) {
     $perfil = [
         'tipo' => 'admin',
         'nome' => 'Admin'
     ];
+
+// Perfil treinador
 } elseif ($idNivel === 2) {
+    // Busca dados do treinador
     $stmtTreinador = $conexao->prepare(
         "SELECT id, nome, telefone, cref, data_inicio
          FROM treinadores
@@ -123,6 +151,7 @@ if ($idNivel === 1) {
         $treinador = $resultadoTreinador->fetch_assoc();
         $stmtTreinador->close();
 
+        // Se encontrou treinador
         if ($treinador) {
             $perfil = [
                 'tipo' => 'treinador',
@@ -132,14 +161,19 @@ if ($idNivel === 1) {
                 'cref' => $treinador['cref'],
                 'data_inicio' => $treinador['data_inicio']
             ];
+
         } else {
+            // Caso não encontre treinador
             $perfil = [
                 'tipo' => 'treinador',
                 'nome' => $usuario['email'] ?? 'Treinador'
             ];
         }
     }
+
+// Perfil atleta
 } elseif ($idNivel === 3) {
+    // Busca dados do atleta
     $stmtAtleta = $conexao->prepare(
         "SELECT
             atletas.id,
@@ -161,8 +195,10 @@ if ($idNivel === 1) {
         $atleta = $resultadoAtleta->fetch_assoc();
         $stmtAtleta->close();
 
+        // Se encontrou atleta
         if ($atleta) {
             $equipes = [];
+            // Verifica se atleta possui equipe
             if (!empty($atleta['id_equipe'])) {
                 $equipes[] = [
                     'id' => (int) $atleta['id_equipe'],
@@ -170,6 +206,7 @@ if ($idNivel === 1) {
                 ];
             }
 
+            // Monta perfil atleta
             $perfil = [
                 'tipo' => 'atleta',
                 'id' => (int) $atleta['id'],
@@ -178,7 +215,9 @@ if ($idNivel === 1) {
                 'peso' => $atleta['peso'],
                 'equipes' => $equipes
             ];
+
         } else {
+            // Caso atleta não seja encontrado
             $perfil = [
                 'tipo' => 'atleta',
                 'nome' => $usuario['email'] ?? 'Atleta',
@@ -190,6 +229,7 @@ if ($idNivel === 1) {
     }
 }
 
+// Dados principais do usuário
 $usuarioRetorno = [
     'id' => (int) $usuario['id'],
     'email' => $usuario['email'],
@@ -199,8 +239,10 @@ $usuarioRetorno = [
     'status' => $usuario['status']
 ];
 
+// Fecha conexão com banco
 $conexao->close();
 
+// Retorna sucesso
 resposta_json([
     'status' => 'ok',
     'mensagem' => 'Sessão válida.',

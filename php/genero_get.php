@@ -1,86 +1,39 @@
 <?php
-    include_once('conexao.php');
+// Inclui a conexão com o banco de dados
+include_once('conexao.php');
+// Estrutura padrão de retorno da API
+$retorno = [
+    'status'    => '',
+    'mensagem'  => '',
+    'data'      => []
+];
 
+// Verifica se existe erro de conexão (depende do seu conexao.php definir isso)
+if(!empty($conexao_error)){
+    // Retorno em caso de erro de conexão
     $retorno = [
-        'status'    => '',
-        'mensagem'  => '',
+        'status'    => 'nok',
+        'mensagem'  => 'Erro de conexao com o banco.',
         'data'      => []
     ];
-
-    if(!empty($conexao_error)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro de conexao com o banco.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $statusFiltro = isset($_GET['status']) ? strtolower($_GET['status']) : 'ativo';
-    $filtrarStatus = true;
-    $statusBanco = 'ativo';
-
-    if($statusFiltro === 'todos'){
-        $filtrarStatus = false;
-    }elseif($statusFiltro === 'inativo'){
-        $statusBanco = 'inativo';
-    }
-
-    if($filtrarStatus){
-        $stmt = $conexao->prepare(
-            "SELECT id, nome, status
-             FROM genero
-             WHERE status = ?
-             ORDER BY nome ASC"
-        );
-        $stmt->bind_param("s", $statusBanco);
-    }else{
-        $stmt = $conexao->prepare(
-            "SELECT id, nome, status
-             FROM genero
-             ORDER BY nome ASC"
-        );
-    }
-
-    if(!$stmt){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar consulta.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    $tabela = [];
-
-    if($resultado->num_rows > 0){
-        while($linha = $resultado->fetch_assoc()){
-            $tabela[] = $linha;
-        }
-
-        $retorno = [
-            'status'    => 'ok',
-            'mensagem'  => 'Sucesso, consulta efetuada.',
-            'data'      => $tabela
-        ];
-    }else{
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Não há registros',
-            'data'      => []
-        ];
-    }
-
-    $stmt->close();
-    $conexao->close();
-
+    // Retorna JSON imediatamente e encerra execução
     header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);
+    exit;
+}
+
+// Recebe filtro de status via GET
+// Se não vier nada, assume "ativo"
+$statusFiltro = isset($_GET['status']) ? strtolower($_GET['status']) : 'ativo';
+
+// Define se vai filtrar ou não no SQL
+$filtrarStatus = true;
+
+// Status padrão usado na query
+$statusBanco = 'ativo';
+
+// Se o usuário pediu "todos", desativa filtro
+if($statusFiltro === 'todos'){
+    $filtrarStatus = false;
+// Se pediu "inativo", ajusta filtro
+}elseif($statusFiltro === '

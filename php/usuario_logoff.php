@@ -1,9 +1,10 @@
 <?php
 session_start();
-
+// Limpa sessão
 session_unset();
+// Destroi sessão
 session_destroy();
-
+// Remove cookie da sessão
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(
@@ -17,11 +18,10 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-$retorno = [
+// Resposta padrão
+header("Content-Type: application/json; charset=utf-8");
+echo json_encode([
     'status' => 'ok',
     'mensagem' => 'Sessão encerrada.',
     'data' => []
-];
-
-header("Content-type:application/json;charset:utf-8");
-echo json_encode($retorno);
+]);

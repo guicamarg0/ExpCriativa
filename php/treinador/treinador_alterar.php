@@ -1,6 +1,5 @@
 <?php
     include_once('../conexao.php');
-
     $retorno = [
         'status'    => '',
         'mensagem'  => '',
@@ -29,6 +28,7 @@
     $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
     $status = isset($_POST['status']) ? strtolower($_POST['status']) : 'ativo';
 
+    // Validação do ID
     if($id <= 0){
         $retorno = [
             'status'    => 'nok',
@@ -41,10 +41,12 @@
         exit;
     }
 
+    // Normaliza status
     if($status !== 'ativo' && $status !== 'inativo'){
         $status = 'ativo';
     }
 
+    // Validação básica obrigatória
     if($nome === '' || $cref === '' || $email === ''){
         $retorno = [
             'status'    => 'nok',
@@ -57,6 +59,7 @@
         exit;
     }
 
+    // Busca treinador e usuário vinculado
     $stmtBusca = $conexao->prepare("SELECT id_usuario FROM treinadores WHERE id = ?");
     if(!$stmtBusca){
         $retorno = [
@@ -81,7 +84,6 @@
             'mensagem'  => 'Treinador não encontrado.',
             'data'      => []
         ];
-
         header("Content-type:application/json;charset:utf-8");
         echo json_encode($retorno);
         exit;
@@ -103,28 +105,30 @@
         exit;
     }
 
+    // Atualiza usuário
     if($senha !== ''){
+        // ✔ senha informada
         $stmtUsuario = $conexao->prepare(
             "UPDATE usuarios SET email = ?, senha = ?, status = ? WHERE id = ?"
         );
+        if(!$stmtUsuario){
+            exit;
+        }
+        // TIPAGEM CORRETA (4 parâmetros)
+        $stmtUsuario->bind_param("sssi", $email, $senha, $status, $idUsuario);
     }else{
+        // ✔ sem alterar senha
         $stmtUsuario = $conexao->prepare(
             "UPDATE usuarios SET email = ?, status = ? WHERE id = ?"
         );
+        if(!$stmtUsuario){
+            exit;
+        }
+        // TIPAGEM CORRETA (3 parâmetros)
+        $stmtUsuario->bind_param("ssi", $email, $status, $idUsuario);
     }
 
-    if(!$stmtUsuario){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar atualização do usuário.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
+    // Atualiza treinador
     $stmtTreinador = $conexao->prepare(
         "UPDATE treinadores SET
             nome = ?,
@@ -138,33 +142,17 @@
 
     if(!$stmtTreinador){
         $stmtUsuario->close();
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar atualização do treinador.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
         exit;
     }
 
     $conexao->begin_transaction();
     $mensagemErro = '';
 
-    if($senha !== ''){
-        $stmtUsuario->bind_param("sssi", $email, $senha, $status, $idUsuario);
-    }else{
-        $stmtUsuario->bind_param("ssi", $email, $status, $idUsuario);
-    }
-
+    // EXECUTA USUÁRIO
     if(!$stmtUsuario->execute()){
-        if($conexao->errno === 1062){
-            $mensagemErro = 'E-mail já cadastrado.';
-        }else{
-            $mensagemErro = 'Falha ao atualizar usuário.';
-        }
+        $mensagemErro = 'Falha ao atualizar usuário.';
     }else{
+        // EXECUTA TREINADOR
         $stmtTreinador->bind_param(
             "ssssssi",
             $nome,
@@ -175,16 +163,12 @@
             $status,
             $id
         );
-
         if(!$stmtTreinador->execute()){
-            if($conexao->errno === 1062){
-                $mensagemErro = 'CREF já cadastrado.';
-            }else{
-                $mensagemErro = 'Falha ao atualizar treinador.';
-            }
+            $mensagemErro = 'Falha ao atualizar treinador.';
         }
     }
 
+    // COMMIT OU ROLLBACK
     if($mensagemErro !== ''){
         $conexao->rollback();
         $retorno = [
@@ -204,6 +188,6 @@
     $stmtTreinador->close();
     $stmtUsuario->close();
     $conexao->close();
-
     header("Content-type:application/json;charset:utf-8");
     echo json_encode($retorno);
+?>
