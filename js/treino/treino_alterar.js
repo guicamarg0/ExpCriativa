@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.elements.id.value = treino.id || "";
   form.elements.id_atleta.value = treino.id_atleta || "";
   form.elements.id_treinador.value = treino.id_treinador || "";
-  form.elements.modalidade.value = treino.modalidade || "";
-  form.elements.data.value = treino.data ? String(treino.data).slice(0, 10) : "";
-  form.elements.detalhes.value = treino.detalhes || "";
+  form.elements.modalidade.value = treino.titulo || "";
+  form.elements.data.value = treino.data_inicio ? String(treino.data_inicio).slice(0, 10) : "";
+  form.elements.detalhes.value = treino.descricao || "";
 
   const retornoAtleta = await fetch(`../php/atleta/atleta_get.php?id=${treino.id_atleta}`);
   const respostaAtleta = await retornoAtleta.json();

@@ -1,46 +1,52 @@
 <?php
-    header("Content-type:application/json;charset:utf-8");
-    include_once('../conexao.php');
+header("Content-type:application/json;charset:utf-8");
+include_once('../conexao.php');
 
-    $retorno = [
-        'status'    => '',
-        'mensagem'  => '',
-        'data'      => []
-    ];
+$retorno = [
+    'status' => 'nok',
+    'mensagem' => 'Não posso alterar um registro sem um ID informado.',
+    'data' => []
+];
 
-    if(isset($_GET['id'])){
-        // Simulando as informações que vem do front
-        $modalidade = $_POST['modalidade']; 
-        $data       = $_POST['data'];
-        $detalhes   = $_POST['detalhes'];
-    
-        // Preparando para inserção no banco de dados
-        $stmt = $conexao->prepare("UPDATE treinos SET modalidade = ?,  data = ?, detalhes = ? WHERE id = ?");
-        $stmt->bind_param("sssi",$modalidade, $data, $detalhes, $_GET['id']);
-        $stmt->execute();
-
-        if($stmt->affected_rows >= 0){
-            $retorno = [
-                'status'    => 'ok',
-                'mensagem'  => 'Registro alterado com sucesso.',
-                'data'      => []
-            ];
-        }else{
-            $retorno = [
-                'status'    => 'nok',
-                'mensagem'  => 'Não consegui alterar o registro.'.json_encode($_GET),
-                'data'      => []
-            ];
-        }
-        $stmt->close();
-    }else{
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Não posso alterar um registro sem um ID informado.',
-            'data'      => []
-        ];
-    }
-       
-    $conexao->close();
-
+if (!isset($_GET['id'])) {
     echo json_encode($retorno);
+    exit;
+}
+
+$id = (int) $_GET['id'];
+$titulo = trim($_POST['modalidade'] ?? '');
+$dataInicio = $_POST['data'] ?? '';
+$descricao = $_POST['detalhes'] ?? '';
+
+if ($id <= 0 || $titulo === '' || $dataInicio === '') {
+    $retorno['mensagem'] = 'Dados obrigatórios não informados.';
+    echo json_encode($retorno);
+    exit;
+}
+
+$dataInicio .= strlen($dataInicio) === 10 ? ' 00:00:00' : '';
+
+$stmt = $conexao->prepare("
+    UPDATE treinos
+    SET titulo = ?, data_inicio = ?, descricao = ?
+    WHERE id = ?
+");
+
+if (!$stmt) {
+    $retorno['mensagem'] = 'Erro ao preparar alteração: ' . $conexao->error;
+    echo json_encode($retorno);
+    exit;
+}
+
+$stmt->bind_param("sssi", $titulo, $dataInicio, $descricao, $id);
+$stmt->execute();
+$stmt->close();
+$conexao->close();
+
+$retorno = [
+    'status' => 'ok',
+    'mensagem' => 'Registro alterado com sucesso.',
+    'data' => []
+];
+
+echo json_encode($retorno);

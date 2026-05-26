@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     target.innerHTML = menuHtml;
 
     const path = window.location.pathname.toLowerCase();
+    const search = window.location.search.toLowerCase();
 
     const grupoCadastro = target.querySelector("#menuGrupoCadastro");
     const resumoCadastro = grupoCadastro?.querySelector(".menuGrupoResumo");
@@ -67,6 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const isTreinoAlterar = path.includes("/treino/treino_alterar.html");
     const isAtletasTreino = path.includes("/treino/atletas_treino.html");
     const isPlanilhaTreino = path.includes("/treino/planilha_treino.html");
+    const isEntradaPlanilhas = isAtletasTreino && search.includes("origem=planilhas");
     const cadastroAtivo =
       isEsportes ||
       isEquipe ||
@@ -110,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (treinosAtivo) {
       grupoTreinos?.setAttribute("open", "open");
       resumoTreinos?.classList.add("active");
-      if (isPlanilhaTreino) {
+      if (isPlanilhaTreino || isEntradaPlanilhas) {
         linksTreinos.planilhasTreino?.classList.add("active");
       } else {
         linksTreinos.atletasTreino?.classList.add("active");
