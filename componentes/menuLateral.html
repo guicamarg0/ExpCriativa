@@ -1,43 +1,35 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Lateral</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="menuLateral.css">
-    <link rel="stylesheet" href="../style.css">
-</head>
-
-<body>
-
-        <div class="menu">
-            <a class="logo" href="../home/home.html"><img src="../assets/mitra_semfundo.png" alt="Mitra"></a>
-            <div class="links">
-<<<<<<< HEAD
-                <a href="../esportes/esportes.html" data-modulo="esportes"><i class="bi bi-dribbble"></i> Esportes</a>
-                <a href="../equipe/equipe.html" data-modulo="equipe"><i class="bi bi-people"></i> Equipes</a>
-                <a href="../treinador/treinador.html" data-modulo="treinador"><i class="bi bi-clipboard"></i> Treinadores</a>
-                <a href="../atleta/atleta.html" data-modulo="atleta"><i class="bi bi-person-walking"></i> Atletas</a>
-=======
-                <a href="../esportes/esportes.html"><i class="bi bi-dribbble"></i> Esportes</a>
-                <a href="../equipe/equipe.html"><i class="bi bi-people"></i> Equipes</a>
-                <a href="../treino/atletas_treino.html"><i class="bi-clipboard2-pulse"></i> Treinador - Planilha de Treinos</a>
-                <a href="../login/treinador_novo.html"><i class="bi bi-clipboard"></i> Treinadores</a>
-                <a href="../home/home.html"><i class="bi bi-person-walking"></i> Atletas</a>
->>>>>>> modalidade-esportes
-            </div>
-            <button type="button" class="btnSairMenu" id="btnMenuLogout">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sair</span>
-            </button>
-        </div>
-
-</body>
-</html>
+<a class="logo" href="/ExpCriativa/home/home.html"><img src="/ExpCriativa/assets/mitra_semfundo.png" alt="Mitra"></a>
+<div class="links">
+  <details class="menuGrupo" id="menuGrupoCadastro">
+    <summary class="menuGrupoResumo">
+      <span class="menuGrupoTitulo">
+        <i class="bi bi-folder2-open"></i>
+        <span>Cadastro</span>
+      </span>
+      <i class="bi bi-chevron-down menuGrupoSeta" aria-hidden="true"></i>
+    </summary>
+    <div class="menuSubLinks">
+      <a data-menu="modalidades" href="/ExpCriativa/esportes/esportes.html"><i class="bi bi-dribbble"></i> Modalidades</a>
+      <a data-menu="equipes" href="/ExpCriativa/equipe/equipe.html"><i class="bi bi-people"></i> Equipes</a>
+      <a data-menu="treinadores" href="/ExpCriativa/treinador/treinador.html"><i class="bi bi-clipboard"></i> Treinadores</a>
+      <a data-menu="atletas" href="/ExpCriativa/atleta/atleta.html"><i class="bi bi-person-walking"></i> Atletas</a>
+    </div>
+  </details>
+  <details class="menuGrupo" id="menuGrupoTreinos">
+    <summary class="menuGrupoResumo">
+      <span class="menuGrupoTitulo">
+        <i class="bi bi-clipboard2-pulse"></i>
+        <span>Treinos</span>
+      </span>
+      <i class="bi bi-chevron-down menuGrupoSeta" aria-hidden="true"></i>
+    </summary>
+    <div class="menuSubLinks">
+      <a data-menu="atletas-treino" href="/ExpCriativa/treino/atletas_treino.html"><i class="bi bi-people"></i> Treinos por atleta</a>
+      <a data-menu="planilhas-treino" href="/ExpCriativa/treino/planilha_treino.html"><i class="bi bi-clipboard2-pulse"></i> Planilhas de treino</a>
+    </div>
+  </details>
+</div>
+<button type="button" class="btnSairMenu" id="btnMenuLogout">
+  <i class="bi bi-box-arrow-right"></i>
+  <span>Sair</span>
+</button>

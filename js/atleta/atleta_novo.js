@@ -1,23 +1,15 @@
-﻿document.addEventListener("DOMContentLoaded", async () => {
-  const formAtleta = document.getElementById("formAtletaNovo");
-  const formUsuario = document.getElementById("formUsuarioAtletaNovo");
+document.addEventListener("DOMContentLoaded", async () => {
+  const form = document.getElementById("formAtletaNovo");
+  if (!form) {
+    return;
+  }
 
-  await carregarOpcoesSelect({
-    selectId: "id_genero",
-    url: "../php/genero_get.php",
-    placeholder: "Selecione um genero"
-  });
+  await popularSelect("id_genero", "../php/genero_get.php", "Selecione um genero");
 
-  formUsuario.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(formAtleta);
-    const formDataUsuario = new FormData(formUsuario);
-
-    for (const [chave, valor] of formDataUsuario.entries()) {
-      formData.append(chave, valor);
-    }
-
+    const formData = new FormData(form);
     await fetch("../php/atleta/atleta_novo.php", {
       method: "POST",
       body: formData
@@ -26,3 +18,22 @@
     window.location.href = "atleta.html";
   });
 });
+
+async function popularSelect(selectId, url, placeholder) {
+  const select = document.getElementById(selectId);
+  if (!select) {
+    return;
+  }
+
+  select.innerHTML = `<option value="">${placeholder}</option>`;
+  const retorno = await fetch(url);
+  const resposta = await retorno.json();
+
+  for (let i = 0; i < (resposta.data || []).length; i++) {
+    const registro = resposta.data[i];
+    const option = document.createElement("option");
+    option.value = String(registro.id ?? "");
+    option.textContent = String(registro.nome ?? "");
+    select.appendChild(option);
+  }
+}

@@ -8,7 +8,7 @@ $cref = $_POST['cref'] ?? '';
 $data_inicio = $_POST['data_inicio'] ?? '';
 $email = $_POST['email'];
 $senha = $_POST['senha'];
-$status = 'ativo';
+$status = $_POST['status'] ?? 'ativo';
 
 $stmtUsuario = $conexao->prepare(
     "INSERT INTO usuarios (email, senha, id_nivel, status) VALUES (?, ?, 2, ?)"

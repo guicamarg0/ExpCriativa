@@ -1,64 +1,39 @@
-    //parte 1
-    document.addEventListener("DOMContentLoaded", async () => {
-        // pega a URL e armazena em um const
-        // busca nessa URL a variável id e armazana no const id.
-        const url = new URLSearchParams(window.location.search);
-        const id_atleta = url.get("id_atleta");
-        document.getElementById("id_atleta").value = id_atleta;
+document.addEventListener("DOMContentLoaded", async () => {
+  const form = document.getElementById("formTreinoNovo");
+  if (!form) {
+    return;
+  }
 
-        const retorno = await fetch("../php/atleta/atleta_get.php?id=" + id_atleta);
-        const resposta = await retorno.json();
-        if(resposta.status == "ok"){
-            document.getElementById("atleta").value = resposta.data[0].nome;
-        }
+  const idAtleta = new URLSearchParams(window.location.search).get("id_atleta");
+  if (!idAtleta) {
+    window.location.href = "atletas_treino.html";
+    return;
+  }
 
-        //const id_treinador = localStorage.getItem("id_treinador");
-        const id_treinador = 1; // Forçando para testar o banco
-        document.getElementById("id_treinador").value = id_treinador;
+  form.elements.id_atleta.value = idAtleta;
+  form.elements.id_treinador.value = "1";
 
-        document.getElementById("enviar").addEventListener("click", () => {
-            enviar();
-        });
+  const retornoAtleta = await fetch(`../php/atleta/atleta_get.php?id=${idAtleta}`);
+  const respostaAtleta = await retornoAtleta.json();
+  if ((respostaAtleta.data || []).length > 0) {
+    form.elements.atleta.value = respostaAtleta.data[0].nome || "";
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const retorno = await fetch("../php/treino/treino_novo.php", {
+      method: "POST",
+      body: formData
     });
-
-    document.getElementById("logoff").addEventListener("click", () => {
-    logoff();
-    });
-
-    async function logoff() {
-    const retorno = await fetch("../php/usuario_logoff.php");
     const resposta = await retorno.json();
-    if (resposta.status == "ok") {
-        window.location.href = "../login/";
+
+    if (resposta.status === "ok") {
+      window.location.href = `planilha_treino.html?id=${idAtleta}`;
+      return;
     }
-    }
-    //parte 2
 
-    async function enviar(){
-        var id_atleta    = document.getElementById("id_atleta").value;
-        var id_treinador    = document.getElementById("id_treinador").value;
-        var modalidade    = document.getElementById("modalidade").value;
-        var data   = document.getElementById("data").value;
-        var detalhes   = document.getElementById("detalhes").value;
-
-        const fd = new FormData();
-        fd.append("id_atleta", id_atleta);
-        fd.append("id_treinador", id_treinador);
-        fd.append("modalidade", modalidade);
-        fd.append("data", data);
-        fd.append("detalhes", detalhes);
-
-        const retorno = await fetch("../php/treino/treino_novo.php",
-            {
-            method: 'POST',
-            body: fd  
-            });
-
-        const resposta = await retorno.json();
-        if(resposta.status == "ok"){
-            window.location.href = `../treino/planilha_treino.html?id=${id_atleta}`;
-        }else{
-            alert("Erro... " + resposta.mensagem);
-        }
-
-    }
+    alert(`Erro: ${resposta.mensagem || "Não foi possível salvar o treino."}`);
+  });
+});

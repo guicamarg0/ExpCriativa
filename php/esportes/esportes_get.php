@@ -1,36 +1,4 @@
 <?php
-<<<<<<< HEAD
-include_once('../conexao.php');
-
-if (isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
-    $stmt = $conexao->prepare("SELECT * FROM modalidades WHERE id = ?");
-    $stmt->bind_param("i", $id);
-} else {
-    $stmt = $conexao->prepare("SELECT * FROM modalidades");
-}
-
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-$tabela = [];
-while ($linha = $resultado->fetch_assoc()) {
-    $tabela[] = $linha;
-}
-
-$retorno = [
-    'status' => 'ok',
-    'mensagem' => 'Sucesso, consulta efetuada.',
-    'data' => $tabela
-];
-
-$stmt->close();
-$conexao->close();
-
-header("Content-type:application/json;charset=utf-8");
-echo json_encode($retorno);
-?>
-=======
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
     // Configurando o padrão de retorno
@@ -81,4 +49,3 @@ echo json_encode($retorno);
     // Estou enviando para o fronted o array RETORNO
     // mas no formato JSON
     echo json_encode($retorno);
->>>>>>> modalidade-esportes

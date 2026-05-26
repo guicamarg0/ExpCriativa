@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await window.esportesSessao.aplicarPermissoesTelaEsportes();
   const lista = document.querySelector(".listViewEsportes");
+  if (!lista) {
+    return;
+  }
   const retornoEsportes = await fetch("../php/esportes/esportes_get.php");
   const respostaEsportes = await retornoEsportes.json();
   const esportesView = respostaEsportes.data || [];
@@ -33,6 +36,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         <p>${esporte.status || ""}</p>
       </div>
     `;
+  }
+
+  if (!html) {
+    lista.innerHTML = '<p class="estadoListaVazia">Nenhuma modalidade cadastrada.</p>';
+    return;
   }
 
   lista.innerHTML = html;

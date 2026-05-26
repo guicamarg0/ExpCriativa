@@ -1,7 +1,4 @@
 <?php
-<<<<<<< HEAD
-include_once('../conexao.php');
-=======
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
     $retorno = [
@@ -9,7 +6,6 @@ include_once('../conexao.php');
         'mensagem'  => '',
         'data'      => []
     ];
->>>>>>> modalidade-esportes
 
 // Configurando o padrão de retorno inicial
 $retorno = [
@@ -53,13 +49,4 @@ if (isset($_POST['nome']) && isset($_POST['status'])) {
     $retorno['mensagem'] = 'Dados insuficientes para inserir o registro (nome e status são obrigatórios).';
 }
 
-<<<<<<< HEAD
-// Fecha a conexão com o banco de dados
-$conexao->close();
-
-header("Content-type:application/json;charset=utf-8");
-echo json_encode($retorno);
-?>
-=======
     echo json_encode($retorno);
->>>>>>> modalidade-esportes

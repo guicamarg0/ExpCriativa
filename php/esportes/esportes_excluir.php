@@ -1,7 +1,4 @@
 <?php
-<<<<<<< HEAD
-include_once('../conexao.php');
-=======
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
     // Configurando o padrão de retorno em todas
@@ -11,7 +8,6 @@ include_once('../conexao.php');
         'mensagem'  => '', // mensagem que envio para o front
         'data'      => []
     ];
->>>>>>> modalidade-esportes
 
 // Configurando o padrão de retorno inicial
 $retorno = [
@@ -54,13 +50,4 @@ if (isset($_GET['id'])) {
     $retorno['mensagem'] = 'É necessário informar um ID para exclusão.';
 }
 
-<<<<<<< HEAD
-// Fecha a conexão com o banco de dados
-$conexao->close();
-
-header("Content-type:application/json;charset=utf-8");
-echo json_encode($retorno);
-?>
-=======
     echo json_encode($retorno);
->>>>>>> modalidade-esportes

@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // busca nessa URL a variável id e armazana no const id.
     const url = new URLSearchParams(window.location.search);
     const id = url.get("id");
+    if (!id) {
+        window.location.href = "atletas_treino.html";
+        return;
+    }
     buscarAtleta(id);
     buscarTreinos(id);
 
@@ -13,18 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 });
-
-document.getElementById("logoff").addEventListener("click", () => {
-  logoff();
-});
-
-async function logoff() {
-  const retorno = await fetch("../php/usuario_logoff.php");
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    window.location.href = "../login/";
-  }
-}
 
 async function excluir(id){
     const retorno = await fetch("../php/treino/treino_excluir.php?id="+id);

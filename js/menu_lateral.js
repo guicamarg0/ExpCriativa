@@ -2,10 +2,14 @@ const STORAGE_SESSION_KEY = "mitraSessionKey";
 const STORAGE_USER_KEY = "mitraUsuario";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const scriptTag = document.currentScript || document.querySelector('script[src*="menu_lateral.js"]');
+  const scriptTag =
+    document.currentScript ||
+    document.querySelector('script[src*="menu_lateral.js"]');
 
-  let basePath = "";
-  if (scriptTag?.src) {
+  let basePath =
+    document.querySelector('meta[name="app-base"]')?.getAttribute("content") ||
+    "";
+  if (!basePath && scriptTag?.src) {
     const scriptUrl = new URL(scriptTag.src, window.location.href);
     const sufixo = "/js/menu_lateral.js";
     if (scriptUrl.pathname.endsWith(sufixo)) {
@@ -13,77 +17,109 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  const menuHtmlPath = scriptTag?.dataset.menuHtml || (basePath ? `${basePath}/componentes/menuLateral.html` : "../componentes/menuLateral.html");
-  const menuCssPath = basePath ? `${basePath}/componentes/menuLateral.css` : "../componentes/menuLateral.css";
-  const logoutPath = basePath ? `${basePath}/php/usuario_logoff.php` : "../php/usuario_logoff.php";
-  const loginPath = basePath ? `${basePath}/login/index.html` : "../login/index.html";
-  const targetSelector = scriptTag?.dataset.menuTarget || ".menu";
+  const normalizedBasePath = basePath.endsWith("/")
+    ? basePath.slice(0, -1)
+    : basePath;
 
-  const cssArquivos = [
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css",
-    "https://unpkg.com/bootstrap-icons@1.11.3/font/bootstrap-icons.css",
-    menuCssPath
-  ];
-
-  for (let i = 0; i < cssArquivos.length; i++) {
-    const href = cssArquivos[i];
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = href;
-      document.head.appendChild(link);
-    }
-  }
+  const menuHtmlPath = `${normalizedBasePath}/componentes/menuLateral.html`;
+  const logoutPath = `${normalizedBasePath}/php/usuario_logoff.php`;
+  const loginPath = `${normalizedBasePath}/login/index.html`;
+  const target =
+    document.querySelector("#menu-lateral") || document.querySelector(".menu");
 
   try {
-    const response = await fetch(menuHtmlPath);
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const menu = doc.querySelector(".menu");
-    const target = document.querySelector(targetSelector);
-
-    if (!menu || !target) {
+    if (!target) {
       return;
     }
 
-    target.innerHTML = menu.innerHTML;
-
-    const telaAtual = (document.querySelector('meta[name="menu-tela-atual"]')?.getAttribute("content") || "")
-      .trim()
-      .toUpperCase();
-
-    let moduloAtivo = "";
-    switch (telaAtual) {
-      case "ESPORTES":
-        moduloAtivo = "esportes";
-        break;
-      case "EQUIPE":
-        moduloAtivo = "equipe";
-        break;
-      case "TREINADOR":
-        moduloAtivo = "treinador";
-        break;
-      case "ATLETA":
-        moduloAtivo = "atleta";
-        break;
-      case "HOME":
-      default:
-        moduloAtivo = "";
-        break;
+    const response = await fetch(menuHtmlPath);
+    if (!response.ok) {
+      return;
     }
 
-    const links = target.querySelectorAll(".links a");
-    links.forEach((link) => link.classList.remove("active"));
+    const menuHtml = await response.text();
+    target.classList.add("menu");
+    target.innerHTML = menuHtml;
 
-    if (moduloAtivo) {
-      const linkAtivo = target.querySelector(`.links a[data-modulo="${moduloAtivo}"]`);
-      if (linkAtivo) {
-        linkAtivo.classList.add("active");
+    const path = window.location.pathname.toLowerCase();
+
+    const grupoCadastro = target.querySelector("#menuGrupoCadastro");
+    const resumoCadastro = grupoCadastro?.querySelector(".menuGrupoResumo");
+    const grupoTreinos = target.querySelector("#menuGrupoTreinos");
+    const resumoTreinos = grupoTreinos?.querySelector(".menuGrupoResumo");
+
+    const linksCadastro = {
+      modalidades: target.querySelector('[data-menu="modalidades"]'),
+      equipes: target.querySelector('[data-menu="equipes"]'),
+      treinadores: target.querySelector('[data-menu="treinadores"]'),
+      atletas: target.querySelector('[data-menu="atletas"]')
+    };
+    const linksTreinos = {
+      atletasTreino: target.querySelector('[data-menu="atletas-treino"]'),
+      planilhasTreino: target.querySelector('[data-menu="planilhas-treino"]')
+    };
+
+    const isEsportes = path.includes("/esportes/");
+    const isEquipe = path.includes("/equipe/");
+    const isTreinador = path.includes("/treinador/");
+    const isAtleta = path.includes("/atleta/");
+    const isTreinoNovo = path.includes("/treino/treino_novo.html");
+    const isTreinoAlterar = path.includes("/treino/treino_alterar.html");
+    const isAtletasTreino = path.includes("/treino/atletas_treino.html");
+    const isPlanilhaTreino = path.includes("/treino/planilha_treino.html");
+    const cadastroAtivo =
+      isEsportes ||
+      isEquipe ||
+      isTreinador ||
+      isAtleta;
+    const treinosAtivo =
+      isAtletasTreino ||
+      isPlanilhaTreino ||
+      isTreinoNovo ||
+      isTreinoAlterar;
+
+    if (resumoCadastro) {
+      resumoCadastro.classList.remove("active");
+    }
+    if (resumoTreinos) {
+      resumoTreinos.classList.remove("active");
+    }
+    Object.values(linksCadastro).forEach((link) => {
+      link?.classList.remove("active");
+    });
+    Object.values(linksTreinos).forEach((link) => {
+      link?.classList.remove("active");
+    });
+
+    if (cadastroAtivo) {
+      grupoCadastro?.setAttribute("open", "open");
+      resumoCadastro?.classList.add("active");
+      if (isEsportes) {
+        linksCadastro.modalidades?.classList.add("active");
+      } else if (isEquipe) {
+        linksCadastro.equipes?.classList.add("active");
+      } else if (isTreinador) {
+        linksCadastro.treinadores?.classList.add("active");
+      } else if (isAtleta) {
+        linksCadastro.atletas?.classList.add("active");
       }
+    } else {
+      grupoCadastro?.removeAttribute("open");
     }
 
-    const btnLogout = target.querySelector("#btnMenuLogout");
+    if (treinosAtivo) {
+      grupoTreinos?.setAttribute("open", "open");
+      resumoTreinos?.classList.add("active");
+      if (isPlanilhaTreino) {
+        linksTreinos.planilhasTreino?.classList.add("active");
+      } else {
+        linksTreinos.atletasTreino?.classList.add("active");
+      }
+    } else {
+      grupoTreinos?.removeAttribute("open");
+    }
+
+    const btnLogout = document.querySelector("#btnMenuLogout");
     if (btnLogout) {
       btnLogout.addEventListener("click", async () => {
         try {

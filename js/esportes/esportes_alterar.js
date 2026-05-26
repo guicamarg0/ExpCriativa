@@ -1,6 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("formEsporteEdicao");
+  if (!form) {
+    return;
+  }
+
   const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) {
+    window.location.href = "esportes.html";
+    return;
+  }
 
   const retorno = await fetch(`../php/esportes/esportes_get.php?id=${id}`);
   const resposta = await retorno.json();

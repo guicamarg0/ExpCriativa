@@ -2,18 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   buscar();
 });
 
-document.getElementById("logoff").addEventListener("click", () => {
-  logoff();
-});
-
-async function logoff() {
-  const retorno = await fetch("../php/usuario_logoff.php");
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    window.location.href = "../login/";
-  }
-}
-
 async function buscar(){
     const retorno = await fetch("../php/atleta/atleta_get.php");
     const resposta = await retorno.json();

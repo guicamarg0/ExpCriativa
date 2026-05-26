@@ -5,13 +5,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <meta name="menu-tela-atual" content="EQUIPE">
     <title>Equipes</title>
+    <link rel="stylesheet" href="../componentes/menuLateral.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="equipe.css" />
   </head>
   <body>
     <div class="conteudo">
-      <div class="menu"></div>
+      <div id="menu-lateral"></div>
       <div class="conteudoEquipe">
         <div class="headerConteudo">
           <h1>Equipes</h1>
@@ -33,9 +34,7 @@
       </div>
     </div>
 
-    <script src="../js/menu_lateral.js"
-      data-menuHtml="../componentes/menuLateral.html"
-      data-menuTarget=".menu"></script>
+    <script src="../js/menu_lateral.js" defer></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/equipe/equipeSessao.js"></script>
     <script src="../js/equipe/equipe_index.js"></script>

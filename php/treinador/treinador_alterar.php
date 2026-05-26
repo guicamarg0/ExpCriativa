@@ -8,7 +8,7 @@ $telefone = $_POST['telefone'] ?? '';
 $cref = $_POST['cref'] ?? '';
 $data_inicio = $_POST['data_inicio'] ?? '';
 $email = $_POST['email'];
-$senha = $_POST['senha'] ?? '';
+$senha = trim($_POST['senha'] ?? '');
 $status = $_POST['status'] ?? 'ativo';
 
 $stmtBusca = $conexao->prepare("SELECT id_usuario FROM treinadores WHERE id = ?");
@@ -18,10 +18,16 @@ $treinadorAtual = $stmtBusca->get_result()->fetch_assoc();
 $idUsuario = (int) $treinadorAtual['id_usuario'];
 $stmtBusca->close();
 
-$stmtUsuario = $conexao->prepare(
-    "UPDATE usuarios SET email = ?, senha = ?, status = ? WHERE id = ?"
-);
-$stmtUsuario->bind_param("sssi", $email, $senha, $status, $idUsuario);
+$sqlUsuario = $senha === ''
+    ? "UPDATE usuarios SET email = ?, status = ? WHERE id = ?"
+    : "UPDATE usuarios SET email = ?, senha = ?, status = ? WHERE id = ?";
+
+$stmtUsuario = $conexao->prepare($sqlUsuario);
+if ($senha === '') {
+    $stmtUsuario->bind_param("ssi", $email, $status, $idUsuario);
+} else {
+    $stmtUsuario->bind_param("sssi", $email, $senha, $status, $idUsuario);
+}
 $stmtUsuario->execute();
 $stmtUsuario->close();
 

@@ -2,29 +2,29 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <meta name="menu-tela-atual" content="ATLETA">
     <title>Novo Atleta</title>
+    <link rel="stylesheet" href="../componentes/menuLateral.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="atleta.css">
 </head>
 <body>
     <div class="conteudo">
-        <div class="menu"></div>
+        <div id="menu-lateral"></div>
         <div class="conteudoAtleta">
             <div class="headerConteudo">
                 <h1>Novo Atleta</h1>
             </div>
+
             <form id="formAtletaNovo" class="modalAtletaForm">
                 <div class="blocoFormulario">
                     <h2 class="tituloBlocoFormulario">Dados do Atleta</h2>
                     <div class="camposGrid">
-                        <label>Nome <input type="text" name="nome"></label>
+                        <label>Nome <input type="text" name="nome" required></label>
                         <label>Data de nascimento <input type="date" name="data_nascimento"></label>
-                        <label>Gênero
+                        <label>Genero
                             <select name="id_genero" id="id_genero">
-                                <option value="">Selecione um gênero</option>
+                                <option value="">Selecione um genero</option>
                             </select>
                         </label>
                         <label>Altura <input type="text" name="altura"></label>
@@ -37,16 +37,15 @@
                         </label>
                     </div>
                 </div>
-            </form>
 
-            <form id="formUsuarioAtletaNovo" class="modalAtletaForm">
                 <div class="blocoFormulario credenciaisUsuario">
                     <h2 class="tituloBlocoFormulario">Cadastro de Usuario</h2>
                     <div class="camposGrid">
-                        <label>E-mail <input type="text" name="email"></label>
-                        <label>Senha <input type="password" name="senha"></label>
+                        <label>E-mail <input type="email" name="email" required></label>
+                        <label>Senha <input type="text" name="senha" required></label>
                     </div>
                 </div>
+
                 <div class="modalAtletaAcoes">
                     <a href="atleta.html"><i class="bi bi-arrow-left"></i> Voltar</a>
                     <button type="submit"><i class="bi bi-check-circle"></i> Salvar</button>
@@ -55,18 +54,8 @@
         </div>
     </div>
 
-    <script src="../js/menu_lateral.js"
-    data-menuHtml="../componentes/menuLateral.html"
-    data-menuTarget=".menu"></script>
+    <script src="../js/menu_lateral.js" defer></script>
     <script src="../js/valida_sessao.js"></script>
-    <script src="../js/select_loader.js"></script>
     <script src="../js/atleta/atleta_novo.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-

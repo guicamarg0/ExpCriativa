@@ -15,17 +15,19 @@
     float: left;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
 }
 
-.menu a{
+.menu a,
+.menuGrupoResumo{
+    box-sizing: border-box;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 1em;
     padding: 0.8em 0;
     border-bottom: 2px solid  var(--cor-primaria);
-    width: 100%;
     text-decoration: none;
     color : var(--cor-primaria);
 }
@@ -35,22 +37,69 @@
     flex-direction: column;
 }
 
-.links a:hover{
+.menuGrupoResumo {
+    list-style: none;
+    cursor: pointer;
+}
+
+.menuGrupoResumo::-webkit-details-marker{
+    display: none;
+}
+
+.menuGrupoTitulo{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.menuGrupoSeta{
+    margin-left: auto;
+    margin-right: 1em;
+    transition: transform .2s ease;
+}
+
+.menuGrupo[open] .menuGrupoSeta{
+    transform: rotate(180deg);
+}
+
+.menuSubLinks{
+    display: flex;
+    flex-direction: column;
+}
+
+.menuSubLinks a{
+    box-sizing: border-box;
+    padding-left: 2.2em;
+    border-bottom: 1px solid rgba(34, 28, 105, 0.35);
+    font-size: 1rem;
+}
+
+.links a:hover,
+.menuGrupoResumo:hover,
+.menuSubLinks a:hover{
     background-color:var(--cor-primaria);
     color: var(--cor-branco);
     transition: .5s;
 }
 
-.links a.active{
+.links a.active,
+.menuGrupoResumo.active{
     background-color:  var(--cor-secundaria);
     color:  var(--cor-branco)
 }
 
 .links a i,
-.links a .bi{
+.links a .bi,
+.menuGrupoResumo i,
+.menuGrupoResumo .bi{
     display: flex;
     margin-left: 1em;
-    font-size: 2em;
+    font-size: 1.5em;
+}
+
+.menuSubLinks a i,
+.menuSubLinks a .bi{
+    font-size: 1.45em;
 }
 
 .menu img{
@@ -77,7 +126,7 @@
 .btnSairMenu i,
 .btnSairMenu .bi{
     margin-left: 1em;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .btnSairMenu:hover{

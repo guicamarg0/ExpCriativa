@@ -8,7 +8,7 @@ $altura = $_POST['altura'] ?? '';
 $peso = $_POST['peso'] ?? '';
 $email = $_POST['email'];
 $senha = $_POST['senha'];
-$status = 'ativo';
+$status = $_POST['status'] ?? 'ativo';
 
 $stmtUsuario = $conexao->prepare("INSERT INTO usuarios (email, senha, id_nivel, status) VALUES (?, ?, 3, ?)");
 $stmtUsuario->bind_param("sss", $email, $senha, $status);
