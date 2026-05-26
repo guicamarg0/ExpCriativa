@@ -28,8 +28,22 @@
             $tabela[] = $linha;
         }
 
+        // Se for atleta (id_nivel = 3), busca o id da tabela atletas
+        // e adiciona nos dados da sessão
+        if((int)$tabela[0]['id_nivel'] === 3){
+            $stmt2 = $conexao->prepare("SELECT id FROM atletas WHERE id_usuario = ?");
+            $stmt2->bind_param("i", $tabela[0]['id']);
+            $stmt2->execute();
+            $resultado2 = $stmt2->get_result();
+            if($resultado2->num_rows > 0){
+                $atleta = $resultado2->fetch_assoc();
+                $tabela[0]['id_atleta'] = $atleta['id']; // adiciona id_atleta nos dados
+            }
+            $stmt2->close();
+        }
+
         session_start();
-        $_SESSION['email'] = $tabela;
+        $_SESSION['email'] = $tabela; // mantém o padrão do projeto
 
         $retorno = [
             'status'    => 'ok', // ok - nok
