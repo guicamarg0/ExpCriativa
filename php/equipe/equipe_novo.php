@@ -19,13 +19,12 @@
         exit;
     }
 
-    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
-    $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : '';
-    $id_modalidade = isset($_POST['id_modalidade']) ? $_POST['id_modalidade'] : '';
-    $id_genero = isset($_POST['id_genero']) ? $_POST['id_genero'] : '';
-    $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
-    $status = 'ativa';
-    $id_treinador_responsavel = isset($_POST['id_treinador_responsavel']) ? $_POST['id_treinador_responsavel'] : '';
+    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
+    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
+    $id_modalidade = isset($_POST['id_modalidade']) && $_POST['id_modalidade'] !== '' ? (int) $_POST['id_modalidade'] : null;
+    $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
+    $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : '';
+    $status = isset($_POST['status']) && $_POST['status'] !== '' ? trim($_POST['status']) : 'ativa';
 
     if($nome === ''){
         $retorno = [
@@ -39,52 +38,8 @@
         exit;
     }
 
-    if($id_treinador_responsavel !== '' && !ctype_digit($id_treinador_responsavel)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Treinador responsavel invalido.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if($id_modalidade !== '' && !ctype_digit($id_modalidade)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Modalidade invalida.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if($id_genero !== '' && !ctype_digit($id_genero)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Genero invalido.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
     $stmt = $conexao->prepare(
-        "INSERT INTO equipes (
-            nome,
-            descricao,
-            id_modalidade,
-            id_genero,
-            categoria,
-            status,
-            id_treinador_responsavel
-        ) VALUES(?, ?, NULLIF(?, ''), NULLIF(?, ''), ?, ?, NULLIF(?, ''))"
+        "INSERT INTO equipes (nome, descricao, id_modalidade, id_genero, categoria, status) VALUES(?,?,?,?,?,?)"
     );
 
     if(!$stmt){
@@ -99,16 +54,7 @@
         exit;
     }
 
-    $stmt->bind_param(
-        "sssssss",
-        $nome,
-        $descricao,
-        $id_modalidade,
-        $id_genero,
-        $categoria,
-        $status,
-        $id_treinador_responsavel
-    );
+    $stmt->bind_param("ssiiss", $nome, $descricao, $id_modalidade, $id_genero, $categoria, $status);
     $stmt->execute();
 
     if($stmt->affected_rows > 0){

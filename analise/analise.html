@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Analisar Dados</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="analise.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="conteudo">
+      <div class="menu"></div>
+      <div class="conteudoAnalise">
+        <div class="section-title">
+          <div>
+            <h1>Análise de Dados</h1>
+            <p class="subtitle">
+              Relatórios de atleta, treinador e administração com gráficos e
+              comparações.
+            </p>
+          </div>
+        </div>
+        <nav class="analise-nav">
+          <button data-page="atleta" class="active">Atleta</button>
+          <button data-page="treinador">Treinador</button>
+          <button data-page="admin">Pro Admin</button>
+        </nav>
+
+        <section id="page-atleta" class="analise-page">
+          <div class="controls">
+            <label
+              >Atleta ID: <input id="atletaId" type="number" value="1"
+            /></label>
+            <button id="carregarAtleta">Carregar</button>
+          </div>
+          <div class="cards-grid">
+            <div class="card">
+              <strong>Presenças confirmadas</strong>
+              <div id="presencasCount" class="value">-</div>
+            </div>
+            <div class="card">
+              <strong>Próximo treino</strong>
+              <div id="proximoTreino" class="value">-</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="evolucaoChart"></canvas>
+          </div>
+          <div class="card progress-summary">
+            <strong>Detalhes de evolução</strong>
+            <ul id="evolucaoDetails" class="progress-list"></ul>
+          </div>
+        </section>
+
+        <section id="page-treinador" class="analise-page" style="display: none">
+          <div class="controls">
+            <label
+              >Treinador ID: <input id="treinadorId" type="number" value="1"
+            /></label>
+            <label
+              >Equipe ID (filtro): <input id="equipeFiltro" type="number"
+            /></label>
+            <button id="carregarTreinador">Carregar</button>
+          </div>
+          <div class="cards-grid">
+            <div class="card">
+              <strong>Treinos agendados</strong>
+              <div id="treinosCount" class="value">-</div>
+            </div>
+            <div class="card">
+              <strong>Atletas comparados</strong>
+              <div id="atletasCount" class="value">-</div>
+            </div>
+          </div>
+          <div id="treinosList"></div>
+          <div class="chart-wrap">
+            <canvas id="comparacaoAtletasChart"></canvas>
+          </div>
+        </section>
+
+        <section id="page-admin" class="analise-page" style="display: none">
+          <div class="controls">
+            <button id="carregarAdmin">Carregar Dados</button>
+          </div>
+          <div class="cards-grid admin-cards">
+            <div class="card">
+              <strong>Equipes</strong>
+              <ul id="equipesList"></ul>
+            </div>
+            <div class="card">
+              <strong>Treinadores</strong>
+              <ul id="treinadoresList"></ul>
+            </div>
+            <div class="card">
+              <strong>Atletas</strong>
+              <ul id="atletasList"></ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script
+      src="../js/menu_lateral.js"
+      data-menuHtml="../componentes/menuLateral.html"
+      data-menuCss="../componentes/menuLateral.css"
+      data-menuTarget=".menu"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/analise.js"></script>
+  </body>
+</html>

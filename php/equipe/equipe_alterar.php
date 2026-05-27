@@ -20,51 +20,17 @@
     }
 
     $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
-    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
-    $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : '';
-    $id_modalidade = isset($_POST['id_modalidade']) ? $_POST['id_modalidade'] : '';
-    $id_genero = isset($_POST['id_genero']) ? $_POST['id_genero'] : '';
-    $categoria = isset($_POST['categoria']) ? $_POST['categoria'] : '';
-    $status = isset($_POST['status']) && $_POST['status'] !== '' ? $_POST['status'] : 'ativa';
-    $id_treinador_responsavel = isset($_POST['id_treinador_responsavel']) ? $_POST['id_treinador_responsavel'] : '';
+    $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
+    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
+    $id_modalidade = isset($_POST['id_modalidade']) && $_POST['id_modalidade'] !== '' ? (int) $_POST['id_modalidade'] : null;
+    $id_genero = isset($_POST['id_genero']) && $_POST['id_genero'] !== '' ? (int) $_POST['id_genero'] : null;
+    $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : '';
+    $status = isset($_POST['status']) && $_POST['status'] !== '' ? trim($_POST['status']) : 'ativa';
 
     if($id <= 0){
         $retorno = [
             'status'    => 'nok',
             'mensagem'  => 'ID obrigatorio.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $stmtValidaEquipe = $conexao->prepare(
-        "SELECT id FROM equipes WHERE id = ? LIMIT 1"
-    );
-
-    if(!$stmtValidaEquipe){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Erro ao preparar validacao de equipe.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    $stmtValidaEquipe->bind_param("i", $id);
-    $stmtValidaEquipe->execute();
-    $resultadoEquipe = $stmtValidaEquipe->get_result();
-    $stmtValidaEquipe->close();
-
-    if($resultadoEquipe->num_rows === 0){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Equipe nao encontrada.',
             'data'      => []
         ];
 
@@ -85,52 +51,8 @@
         exit;
     }
 
-    if($id_treinador_responsavel !== '' && !ctype_digit($id_treinador_responsavel)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Treinador responsavel invalido.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if($id_modalidade !== '' && !ctype_digit($id_modalidade)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Modalidade invalida.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
-    if($id_genero !== '' && !ctype_digit($id_genero)){
-        $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Genero invalido.',
-            'data'      => []
-        ];
-
-        header("Content-type:application/json;charset:utf-8");
-        echo json_encode($retorno);
-        exit;
-    }
-
     $stmt = $conexao->prepare(
-        "UPDATE equipes SET
-            nome = ?,
-            descricao = ?,
-            id_modalidade = NULLIF(?, ''),
-            id_genero = NULLIF(?, ''),
-            categoria = ?,
-            status = ?,
-            id_treinador_responsavel = NULLIF(?, '')
-        WHERE id = ?"
+        "UPDATE equipes SET nome = ?, descricao = ?, id_modalidade = ?, id_genero = ?, categoria = ?, status = ? WHERE id = ?"
     );
 
     if(!$stmt){
@@ -145,20 +67,10 @@
         exit;
     }
 
-    $stmt->bind_param(
-        "sssssssi",
-        $nome,
-        $descricao,
-        $id_modalidade,
-        $id_genero,
-        $categoria,
-        $status,
-        $id_treinador_responsavel,
-        $id
-    );
+    $stmt->bind_param("ssiissi", $nome, $descricao, $id_modalidade, $id_genero, $categoria, $status, $id);
     $stmt->execute();
 
-    if($stmt->errno === 0){
+    if($stmt->affected_rows > 0){
         $retorno = [
             'status'    => 'ok',
             'mensagem'  => 'Equipe alterada com sucesso.',
