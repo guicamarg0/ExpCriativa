@@ -1,19 +1,15 @@
 <?php
-    header("Content-Type: application/json; charset=utf-8");
+    header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
 
-if (isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
-    $stmt = $conexao->prepare("SELECT * FROM atletas WHERE id = ?");
-    $stmt->bind_param("i", $id);
-} else {
-    $stmt = $conexao->prepare("SELECT * FROM atletas");
-}
+    // Configurando o padrão de retorno
+    $retorno = [
+        'status' => '', // ok - nok
+        'mensagem' => '', // mensagem que envio para o front
+        'data' => []
+    ];
 
-$stmt->execute();
-$resultado = $stmt->get_result();
-
-    if(isset($_GET['id'])){
+    if (isset($_GET['id'])) {
         $stmt = $conexao->prepare(
             "SELECT
                 atletas.id,
@@ -27,8 +23,8 @@ $resultado = $stmt->get_result();
             LEFT JOIN genero ON genero.id = atletas.id_genero
             WHERE atletas.id = ?"
         );
-        $stmt->bind_param("i",$_GET['id']);
-    }else{
+        $stmt->bind_param("i", $_GET['id']);
+    } else {
         $stmt = $conexao->prepare(
             "SELECT
                 atletas.id,
@@ -43,28 +39,32 @@ $resultado = $stmt->get_result();
         );
     }
 
-$retorno = [
-    'status' => 'ok',
-    'mensagem' => 'Sucesso, consulta efetuada.',
-    'data' => $tabela
-];
+    // Executando a query
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    // Criando um array vazio para receber o resultado do bd
+    $tabela = [];
 
-$stmt->close();
-$conexao->close();
+    if ($resultado->num_rows > 0) {
+        while ($linha = $resultado->fetch_assoc()) {
+            $tabela[] = $linha;
+        }
 
         $retorno = [
-            'status'    => 'ok', // ok - nok
-            'mensagem'  => 'Sucesso, consulta efetuada.', 
-            'data'      => $tabela
+            'status' => 'ok',
+            'mensagem' => 'Sucesso, consulta efetuada.',
+            'data' => $tabela
         ];
-    }else{
+    }
+    else {
         $retorno = [
-            'status'    => 'nok',
-            'mensagem'  => 'Não há registros', 
-            'data'      => []
+            'status' => 'nok',
+            'mensagem' => 'Não há registros',
+            'data' => []
         ];
     }
 
+    // Fechamento do estado e conexão.
     $stmt->close();
     $conexao->close();
 
