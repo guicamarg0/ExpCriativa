@@ -51,8 +51,23 @@ function obterTipoUsuario(sessao) {
   return "Usuario";
 }
 
+function formatarTaxa(valor) {
+  if (valor === null || typeof valor === "undefined" || valor === "") {
+    return "-";
+  }
+
+  const numero = Number(valor);
+  if (Number.isNaN(numero)) {
+    return String(valor);
+  }
+
+  return `${numero}%`;
+}
+
 function renderizarHome(sessao) {
+  console.log("renderizarHome called", { sessao });
   if (!sessao || sessao.status !== "ok") {
+    console.warn("Sessão inválida ou não encontrada em renderizarHome", sessao);
     return;
   }
 
@@ -66,6 +81,11 @@ function renderizarHome(sessao) {
   const idNivel = Number(sessao.id_nivel || 0);
   const perfil = sessao.perfil || {};
   const nome = perfil.nome || sessao.usuario?.nome || "Usuário";
+  const equipeNome = perfil.equipes?.[0]?.nome || "Sem equipe";
+  const esporteNome = perfil.esporte || "Futebol";
+  const proximoTreino = perfil.proximo_treino || "Treino tático";
+  const treinadorNome = perfil.treinador || "Guilherme";
+
   if (tipoUsuario) {
     tipoUsuario.textContent = `Tipo de usuário: ${obterTipoUsuario(sessao)}`;
   }
@@ -83,24 +103,104 @@ function renderizarHome(sessao) {
   }
 
   if (idNivel === 3) {
-    titulo.textContent = `Bem vindo ao Mitra, ${nome}`;
-    painel.innerHTML = `
-      <article class="cardDadosAtleta">
-        <h2>Seus dados</h2>
-        <div class="infoAtletaLinha">
-          <strong>Peso</strong>
-          <span>${escaparHtml(formatarNumero(perfil.peso))}</span>
+    try {
+      titulo.textContent = `Bem vindo ao Mitra, ${nome}`;
+      painel.innerHTML = `
+      <div class="painelAtleta">
+        <section class="atletaTopo">
+          <div class="atletaPerfil">
+            <span class="atletaIcon">👤</span>
+            <div>
+              <strong>${escaparHtml(nome)}</strong>
+              <span>${escaparHtml(equipeNome)} · ${escaparHtml(esporteNome)}</span>
+            </div>
+          </div>
+        </section>
+
+        <article class="cardAgenda">
+          <div class="agendaData">
+            <span>28</span>
+            <small>Mai</small>
+          </div>
+          <div class="agendaInfo">
+            <strong>Próximo treino: ${escaparHtml(proximoTreino)}</strong>
+            <span>Qua, 09:00 · Treinador ${escaparHtml(treinadorNome)}</span>
+          </div>
+        </article>
+
+        <div class="cardsResumo">
+          <article class="statCard">
+            <small>Presenças</small>
+            <div class="statValue">18</div>
+            <span>de 22 treinos</span>
+          </article>
+          <article class="statCard">
+            <small>Frequência</small>
+            <div class="statValue">82%</div>
+            <span>Últimos 3 meses</span>
+          </article>
+          <article class="statCard">
+            <small>Sequência</small>
+            <div class="statValue">5</div>
+            <span>dias seguidos</span>
+          </article>
+          <article class="statCard">
+            <small>Evolução</small>
+            <div class="statValue">+12%</div>
+            <span>vs mês anterior</span>
+          </article>
         </div>
-        <div class="infoAtletaLinha">
-          <strong>Altura</strong>
-          <span>${escaparHtml(formatarNumero(perfil.altura))}</span>
+
+        <div class="graficosResumo">
+          <article class="cardGrafico cardGraficoBarras">
+            <div class="graficoHeader">
+              <h3>Presenças por mês</h3>
+            </div>
+            <div class="barrasChart">
+              <div>
+                <div class="bar" style="height:65%"></div>
+                <span>Mar</span>
+              </div>
+              <div>
+                <div class="bar" style="height:80%"></div>
+                <span>Abr</span>
+              </div>
+              <div>
+                <div class="bar" style="height:95%"></div>
+                <span>Mai</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="cardGrafico cardGraficoLinha">
+            <div class="graficoHeader linhaHeader">
+              <h3>Evolução de desempenho</h3>
+              <div class="graficoLegenda">
+                <span><i class="legendaPonto pontoVelocidade"></i> Velocidade (km/h)</span>
+                <span><i class="legendaPonto pontoResistencia"></i> Resistência (min)</span>
+              </div>
+            </div>
+            <div class="graficoLinhaSvgWrapper">
+              <svg viewBox="0 0 320 180" preserveAspectRatio="none">
+                <polyline points="20,140 80,130 140,125 200,115 280,95" class="linhaVelocidade" />
+                <polyline points="20,120 80,105 140,100 200,90 280,70" class="linhaResistencia" />
+              </svg>
+              <div class="graficoEixo">
+                <span>T1</span>
+                <span>T2</span>
+                <span>T3</span>
+                <span>T4</span>
+                <span>T5</span>
+              </div>
+            </div>
+          </article>
         </div>
-        <div class="infoAtletaLinha">
-          <strong>Equipes vinculadas</strong>
-          <span>${escaparHtml(textoEquipesAtleta(perfil))}</span>
-        </div>
-      </article>
+      </div>
     `;
+    } catch (err) {
+      console.error("Erro ao renderizar painel de atleta:", err);
+      painel.innerHTML = `<div style="padding:1rem;background:#fff;border-radius:8px;color:#c00">Erro ao carregar painel do atleta. Veja o console para detalhes.</div>`;
+    }
     return;
   }
 

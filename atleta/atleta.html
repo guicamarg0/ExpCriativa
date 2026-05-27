@@ -16,6 +16,35 @@
                     <a href="atleta_novo.html">+ Adicionar Atleta</a>
                 </div>
             </div>
+            <!-- Painel de gráficos estáticos (serão preenchidos pelo JS) -->
+            <div class="painelAtleta">
+                <section class="atletaTopo">
+                    <div class="atletaPerfil">
+                        <span class="atletaIcon">👤</span>
+                        <div>
+                            <strong id="atletaNome">—</strong>
+                            <span id="atletaEquipe">Sem equipe · —</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="graficosResumo">
+                    <article class="cardGrafico cardGraficoBarras" id="grafPresencas">
+                        <div class="graficoHeader"><h3>Presenças (últimos 6 meses)</h3></div>
+                        <div class="barrasChart">Carregando...</div>
+                    </article>
+
+                    <article class="cardGrafico cardGraficoLinha" id="grafEvolucao">
+                        <div class="graficoHeader"><h3>Evolução do treino</h3></div>
+                        <div class="linhaWrapper">Carregando...</div>
+                    </article>
+
+                    <article class="cardGrafico" id="cardProximoTreino">
+                        <div class="graficoHeader"><h3>Próximo treino</h3></div>
+                        <div class="proximoConteudo">Carregando...</div>
+                    </article>
+                </div>
+            </div>
             <div class="cabecalhoAtletas" aria-hidden="true">
                 <span></span>
                 <span>Nome</span>

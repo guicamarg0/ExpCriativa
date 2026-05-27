@@ -360,3 +360,33 @@
     }
 }
 
+/* Dashboard styles (minimal, reused from home) */
+.painelAtleta {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.atletaTopo {
+    border-radius: 12px;
+    padding: 1rem;
+    background: linear-gradient(135deg, #27225d 0%, #1e1b4d 100%);
+    color: #fff;
+}
+
+.atletaPerfil { display:flex; gap:1rem; align-items:center }
+.atletaIcon { width:44px; height:44px; display:grid; place-items:center; border-radius:50%; background:rgba(255,255,255,0.12) }
+
+.cardsResumo { display:flex; gap:1rem; flex-wrap:wrap }
+.statCard { background:#252459; color:#fff; padding:0.8rem 1rem; border-radius:10px; min-width:160px }
+.statCard small{ display:block; color:rgba(255,255,255,0.78); font-size:0.8rem }
+.statValue{ font-size:1.4rem; font-weight:700 }
+
+.graficosResumo { display:grid; grid-template-columns: 1fr 320px; gap:1rem }
+.cardGrafico { background:#1f1c4f; color:#fff; padding:0.9rem; border-radius:10px }
+.barrasChart { display:flex; gap:0.8rem; align-items:end; min-height:120px }
+.barrasChart > div{ display:flex; flex-direction:column; align-items:center; gap:0.6rem }
+.bar { width:36px; border-radius:999px; background:linear-gradient(180deg,#6f63ff,#4b3fd5) }
+
+@media (max-width:900px){ .graficosResumo{ grid-template-columns: 1fr } }
+

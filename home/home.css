@@ -60,3 +60,250 @@
 .infoAtletaLinha span {
     color: rgba(34, 28, 105, 0.9);
 }
+
+.painelAtleta {
+    display: grid;
+    gap: 1rem;
+}
+
+.atletaTopo {
+    border-radius: 20px;
+    padding: 1.4rem 1.6rem;
+    background: linear-gradient(135deg, #27225d 0%, #1e1b4d 100%);
+    color: #fff;
+}
+
+.atletaPerfil {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.atletaIcon {
+    width: 3.2rem;
+    height: 3.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 1.4rem;
+}
+
+.atletaPerfil strong {
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
+}
+
+.atletaPerfil span {
+    color: rgba(255, 255, 255, 0.78);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.cardAgenda {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    background: #eef0ff;
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    align-items: center;
+}
+
+.agendaData {
+    display: grid;
+    place-items: center;
+    width: 4.4rem;
+    min-height: 4.4rem;
+    border-radius: 18px;
+    background: #312f78;
+    color: #fff;
+    text-align: center;
+}
+
+.agendaData span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.agendaData small {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.agendaInfo strong {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+    color: #1c1b52;
+}
+
+.agendaInfo span {
+    color: rgba(34, 28, 105, 0.75);
+    font-size: 0.95rem;
+}
+
+.cardsResumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.statCard {
+    border-radius: 18px;
+    background: #252459;
+    color: #fff;
+    padding: 1.1rem 1.2rem;
+    min-height: 130px;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.statCard small {
+    color: rgba(255, 255, 255, 0.72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.85rem;
+}
+
+.statValue {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statCard span {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.95rem;
+}
+
+.graficosResumo {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1rem;
+}
+
+.cardGrafico {
+    border-radius: 20px;
+    background: #1f1c4f;
+    color: #fff;
+    padding: 1.2rem 1.3rem;
+    min-height: 280px;
+    display: grid;
+    gap: 1rem;
+}
+
+.graficoHeader {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.graficoHeader h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.graficoLegenda {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.85rem;
+}
+
+.legendaPonto {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.35rem;
+}
+
+.pontoVelocidade {
+    background: #5b50ff;
+}
+
+.pontoResistencia {
+    background: #1abc9c;
+}
+
+.barrasChart {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+    align-items: end;
+    min-height: 176px;
+}
+
+.barrasChart > div {
+    display: grid;
+    gap: 0.85rem;
+    align-items: end;
+    text-align: center;
+}
+
+.bar {
+    width: 100%;
+    min-height: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #6f63ff 0%, #4b3fd5 100%);
+    box-shadow: 0 12px 30px rgba(91, 80, 255, 0.16);
+}
+
+.barrasChart span {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.graficoLinhaSvgWrapper {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.graficoLinhaSvgWrapper svg {
+    width: 100%;
+    height: 180px;
+    overflow: visible;
+}
+
+.graficoLinhaSvgWrapper svg polyline {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.linhaVelocidade {
+    stroke: #5b50ff;
+}
+
+.linhaResistencia {
+    stroke: #1abc9c;
+}
+
+.graficoEixo {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.82rem;
+}
+
+.graficoEixo span {
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .graficosResumo {
+        grid-template-columns: 1fr;
+    }
+}
