@@ -1,5 +1,6 @@
 <?php
     header("Content-Type: application/json; charset=utf-8");
+    header("Content-Type: application/json; charset=utf-8");
     include_once('../conexao.php');
 
 if (isset($_GET['id'])) {

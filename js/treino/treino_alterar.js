@@ -1,53 +1,138 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const form = document.getElementById("formTreinoEdicao");
-  if (!form) {
-    return;
-  }
-
-  const idTreino = new URLSearchParams(window.location.search).get("id");
-  if (!idTreino) {
-    window.location.href = "atletas_treino.html";
-    return;
-  }
-
-  const retornoTreino = await fetch(`../php/treino/treino_get.php?id=${idTreino}`);
-  const respostaTreino = await retornoTreino.json();
-  const treino = (respostaTreino.data || [])[0] || {};
-
-  if (!treino.id) {
-    alert(`Erro: ${respostaTreino.mensagem || "Treino não encontrado."}`);
-    window.location.href = "atletas_treino.html";
-    return;
-  }
-
-  form.elements.id.value = treino.id || "";
-  form.elements.id_atleta.value = treino.id_atleta || "";
-  form.elements.id_treinador.value = treino.id_treinador || "";
-  form.elements.modalidade.value = treino.titulo || "";
-  form.elements.data.value = treino.data_inicio ? String(treino.data_inicio).slice(0, 10) : "";
-  form.elements.detalhes.value = treino.descricao || "";
-
-  const retornoAtleta = await fetch(`../php/atleta/atleta_get.php?id=${treino.id_atleta}`);
-  const respostaAtleta = await retornoAtleta.json();
-  if ((respostaAtleta.data || []).length > 0) {
-    form.elements.atleta.value = respostaAtleta.data[0].nome || "";
-  }
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(form);
-    const retorno = await fetch(`../php/treino/treino_alterar.php?id=${idTreino}`, {
-      method: "POST",
-      body: formData
-    });
-    const resposta = await retorno.json();
-
-    if (resposta.status === "ok") {
-      window.location.href = `planilha_treino.html?id=${form.elements.id_atleta.value}`;
-      return;
-    }
-
-    alert(`Erro: ${resposta.mensagem || "Não foi possível salvar as alterações."}`);
+document.addEventListener("DOMContentLoaded", () => {
+  const url = new URLSearchParams(window.location.search);
+  const id = url.get("id");
+  carregarModalidades().then(() => buscar(id));
+  document
+    .getElementById("modalidade")
+    .addEventListener("change", () => carregarExerciciosPorModalidade());
+  document.getElementById("enviar").addEventListener("click", () => {
+    alterar();
   });
 });
+
+async function carregarModalidades() {
+  const retorno = await fetch("../php/esportes/esportes_get.php");
+  const resposta = await retorno.json();
+  const select = document.getElementById("modalidade");
+  select.innerHTML = '<option value="">Selecione uma modalidade</option>';
+  if (resposta.status == "ok") {
+    resposta.data.forEach((modalidade) => {
+      const option = document.createElement("option");
+      option.value = modalidade.id;
+      option.textContent = modalidade.nome;
+      select.appendChild(option);
+    });
+  }
+}
+
+async function buscar(id) {
+  const retorno = await fetch("../php/treino/treino_get.php?id=" + id);
+  const resposta = await retorno.json();
+  if (resposta.status == "ok") {
+    var registro = resposta.data[0];
+    document.getElementById("id").value = id;
+    document.getElementById("id_atleta").value = registro.id_atleta;
+    document.getElementById("data").value = registro.data;
+    document.getElementById("detalhes").value = registro.detalhes;
+
+    const select = document.getElementById("modalidade");
+    const option = Array.from(select.options).find(
+      (o) => o.textContent === registro.modalidade,
+    );
+    if (option) {
+      select.value = option.value;
+    } else {
+      const fallback = new Option(registro.modalidade, "", true, true);
+      select.appendChild(fallback);
+      select.value = "";
+    }
+
+    const selectedIds = registro.exercicio_ids
+      ? registro.exercicio_ids.split(",").map((id) => parseInt(id, 10))
+      : [];
+
+    await carregarExerciciosPorModalidade(selectedIds);
+
+    const retornoAtleta = await fetch(
+      "../php/atleta/atleta_get.php?id=" + registro.id_atleta,
+    );
+    const respostaAtleta = await retornoAtleta.json();
+    if (respostaAtleta.status == "ok") {
+      document.getElementById("atleta").value = respostaAtleta.data[0].nome;
+    }
+  } else {
+    alert("ERRO:" + resposta.mensagem);
+    window.location.href = "../treino/atletas_treino.html";
+  }
+}
+
+async function carregarExerciciosPorModalidade(preSelected = []) {
+  const select = document.getElementById("modalidade");
+  const modalidadeId = select.value;
+  const container = document.getElementById("lista_exercicios_container");
+  const lista = document.getElementById("lista_exercicios");
+  lista.innerHTML = "";
+
+  if (!modalidadeId) {
+    container.style.display = "none";
+    return;
+  }
+
+  const retorno = await fetch(
+    `../php/esportes/modalidade_exercicios_get.php?id=${modalidadeId}`,
+  );
+  const resposta = await retorno.json();
+  if (resposta.status == "ok") {
+    container.style.display = "block";
+    resposta.data.forEach((exercicio) => {
+      const isChecked = preSelected.includes(exercicio.id);
+      const item = document.createElement("div");
+      item.className = "form-check mb-2";
+      item.innerHTML = `
+                <input class="form-check-input" type="checkbox" value="${exercicio.id}" id="ex_${exercicio.id}" ${isChecked ? "checked" : ""}>
+                <label class="form-check-label" for="ex_${exercicio.id}">${exercicio.nome}</label>
+            `;
+      lista.appendChild(item);
+    });
+  } else {
+    container.style.display = "none";
+  }
+}
+
+document.getElementById("enviar").addEventListener("click", () => {
+  alterar();
+});
+
+async function alterar() {
+  var id = document.getElementById("id").value;
+  var id_atleta = document.getElementById("id_atleta").value;
+  var selectModalidade = document.getElementById("modalidade");
+  var modalidade =
+    selectModalidade.options[selectModalidade.selectedIndex]?.text || "";
+  var modalidadeId = selectModalidade.value;
+  var data = document.getElementById("data").value;
+  var detalhes = document.getElementById("detalhes").value;
+
+  const checked = Array.from(
+    document.querySelectorAll("#lista_exercicios input[type=checkbox]:checked"),
+  ).map((input) => parseInt(input.value));
+
+  const fd = new FormData();
+  fd.append("modalidade", modalidade);
+  fd.append("modalidade_id", modalidadeId);
+  fd.append("data", data);
+  fd.append("detalhes", detalhes);
+  fd.append("exercicios", JSON.stringify(checked));
+
+  const retorno = await fetch("../php/treino/treino_alterar.php?id=" + id, {
+    method: "POST",
+    body: fd,
+  });
+
+  const resposta = await retorno.json();
+  if (resposta.status == "ok") {
+    window.location.href = `../treino/planilha_treino.html?id=${id_atleta}`;
+  } else {
+    alert("Erro... " + resposta.mensagem);
+  }
+}

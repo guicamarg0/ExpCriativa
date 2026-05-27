@@ -15,32 +15,17 @@ function encerrar_sessao() {
     }
 }
 
-if (
-    !isset($_SESSION['usuario_id']) ||
-    !isset($_SESSION['id_nivel']) ||
-    !isset($_SESSION['session_key'])
-) {
+if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['id_nivel'])) {
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Sessão inválida.'
-    ]);
-}
-
-$chaveCabecalho = $_SERVER['HTTP_X_SESSION_KEY'] ?? '';
-$chaveSessao = (string) ($_SESSION['session_key'] ?? '');
-
-if ($chaveCabecalho === '' || $chaveCabecalho !== $chaveSessao) {
-    encerrar_sessao();
-    resposta_json([
-        'status' => 'nok',
-        'mensagem' => 'Sessão expirada.'
+        'mensagem' => 'Sessao invalida.'
     ]);
 }
 
 if (!empty($conexao_error)) {
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Erro de conexão com o banco.'
+        'mensagem' => 'Erro de conexao com o banco.'
     ]);
 }
 
@@ -50,7 +35,7 @@ if ($usuarioId <= 0) {
     encerrar_sessao();
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Sessão inválida.'
+        'mensagem' => 'Sessao invalida.'
     ]);
 }
 
@@ -70,7 +55,7 @@ $stmtUsuario = $conexao->prepare(
 if (!$stmtUsuario) {
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Falha ao validar usuário.'
+        'mensagem' => 'Falha ao validar usuario.'
     ]);
 }
 
@@ -84,7 +69,7 @@ if (!$usuario) {
     encerrar_sessao();
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Usuário não encontrado.'
+        'mensagem' => 'Usuario nao encontrado.'
     ]);
 }
 
@@ -93,14 +78,14 @@ if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
     encerrar_sessao();
     resposta_json([
         'status' => 'nok',
-        'mensagem' => 'Usuário inativo.'
+        'mensagem' => 'Usuario inativo.'
     ]);
 }
 
 $idNivel = (int) ($usuario['id_nivel'] ?? 0);
 $perfil = [
     'tipo' => 'usuario',
-    'nome' => $usuario['email'] ?? 'Usuário'
+    'nome' => $usuario['email'] ?? 'Usuario'
 ];
 
 if ($idNivel === 1) {
@@ -195,7 +180,7 @@ $usuarioRetorno = [
     'email' => $usuario['email'],
     'id_nivel' => $idNivel,
     'nivel_nome' => $usuario['nivel_nome'] ?? '',
-    'nome' => $perfil['nome'] ?? ($usuario['email'] ?? 'Usuário'),
+    'nome' => $perfil['nome'] ?? ($usuario['email'] ?? 'Usuario'),
     'status' => $usuario['status']
 ];
 
@@ -203,7 +188,7 @@ $conexao->close();
 
 resposta_json([
     'status' => 'ok',
-    'mensagem' => 'Sessão válida.',
+    'mensagem' => 'Sessao valida.',
     'id' => (int) $usuario['id'],
     'id_nivel' => $idNivel,
     'usuario' => $usuarioRetorno,

@@ -5,10 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // busca nessa URL a variável id e armazana no const id.
     const url = new URLSearchParams(window.location.search);
     const id = url.get("id");
-    if (!id) {
-        window.location.replace("atletas_treino.html");
-        return;
-    }
     buscarAtleta(id);
     buscarTreinos(id);
 
@@ -17,6 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 });
+
+document.getElementById("logoff").addEventListener("click", () => {
+  logoff();
+});
+
+async function logoff() {
+  const retorno = await fetch("../php/usuario_logoff.php");
+  const resposta = await retorno.json();
+  if (resposta.status == "ok") {
+    window.location.href = "../login/";
+  }
+}
 
 async function excluir(id){
     const retorno = await fetch("../php/treino/treino_excluir.php?id="+id);
@@ -31,15 +39,15 @@ async function excluir(id){
 async function buscarAtleta(id){
     const retorno = await fetch("../php/atleta/atleta_get.php?id="+id);
     const resposta = await retorno.json();
-    if(resposta.status == "ok" && (resposta.data || []).length > 0){
-        document.getElementById("nome_atleta").innerHTML = resposta.data[0].nome || ""; //preencher nome
+    if(resposta.status == "ok"){
+        document.getElementById("nome_atleta").innerHTML = resposta.data[0].nome; //preencher nome
     }
 }
 
 async function buscarTreinos(id){
     const retorno = await fetch("../php/treino/treino_get.php?id_atleta="+id);
     const resposta = await retorno.json();
-    if(resposta.status == "ok" && (resposta.data || []).length > 0){
+    if(resposta.status == "ok"){
         preencherCards(resposta.data);
     }else{
         document.getElementById("cards_treino").innerHTML = "<p>Nenhum treino cadastrado para esse atleta</p>";
@@ -49,30 +57,20 @@ async function buscarTreinos(id){
 function preencherCards(tabela) {
   var html = '';
   for (var i = 0; i < tabela.length; i++) {
-    var treino = tabela[i] || {};
-    var dataTreino = treino.data_inicio || treino.data || "";
-    var tituloTreino = treino.titulo || treino.modalidade || "";
-    var descricaoTreino = treino.descricao || treino.detalhes || "";
-    var treinador = treino.nome_treinador || "";
-
     html += `
             <div class="card-treino">
-                <h3>${formatarData(dataTreino)}</h3>
-                <p><strong>Treino:</strong> ${tituloTreino}</p>
-                <p><strong>Detalhes:</strong> ${descricaoTreino}</p>
-                <p><strong>Treino montado pelo treinador: </strong> ${treinador}</p>
-                <a href="treino_alterar.html?id=${treino.id}">Alterar</a>
-                <a href="#" onclick="excluir(${treino.id})">Excluir</a>
+                <h3>${formatarData(tabela[i].data)}</h3>
+                <p><strong>Modalidade:</strong> ${tabela[i].modalidade}</p>
+                <p><strong>Detalhes:</strong> ${tabela[i].detalhes}</p>
+                <p><strong>Treino montado pelo treinador: </strong> ${tabela[i].nome_treinador}</p>
+                <a href="treino_alterar.html?id=${tabela[i].id}">Alterar</a>
+                <a href="#" onclick="excluir(${tabela[i].id})">Excluir</a>
             </div>
         `;
   }
   document.getElementById("cards_treino").innerHTML = html;
   
   function formatarData(data){
-    if (!data) {
-      return "";
-    }
-    data = String(data).slice(0, 10);
     const [ano, mes, dia] = data.split("-");
     return `${dia}/${mes}/${ano}`;
   }

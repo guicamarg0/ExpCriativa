@@ -106,11 +106,8 @@ if ($statusUsuario !== 'ativo' && $statusUsuario !== 'ativa') {
 }
 
 session_regenerate_id(true);
-
-$sessionKey = hash('sha256', uniqid((string) mt_rand(), true));
 $_SESSION['usuario_id'] = (int) $usuario['id'];
 $_SESSION['id_nivel'] = (int) $usuario['id_nivel'];
-$_SESSION['session_key'] = $sessionKey;
 
 unset($_SESSION['email']);
 
@@ -122,7 +119,6 @@ $retorno = [
         'email' => $usuario['email'],
         'id_nivel' => (int) $usuario['id_nivel']
     ],
-    'session_key' => $sessionKey,
     'data' => [
         [
             'id' => (int) $usuario['id'],

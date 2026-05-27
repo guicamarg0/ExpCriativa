@@ -1,5 +1,6 @@
 <?php
     header("Content-type:application/json;charset:utf-8");
+    header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
     // Configurando o padrão de retorno em todas
     // as situações

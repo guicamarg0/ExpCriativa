@@ -1,58 +1,32 @@
-﻿(function () {
-  const STORAGE_SESSION_KEY = "mitraSessionKey";
-  const STORAGE_USER_KEY = "mitraUsuario";
+(function () {
+  const userStorageKey =
+    typeof STORAGE_USER_KEY !== "undefined" ? STORAGE_USER_KEY : "mitraUsuario";
 
-  const scriptTag =
-    document.currentScript ||
-    document.querySelector('script[src*="valida_sessao.js"]');
-
-  let basePath = "";
-  if (scriptTag && scriptTag.src) {
-    const scriptUrl = new URL(scriptTag.src, window.location.href);
-    const suffix = "/js/valida_sessao.js";
-    if (scriptUrl.pathname.endsWith(suffix)) {
-      basePath = scriptUrl.pathname.slice(0, -suffix.length);
-    }
-  }
-
-  const phpPath = `${basePath}/php/valida_sessao.php`;
-  const loginPath = `${basePath}/login/index.html`;
-
-  function limparSessaoLocal() {
-    localStorage.removeItem(STORAGE_SESSION_KEY);
-    localStorage.removeItem(STORAGE_USER_KEY);
-  }
+  // Caminho relativo para o PHP, ajusta automaticamente para subpastas
+  let phpPath = "php/valida_sessao.php";
+  const path = window.location.pathname;
+  if (path.includes("/home/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("/js/") || path.includes("/componentes/"))
+    phpPath = "../../php/valida_sessao.php";
+  else if (path.includes("../login/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../esportes/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../exemplo/")) phpPath = "../php/valida_sessao.php";
+  else if (path.includes("../equipe/")) phpPath = "../php/valida_sessao.php";
+  else phpPath = "../php/valida_sessao.php";
 
   function redirecionarLogin() {
-    limparSessaoLocal();
-    window.location.replace(loginPath);
+    window.location.href = "../login/index.html";
   }
 
-  const sessionKey = localStorage.getItem(STORAGE_SESSION_KEY) || "";
-  if (!sessionKey) {
-    redirecionarLogin();
-    return;
-  }
-
-  fetch(phpPath, {
-    cache: "no-store",
-    headers: {
-      "X-Session-Key": sessionKey
-    }
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Sessao invalida");
-      }
-      return response.json();
-    })
+  fetch(phpPath, { cache: "no-store" })
+    .then((response) => response.json())
     .then((data) => {
       if (data.status !== "ok") {
         throw new Error("Sessao invalida");
       }
 
       if (data.usuario) {
-        localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(data.usuario));
+        localStorage.setItem(userStorageKey, JSON.stringify(data.usuario));
       }
 
       window.mitraSessao = data;
