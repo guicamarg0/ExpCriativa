@@ -12,6 +12,7 @@ if (isset($_GET['id'])) {
     $stmt = $conexao->prepare("
         SELECT
             treinos.*,
+            treino_atletas.id AS id_treino_atleta,
             treino_atletas.id_atleta,
             treinadores.nome AS nome_treinador
         FROM treinos
@@ -25,6 +26,7 @@ if (isset($_GET['id'])) {
     $stmt = $conexao->prepare("
         SELECT
             treinos.*,
+            treino_atletas.id AS id_treino_atleta,
             treino_atletas.id_atleta,
             treinadores.nome AS nome_treinador
         FROM treino_atletas
@@ -39,6 +41,7 @@ if (isset($_GET['id'])) {
     $stmt = $conexao->prepare("
         SELECT
             treinos.*,
+            treino_atletas.id AS id_treino_atleta,
             treino_atletas.id_atleta,
             treinadores.nome AS nome_treinador
         FROM treinos

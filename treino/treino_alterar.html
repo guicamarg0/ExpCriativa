@@ -59,6 +59,37 @@
         .form-container {
             max-width: 500px;
         }
+
+        .bloco-metricas {
+            border: 1px solid var(--cinza-borda);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .bloco-metricas h2 {
+            color: var(--azul-mitra);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .lista-metricas {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .lista-metricas label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .campos-metrica {
+            display: grid;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
@@ -94,6 +125,24 @@
                 <div class="mb-3">
                     <label for="atleta" class="form-label fw-semibold text-secondary">O treino sera vinculado ao Atleta: </label>
                     <input type="text" id="atleta" name="atleta" class="form-control" readonly>
+                </div>
+
+                <div class="bloco-metricas">
+                    <h2>Metricas para o atleta preencher</h2>
+                    <p>Percepcao de esforco sempre sera adicionada.</p>
+                    <div id="lista_metricas" class="lista-metricas"></div>
+
+                    <div class="campos-metrica">
+                        <input type="text" id="nova_metrica_nome" class="form-control" placeholder="Nova metrica">
+                        <input type="text" id="nova_metrica_unidade" class="form-control" placeholder="Unidade">
+                        <select id="nova_metrica_tipo" class="form-control">
+                            <option value="numero">Numero</option>
+                            <option value="escala_0_10">Escala 0 a 10</option>
+                            <option value="aproveitamento">Aproveitamento</option>
+                        </select>
+                        <textarea id="nova_metrica_descricao" class="form-control" rows="2" placeholder="Descricao"></textarea>
+                        <button type="button" id="btnCadastrarMetrica" class="btn px-4">Cadastrar metrica</button>
+                    </div>
                 </div>
 
                 <div>
