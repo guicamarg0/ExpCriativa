@@ -1,48 +1,40 @@
-document.addEventListener("DOMContentLoaded", () => {
-  buscar();
-});
+document.addEventListener("DOMContentLoaded", buscar);
 
-document.getElementById("logoff").addEventListener("click", () => {
-  logoff();
-});
+async function buscar() {
+  const retornoAtletas = await fetch("../php/atleta/atleta_get.php");
+  const respostaAtletas = await retornoAtletas.json();
 
-async function logoff() {
-  const retorno = await fetch("../php/usuario_logoff.php");
-  const resposta = await retorno.json();
-  if (resposta.status == "ok") {
-    window.location.href = "../login/";
+  if (respostaAtletas.status !== "ok") {
+    return;
   }
+
+  preencherLista(respostaAtletas.data || []);
 }
 
-async function buscar(){
-    const retorno = await fetch("../php/atleta/atleta_get.php");
-    const resposta = await retorno.json();
-    if(resposta.status == "ok"){
-        preencherTabela(resposta.data);    
-    }
-}
+function preencherLista(atletas) {
+  const lista = document.getElementById("listaAtletasTreino");
 
-function preencherTabela(tabela) {
-  var html = `
-        <table>
-            <tr>
-                <th> ID do Atleta </th>
-                <th> Nome </th>
-                <th> Menu </th>
-            </tr>`;
-  for (var i = 0; i < tabela.length; i++) {
+  if (!atletas.length) {
+    lista.innerHTML = '<p class="estadoListaVazia">Nenhum atleta cadastrado.</p>';
+    return;
+  }
+
+  let html = "";
+
+  for (let i = 0; i < atletas.length; i++) {
+    const atleta = atletas[i];
+
     html += `
-            <tr>
-                <td>${tabela[i].id}</td>
-                <td>${tabela[i].nome}</td>
-                <td>
-                    <button class="btn-planilha" onclick="window.location.href='planilha_treino.html?id=${tabela[i].id}'">
-                    Visualizar Planilha de Treinos
-                    </button>
-                </td>
-            </tr>
-        `;
+      <div class="linhaAtletaTreino">
+        <a class="btnPlanilhaAtleta" href="planilha_treino.html?id=${atleta.id}">
+          <i class="bi bi-clipboard2-pulse"></i>
+          <span class="visually-hidden">Visualizar treinos</span>
+        </a>
+        <p>${atleta.nome || ""}</p>
+        <p>${atleta.status || ""}</p>
+      </div>
+    `;
   }
-  html += "</table>";
-  document.getElementById("lista").innerHTML = html;
+
+  lista.innerHTML = html;
 }

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const id = url.get("id");
 
   if (!id) {
-    alert("ID da modalidade nao informado.");
+    mostrarToast("ID da modalidade nao informado.", "aviso");
     window.location.href = "../esportes/esportes.html";
     return;
   }
@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (form) {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (!validarEsporte(form)) {
+        return;
+      }
       await alterar();
     });
   }
@@ -35,7 +38,7 @@ async function buscar(id) {
     document.getElementById("id").value = id;
     await carregarExercicios(id);
   } else {
-    alert("ERRO:" + resposta.mensagem);
+    mostrarToast("Erro: " + resposta.mensagem, "erro");
     window.location.href = "../esportes/esportes.html";
   }
 }
@@ -74,9 +77,29 @@ async function alterar() {
   });
   const resposta = await retorno.json();
   if (resposta.status == "ok") {
-    alert("SUCESSO: " + resposta.mensagem);
-    window.location.href = "../esportes/esportes.html";
+    mostrarToast("Sucesso: " + resposta.mensagem, "sucesso", { duracao: 1200 });
+    window.setTimeout(() => {
+      window.location.href = "../esportes/esportes.html";
+    }, 700);
   } else {
-    alert("Erro... " + resposta.mensagem);
+    mostrarToast("Erro: " + resposta.mensagem, "erro");
   }
+}
+
+function validarEsporte(form) {
+  const campos = form.querySelectorAll("[required]");
+
+  for (let i = 0; i < campos.length; i++) {
+    const campo = campos[i];
+    campo.classList.remove("campo-invalido");
+
+    if (!String(campo.value || "").trim()) {
+      campo.classList.add("campo-invalido");
+      campo.focus();
+      mostrarToast("Preencha todos os campos obrigatorios.", "aviso");
+      return false;
+    }
+  }
+
+  return true;
 }

@@ -20,7 +20,7 @@ async function login() {
   const senha = document.getElementById("senha")?.value || "";
 
   if (!email || !senha) {
-    alert("Informe e-mail e senha.");
+    mostrarToast("Informe e-mail e senha.", "aviso");
     return;
   }
 
@@ -43,10 +43,12 @@ async function login() {
       } else {
         localStorage.removeItem("id_treinador");
       }
-      alert("Login Efetuado com Sucesso");
-      window.location.href = "../home/home.html";
+      mostrarToast("Login efetuado com sucesso.", "sucesso", { duracao: 1200 });
+      window.setTimeout(() => {
+        window.location.href = "../home/home.html";
+      }, 700);
     } else {
-      alert("Credenciais inválidas");
+      mostrarToast("Credenciais invalidas.", "erro");
     }
   }
 

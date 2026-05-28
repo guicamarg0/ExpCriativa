@@ -17,21 +17,21 @@
             <div class="headerConteudo">
                 <h1>Alterar Atleta</h1>
             </div>
-            <form id="formAtletaEdicao" class="modalAtletaForm">
+            <form id="formAtletaEdicao" class="modalAtletaForm" novalidate>
                 <input type="hidden" name="id">
                 <div class="blocoFormulario">
                     <div class="camposGrid">
-                        <label>Nome <input type="text" name="nome"></label>
-                        <label>Data de nascimento <input type="date" name="data_nascimento"></label>
+                        <label>Nome <input type="text" name="nome" placeholder="Nome completo" required></label>
+                        <label>Data de nascimento <input type="date" name="data_nascimento" required></label>
                         <label>Gênero
-                            <select name="id_genero" id="id_genero">
+                            <select name="id_genero" id="id_genero" required>
                                 <option value="">Selecione um gênero</option>
                             </select>
                         </label>
-                        <label>Altura <input type="text" name="altura"></label>
-                        <label>Peso <input type="text" name="peso"></label>
+                        <label>Altura <input type="text" name="altura" placeholder="Ex: 1,75" inputmode="decimal" required></label>
+                        <label>Peso <input type="text" name="peso" placeholder="Ex: 70,50" inputmode="decimal" required></label>
                         <label>Status
-                            <select name="status">
+                            <select name="status" required>
                                 <option value="ativo">Ativo</option>
                                 <option value="inativo">Inativo</option>
                             </select>
@@ -47,6 +47,7 @@
     </div>
 
     <script src="../js/menu_lateral.js" defer></script>
+    <script src="../js/notificacao.js"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/atleta/atleta_alterar.js"></script>
 </body>

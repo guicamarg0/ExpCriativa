@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const treino = (respostaTreino.data || [])[0] || {};
 
   if (!treino.id) {
-    alert(`Erro: ${respostaTreino.mensagem || "Treino nao encontrado."}`);
+    mostrarToast(`Erro: ${respostaTreino.mensagem || "Treino nao encontrado."}`, "erro");
     window.location.href = "atletas_treino.html";
     return;
   }
@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    if (!validarTreino(form)) {
+      return;
+    }
+
     const selectModalidade = document.getElementById("modalidade");
     const modalidadeTexto =
       selectModalidade.options[selectModalidade.selectedIndex]?.text || "";
@@ -50,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     if (exerciciosMarcados.length === 0) {
-      alert("Selecione pelo menos um exercicio para o treino.");
+      mostrarToast("Selecione pelo menos um exercicio para o treino.", "aviso");
       return;
     }
 
@@ -63,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       if (!selectMetrica || !selectMetrica.value) {
-        alert("Selecione uma metrica para cada exercicio marcado.");
+        mostrarToast("Selecione uma metrica para cada exercicio marcado.", "aviso");
         return;
       }
 
@@ -87,9 +91,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    alert(`Erro: ${resposta.mensagem || "Nao foi possivel salvar as alteracoes."}`);
+    mostrarToast(`Erro: ${resposta.mensagem || "Nao foi possivel salvar as alteracoes."}`, "erro");
   });
 });
+
+function validarTreino(form) {
+  const campos = form.querySelectorAll("[required]");
+
+  for (let i = 0; i < campos.length; i++) {
+    const campo = campos[i];
+    campo.classList.remove("campo-invalido");
+
+    if (!String(campo.value || "").trim()) {
+      campo.classList.add("campo-invalido");
+      campo.focus();
+      mostrarToast("Preencha todos os campos obrigatorios.", "aviso");
+      return false;
+    }
+  }
+
+  return true;
+}
 
 function getExerciciosSelecionados(treino) {
   if (!treino.exercicio_ids) {

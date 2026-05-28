@@ -15,46 +15,76 @@
       <div id="menu-lateral"></div>
       <div class="conteudoEquipe">
         <div class="headerConteudo"><h1>Alterar Equipe</h1></div>
-        <form id="formEquipeEdicao" class="modalEquipeForm">
+        <form id="formEquipeEdicao" class="modalEquipeForm" novalidate>
           <input type="hidden" name="id" />
           <div class="blocoEquipeForm">
             <div class="camposGridEquipe">
-              <label>Nome <input type="text" name="nome" /></label>
-              <label>Categoria <input type="text" name="categoria" /></label>
+              <label>Nome <input type="text" name="nome" placeholder="Nome da equipe" required /></label>
+              <label>Categoria <input type="text" name="categoria" placeholder="Ex: Sub-17" required /></label>
               <label>Modalidade
-                <select name="id_modalidade" id="id_modalidade">
+                <select name="id_modalidade" id="id_modalidade" required>
                   <option value="">Selecione uma modalidade</option>
                 </select>
               </label>
               <label>Genero
-                <select name="id_genero" id="id_genero">
+                <select name="id_genero" id="id_genero" required>
                   <option value="">Selecione um genero</option>
                 </select>
               </label>
               <label>Treinador responsavel
-                <select name="id_treinador_responsavel" id="id_treinador_responsavel">
+                <select name="id_treinador_responsavel" id="id_treinador_responsavel" required>
                   <option value="">Selecione um treinador</option>
                 </select>
               </label>
-              <label>IDs dos atletas <input type="text" name="atletas_ids" /></label>
               <label>Status
-                <select name="status">
+                <select name="status" required>
                   <option value="ativa">Ativa</option>
                   <option value="inativa">Inativa</option>
                 </select>
               </label>
             </div>
-            <label>Descricao <textarea name="descricao" rows="3"></textarea></label>
+            <label>Descricao <textarea name="descricao" rows="3" placeholder="Descreva a equipe" required></textarea></label>
+            <input type="hidden" name="atletas_ids" id="atletas_ids">
+            <div class="vinculoAtletasEquipe">
+              <button type="button" class="btnPrimario" id="btnAbrirModalAtletas">
+                <i class="bi bi-person-plus"></i> Vincular atletas
+              </button>
+              <div class="atletasSelecionadosResumo" id="atletasSelecionadosResumo">Nenhum atleta selecionado.</div>
+            </div>
           </div>
           <div class="modalEquipeAcoes">
             <a href="equipe.html"><i class="bi bi-arrow-left"></i> Voltar</a>
             <button type="submit"><i class="bi bi-check-circle"></i> Salvar</button>
           </div>
         </form>
+        <div class="modalEquipe modalAtletasEquipe" id="modalAtletasEquipe" aria-hidden="true">
+          <div class="modalEquipeOverlay" id="modalAtletasEquipeOverlay"></div>
+          <div class="modalEquipeCard">
+            <div class="modalEquipeHeader">
+              <h2>Vincular atletas</h2>
+              <button type="button" class="modalEquipeFechar" id="btnFecharModalAtletas" aria-label="Fechar">x</button>
+            </div>
+            <div class="modalAtletasConteudo">
+              <div>
+                <h3>Atletas disponiveis</h3>
+                <div class="listaModalAtletas" id="listaAtletasDisponiveis"></div>
+              </div>
+              <div>
+                <h3>Selecionados</h3>
+                <div class="listaModalAtletas" id="listaAtletasSelecionados"></div>
+              </div>
+            </div>
+            <div class="modalEquipeAcoes">
+              <button type="button" class="btnSecundario" id="btnCancelarAtletas">Cancelar</button>
+              <button type="button" class="btnPrimario" id="btnConfirmarAtletas">Confirmar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <script src="../js/menu_lateral.js" defer></script>
+    <script src="../js/notificacao.js"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/equipe/equipe_alterar.js"></script>
   </body>

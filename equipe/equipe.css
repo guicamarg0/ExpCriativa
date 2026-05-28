@@ -262,6 +262,101 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.vinculoAtletasEquipe{
+    display: grid;
+    gap: 0.8em;
+    margin-top: 1em;
+}
+
+.vinculoAtletasEquipe .btnPrimario{
+    justify-self: start;
+}
+
+.atletasSelecionadosResumo{
+    border: 2px dashed rgba(34, 28, 105, 0.25);
+    border-radius: 8px;
+    padding: 0.8em;
+    color: var(--cor-primaria);
+    font-weight: 600;
+    min-height: 3em;
+}
+
+.modalAtletasConteudo{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1em;
+}
+
+.modalAtletasConteudo h3{
+    color: var(--cor-primaria);
+    font-size: 1rem;
+    margin-bottom: 0.7em;
+}
+
+.listaModalAtletas{
+    border: 2px solid rgba(34, 28, 105, 0.16);
+    border-radius: 8px;
+    padding: 0.6em;
+    min-height: 240px;
+    max-height: 360px;
+    overflow: auto;
+    display: grid;
+    align-content: start;
+    gap: 0.5em;
+}
+
+.itemModalAtleta{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8em;
+    border: 1px solid rgba(34, 28, 105, 0.16);
+    border-radius: 8px;
+    padding: 0.65em 0.75em;
+    color: var(--cor-primaria);
+    background: var(--cor-branco);
+}
+
+.itemModalAtleta span{
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.itemModalAtleta button{
+    flex-shrink: 0;
+    border: 2px solid var(--cor-primaria);
+    border-radius: 6px;
+    background: var(--cor-branco);
+    color: var(--cor-primaria);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0.35em 0.65em;
+}
+
+.itemModalAtleta button:hover{
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+}
+
+.itemModalAtleta .btnRemoverAtleta{
+    border-color: var(--cor-vermelho);
+    color: var(--cor-vermelho);
+}
+
+.itemModalAtleta .btnRemoverAtleta:hover{
+    background: var(--cor-vermelho);
+    color: var(--cor-branco);
+}
+
+.estadoModalAtletas{
+    color: var(--cor-primaria);
+    font-weight: 600;
+    padding: 0.6em;
+}
+
 .modalEquipeAcoes{
     display: flex;
     flex-wrap: wrap;
@@ -338,6 +433,10 @@
         white-space: normal;
         overflow: visible;
         text-overflow: initial;
+    }
+
+    .modalAtletasConteudo{
+        grid-template-columns: 1fr;
     }
 
 }

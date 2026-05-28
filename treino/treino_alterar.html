@@ -8,72 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../componentes/menuLateral.css">
-
-    <style>
-        :root {
-            --azul-mitra: #181952;
-            --cinza-borda: #e5e5e5;
-        }
-
-        body {
-            background-color: #ffffff;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .conteudo {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        .conteudo-principal {
-            flex: 1;
-            min-width: 0;
-            padding: 40px 50px;
-        }
-
-        h1 {
-            color: var(--azul-mitra);
-            font-weight: 600;
-            font-size: 2rem;
-            margin-bottom: 0;
-        }
-
-        hr {
-            border-color: var(--azul-mitra);
-            opacity: 0.2;
-        }
-
-        #enviar {
-            background-color: var(--azul-mitra);
-            color: white;
-            border: 1px solid var(--azul-mitra);
-        }
-
-        #enviar:hover {
-            background-color: #22246b;
-            color: white;
-        }
-
-        .form-container {
-            max-width: 500px;
-        }
-
-        .exercicio-metricas {
-            border: 1px solid var(--cinza-borda);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-
-        .metricas-exercicio {
-            display: grid;
-            gap: 6px;
-            margin-top: 8px;
-            padding-left: 24px;
-        }
-    </style>
+    <link rel="stylesheet" href="treino_alterar.css">
 </head>
 <body>
     <div class="conteudo">
@@ -85,7 +20,7 @@
             </div>
             <hr class="mb-4">
 
-            <form id="formTreinoEdicao" class="form-container">
+            <form id="formTreinoEdicao" class="form-container" novalidate>
                 <input type="hidden" name="id">
                 <input type="hidden" name="id_atleta">
                 <input type="hidden" name="id_treinador">
@@ -97,7 +32,7 @@
                     </select>
                 </div>
 
-                <div class="mb-3" id="lista_exercicios_container" style="display: none">
+                <div class="mb-3 oculto" id="lista_exercicios_container">
                     <label class="form-label fw-semibold text-secondary">Exercicios vinculados</label>
                     <div id="lista_exercicios"></div>
                 </div>
@@ -109,12 +44,12 @@
 
                 <div class="mb-3">
                     <label for="detalhes" class="form-label fw-semibold text-secondary">Detalhes e informacoes do Treino:</label>
-                    <textarea id="detalhes" name="detalhes" class="form-control" rows="5" required></textarea>
+                    <textarea id="detalhes" name="detalhes" class="form-control" rows="5" placeholder="Descreva o objetivo, volume e orientacoes do treino" required></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="atleta" class="form-label fw-semibold text-secondary">O treino sera vinculado ao Atleta: </label>
-                    <input type="text" id="atleta" name="atleta" class="form-control" readonly>
+                    <input type="text" id="atleta" name="atleta" class="form-control" placeholder="Atleta selecionado" readonly>
                 </div>
 
                 <div>
@@ -125,6 +60,7 @@
     </div>
 
     <script src="../js/menu_lateral.js" defer></script>
+    <script src="../js/notificacao.js"></script>
     <script src="../js/treino/treino_alterar.js"></script>
     <script src="../js/valida_sessao.js"></script>
 </body>

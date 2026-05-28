@@ -17,23 +17,28 @@
       <div id="menu-lateral"></div>
       <div class="conteudoEquipe">
         <div class="headerConteudo"><h1>Alterar Treinador</h1></div>
-        <form id="formTreinadorEdicao" class="modalEquipeForm">
+        <form id="formTreinadorEdicao" class="modalEquipeForm" novalidate>
           <input type="hidden" name="id" />
           <div class="blocoFormulario">
             <div class="camposGrid">
-              <label>Nome <input type="text" name="nome"></label>
-              <label>Data de nascimento <input type="date" name="data_nascimento"></label>
-              <label>Telefone <input type="text" name="telefone"></label>
-              <label>CREF <input type="text" name="cref"></label>
+              <label>Nome <input type="text" name="nome" placeholder="Nome completo" required></label>
+              <label>Data de nascimento <input type="date" name="data_nascimento" required></label>
+              <label>Telefone <input type="text" name="telefone" placeholder="(41) 99999-9999" inputmode="numeric" required></label>
+              <label>CREF <input type="text" name="cref" placeholder="123456-G/PR" required></label>
               <label>Data de início <input type="date" name="data_inicio"></label>
-              <label>E-mail <input type="text" name="email"></label>
-              <label>Senha <input type="password" name="senha"></label>
               <label>Status
-                <select name="status">
+                <select name="status" required>
                   <option value="ativo">Ativo</option>
                   <option value="inativo">Inativo</option>
                 </select>
               </label>
+            </div>
+          </div>
+          <div class="blocoFormulario credenciaisUsuario">
+            <h2 class="tituloBlocoFormulario">Cadastro de Usuario</h2>
+            <div class="camposGrid">
+              <label>E-mail <input type="email" name="email" placeholder="nome@email.com" required></label>
+              <label>Senha <input type="password" name="senha" placeholder="Deixe em branco para manter"></label>
             </div>
           </div>
           <div class="modalEquipeAcoes">
@@ -45,6 +50,7 @@
     </div>
 
     <script src="../js/menu_lateral.js" defer></script>
+    <script src="../js/notificacao.js"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/treinador/treinador_alterar.js"></script>
   </body>

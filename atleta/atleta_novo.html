@@ -16,21 +16,21 @@
                 <h1>Novo Atleta</h1>
             </div>
 
-            <form id="formAtletaNovo" class="modalAtletaForm">
+            <form id="formAtletaNovo" class="modalAtletaForm" novalidate>
                 <div class="blocoFormulario">
                     <h2 class="tituloBlocoFormulario">Dados do Atleta</h2>
                     <div class="camposGrid">
-                        <label>Nome <input type="text" name="nome" required></label>
-                        <label>Data de nascimento <input type="date" name="data_nascimento"></label>
+                        <label>Nome <input type="text" name="nome" placeholder="Nome completo" required></label>
+                        <label>Data de nascimento <input type="date" name="data_nascimento" required></label>
                         <label>Genero
-                            <select name="id_genero" id="id_genero">
+                            <select name="id_genero" id="id_genero" required>
                                 <option value="">Selecione um genero</option>
                             </select>
                         </label>
-                        <label>Altura <input type="text" name="altura"></label>
-                        <label>Peso <input type="text" name="peso"></label>
+                        <label>Altura <input type="text" name="altura" placeholder="Ex: 1,75" inputmode="decimal" required></label>
+                        <label>Peso <input type="text" name="peso" placeholder="Ex: 70,50" inputmode="decimal" required></label>
                         <label>Status
-                            <select name="status">
+                            <select name="status" required>
                                 <option value="ativo" selected>Ativo</option>
                                 <option value="inativo">Inativo</option>
                             </select>
@@ -41,8 +41,8 @@
                 <div class="blocoFormulario credenciaisUsuario">
                     <h2 class="tituloBlocoFormulario">Cadastro de Usuario</h2>
                     <div class="camposGrid">
-                        <label>E-mail <input type="email" name="email" required></label>
-                        <label>Senha <input type="text" name="senha" required></label>
+                        <label>E-mail <input type="email" name="email" placeholder="nome@email.com" required></label>
+                        <label>Senha <input type="text" name="senha" placeholder="Senha de acesso" required></label>
                     </div>
                 </div>
 
@@ -55,6 +55,7 @@
     </div>
 
     <script src="../js/menu_lateral.js" defer></script>
+    <script src="../js/notificacao.js"></script>
     <script src="../js/valida_sessao.js"></script>
     <script src="../js/atleta/atleta_novo.js"></script>
 </body>

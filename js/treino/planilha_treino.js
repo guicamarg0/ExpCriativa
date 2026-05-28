@@ -25,7 +25,7 @@ async function excluir(id) {
   if (resposta.status == "ok") {
     window.location.reload();
   } else {
-    alert(resposta.mensagem);
+    mostrarToast(resposta.mensagem, "erro");
   }
 }
 
@@ -223,7 +223,7 @@ async function salvarMetricasTreino(idTreinoAtleta, idTreino, paresTexto) {
     const resposta = await retorno.json();
 
     if (resposta.status != "ok") {
-      alert(resposta.mensagem || "Nao foi possivel salvar uma das metricas.");
+      mostrarToast(resposta.mensagem || "Nao foi possivel salvar uma das metricas.", "erro");
       return;
     }
 
@@ -231,7 +231,7 @@ async function salvarMetricasTreino(idTreinoAtleta, idTreino, paresTexto) {
   }
 
   if (!salvouAlguma) {
-    alert("Preencha pelo menos uma metrica.");
+    mostrarToast("Preencha pelo menos uma metrica.", "aviso");
     return;
   }
 

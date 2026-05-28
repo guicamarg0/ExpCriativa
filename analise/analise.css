@@ -77,6 +77,10 @@ body {
   display: block;
 }
 
+.oculto {
+  display: none;
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
