@@ -2,6 +2,10 @@ DROP DATABASE IF EXISTS mitra_db;
 CREATE DATABASE mitra_db;
 USE mitra_db;
 
+-- =====================================================
+-- TABELAS BASE
+-- =====================================================
+
 CREATE TABLE nivel_acesso (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL UNIQUE,
@@ -20,6 +24,7 @@ CREATE TABLE usuarios (
     senha VARCHAR(255) NOT NULL,
     id_nivel INT,
     status VARCHAR(20) DEFAULT 'ativo',
+
     FOREIGN KEY (id_nivel) REFERENCES nivel_acesso(id)
 );
 
@@ -39,32 +44,47 @@ CREATE TABLE exercicios (
 CREATE TABLE modalidade_exercicio (
     id_modalidade INT NOT NULL,
     id_exercicio INT NOT NULL,
+
     PRIMARY KEY (id_modalidade, id_exercicio),
+
     FOREIGN KEY (id_modalidade) REFERENCES modalidades(id) ON DELETE CASCADE,
     FOREIGN KEY (id_exercicio) REFERENCES exercicios(id) ON DELETE CASCADE
 );
 
+-- =====================================================
+-- TREINADORES, EQUIPES E ATLETAS
+-- =====================================================
+
 CREATE TABLE treinadores (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_usuario INT UNIQUE,
+
     nome VARCHAR(100) NOT NULL,
     cref VARCHAR(20) NOT NULL UNIQUE,
     telefone VARCHAR(20),
+
     data_nascimento DATE,
     data_inicio DATE,
+
     status VARCHAR(20) DEFAULT 'ativo',
+
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE equipes (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
+
     id_modalidade INT,
     id_genero INT,
     id_treinador_responsavel INT,
     categoria VARCHAR(50),
+
     status VARCHAR(20) DEFAULT 'ativa',
+
     FOREIGN KEY (id_modalidade) REFERENCES modalidades(id) ON DELETE CASCADE,
     FOREIGN KEY (id_genero) REFERENCES genero(id),
     FOREIGN KEY (id_treinador_responsavel) REFERENCES treinadores(id) ON DELETE SET NULL
@@ -72,47 +92,72 @@ CREATE TABLE equipes (
 
 CREATE TABLE atletas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_usuario INT UNIQUE,
     id_equipe INT,
     id_genero INT,
+
     nome VARCHAR(100) NOT NULL,
     posicao VARCHAR(50),
+
     data_nascimento DATE,
+
     peso DECIMAL(5,2),
     altura DECIMAL(4,2),
+
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     status VARCHAR(20) DEFAULT 'ativo',
+
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_equipe) REFERENCES equipes(id) ON DELETE SET NULL,
     FOREIGN KEY (id_genero) REFERENCES genero(id)
 );
 
+-- =====================================================
+-- MÉTRICAS E EXERCÍCIOS
+-- =====================================================
+
 CREATE TABLE metricas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     nome VARCHAR(100) NOT NULL UNIQUE,
     descricao TEXT,
     unidade_medida VARCHAR(30),
+
     tipo VARCHAR(30) NOT NULL DEFAULT 'numero',
+
     status VARCHAR(20) DEFAULT 'ativo'
 );
 
 CREATE TABLE exercicio_metricas (
     id_exercicio INT NOT NULL,
     id_metrica INT NOT NULL,
+
     PRIMARY KEY (id_exercicio, id_metrica),
+
     FOREIGN KEY (id_exercicio) REFERENCES exercicios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_metrica) REFERENCES metricas(id) ON DELETE CASCADE
 );
 
+-- =====================================================
+-- TREINOS
+-- =====================================================
+
 CREATE TABLE treinos (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_treinador INT NOT NULL,
     id_modalidade INT,
+
     titulo VARCHAR(100) NOT NULL,
     data_inicio DATETIME NOT NULL,
     data_fim DATETIME,
+
     descricao TEXT,
+
     status VARCHAR(20) DEFAULT 'ativo',
+
     FOREIGN KEY (id_treinador) REFERENCES treinadores(id) ON DELETE CASCADE,
     FOREIGN KEY (id_modalidade) REFERENCES modalidades(id) ON DELETE SET NULL
 );
@@ -120,59 +165,88 @@ CREATE TABLE treinos (
 CREATE TABLE treino_exercicios (
     id_treino INT NOT NULL,
     id_exercicio INT NOT NULL,
+
     PRIMARY KEY (id_treino, id_exercicio),
+
     FOREIGN KEY (id_treino) REFERENCES treinos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_exercicio) REFERENCES exercicios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE treino_atletas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_treino INT NOT NULL,
     id_atleta INT NOT NULL,
+
     status_presenca VARCHAR(20) DEFAULT 'presente',
     observacao TEXT,
+
     UNIQUE (id_treino, id_atleta),
+
     FOREIGN KEY (id_treino) REFERENCES treinos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_atleta) REFERENCES atletas(id) ON DELETE CASCADE
 );
 
+-- =====================================================
+-- PRESENÇAS, PROGRESSO E DESEMPENHO
+-- =====================================================
+
 CREATE TABLE presencas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_atleta INT NOT NULL,
     id_treino INT NOT NULL,
+
     presente TINYINT(1) DEFAULT 0,
     observacao TEXT,
+
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     UNIQUE (id_atleta, id_treino),
+
     FOREIGN KEY (id_atleta) REFERENCES atletas(id) ON DELETE CASCADE,
     FOREIGN KEY (id_treino) REFERENCES treinos(id) ON DELETE CASCADE
 );
 
 CREATE TABLE progresso (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_atleta INT NOT NULL,
     id_treino INT,
+
     data DATE NOT NULL,
+
     peso DECIMAL(5,2),
     altura DECIMAL(4,2),
+
     observacao TEXT,
+
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (id_atleta) REFERENCES atletas(id) ON DELETE CASCADE,
     FOREIGN KEY (id_treino) REFERENCES treinos(id) ON DELETE SET NULL
 );
 
 CREATE TABLE desempenho_atleta (
     id INT AUTO_INCREMENT PRIMARY KEY,
+
     id_treino_atleta INT NOT NULL,
     id_exercicio INT NOT NULL,
     id_metrica INT NOT NULL,
+
     valor VARCHAR(30) NOT NULL,
     observacao TEXT,
+
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (id_treino_atleta) REFERENCES treino_atletas(id) ON DELETE CASCADE,
     FOREIGN KEY (id_exercicio) REFERENCES exercicios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_metrica) REFERENCES metricas(id) ON DELETE CASCADE
 );
+
+-- =====================================================
+-- INSERTS BÁSICOS
+-- =====================================================
 
 INSERT INTO nivel_acesso (nome, status) VALUES
 ('Admin', 'ativo'),
@@ -184,75 +258,14 @@ INSERT INTO genero (nome, status) VALUES
 ('Feminino', 'ativo'),
 ('Misto', 'ativo');
 
-INSERT INTO usuarios (email, senha, id_nivel, status) VALUES
-('admin@mitra.com', '123', 1, 'ativo'),
-('treinador.volei@mitra.com', '123', 2, 'ativo');
-
-INSERT INTO modalidades (nome, status) VALUES ('Volei', 'ativo');
-SET @id_modalidade_volei = LAST_INSERT_ID();
-
-INSERT INTO exercicios (nome, descricao, status) VALUES
-('Saque', 'Treino de saque', 'ativo'),
-('Recepcao', 'Treino de recepcao', 'ativo'),
-('Condicionamento fisico', 'Treino fisico geral', 'ativo');
-
-INSERT INTO modalidade_exercicio (id_modalidade, id_exercicio)
-SELECT @id_modalidade_volei, id FROM exercicios;
+INSERT INTO usuarios (email, senha, id_nivel, status)
+VALUES ('admin@mitra.com', '123', 1, 'ativo');
 
 INSERT INTO metricas (nome, descricao, unidade_medida, tipo, status) VALUES
-('Percepcao de esforco', 'Escala de esforco percebido pelo atleta', '0-10', 'escala_0_10', 'ativo'),
-('Acertos', 'Quantidade de acertos', 'un', 'numero', 'ativo'),
-('Tentativas', 'Quantidade de tentativas', 'un', 'numero', 'ativo'),
-('Aproveitamento', 'Relacao entre acertos e tentativas', 'acertos/tentativas', 'aproveitamento', 'ativo'),
-('Tempo', 'Tempo total do exercicio', 'min', 'numero', 'ativo');
-
-INSERT INTO exercicio_metricas (id_exercicio, id_metrica)
-SELECT e.id, m.id
-FROM exercicios e
-JOIN metricas m
-WHERE m.nome IN ('Percepcao de esforco', 'Acertos', 'Tentativas', 'Aproveitamento', 'Tempo');
-
-INSERT INTO treinadores (id_usuario, nome, cref, telefone, data_nascimento, data_inicio, status)
-VALUES (2, 'Guilherme Camargo', '123456-G/PR', '41999999999', '1999-01-10', '2026-01-01', 'ativo');
-SET @id_treinador_1 = LAST_INSERT_ID();
-
-INSERT INTO equipes (nome, descricao, id_modalidade, id_genero, id_treinador_responsavel, categoria, status)
-VALUES ('CMP Sub-17 A', 'Equipe masculina de volei sub-17 A', @id_modalidade_volei, 1, @id_treinador_1, 'Sub-17', 'ativa');
-SET @id_equipe_sub17_a = LAST_INSERT_ID();
-
-INSERT INTO atletas (id_equipe, id_genero, nome, posicao, data_nascimento, peso, altura, status) VALUES
-(@id_equipe_sub17_a, 1, 'Nicolas Brun', 'Levantador', '2009-03-10', 68.50, 1.78, 'ativo'),
-(@id_equipe_sub17_a, 1, 'Lucaz Boza', 'Levantador', '2009-05-22', 70.00, 1.80, 'ativo'),
-(@id_equipe_sub17_a, 1, 'Guilherme Belon', 'Levantador', '2008-11-14', 72.30, 1.82, 'ativo');
-
-INSERT INTO treinos (id_treinador, id_modalidade, titulo, data_inicio, data_fim, descricao, status)
-VALUES (@id_treinador_1, @id_modalidade_volei, 'Treino tecnico de saque e recepcao', '2026-05-27 19:00:00', '2026-05-27 21:00:00', 'Treino focado em saque, recepcao e percepcao de esforco dos atletas', 'ativo');
-SET @id_treino_1 = LAST_INSERT_ID();
-
-INSERT INTO treino_exercicios (id_treino, id_exercicio)
-SELECT @id_treino_1, id FROM exercicios WHERE nome IN ('Saque', 'Recepcao', 'Condicionamento fisico');
-
-INSERT INTO treino_atletas (id_treino, id_atleta, status_presenca, observacao)
-SELECT @id_treino_1, id, 'presente', 'Participou do treino' FROM atletas WHERE id_equipe = @id_equipe_sub17_a;
-
-INSERT INTO presencas (id_atleta, id_treino, presente, observacao)
-SELECT id_atleta, id_treino, 1, 'Presenca registrada automaticamente' FROM treino_atletas WHERE id_treino = @id_treino_1;
-
-INSERT INTO progresso (id_atleta, id_treino, data, peso, altura, observacao)
-SELECT id, @id_treino_1, '2026-05-27', peso, altura, 'Registro inicial de progresso fisico'
-FROM atletas
-WHERE id_equipe = @id_equipe_sub17_a;
-
-SET @id_treino_atleta_exemplo = (
-    SELECT ta.id
-    FROM treino_atletas ta
-    INNER JOIN atletas a ON a.id = ta.id_atleta
-    WHERE ta.id_treino = @id_treino_1 AND a.nome = 'Nicolas Brun'
-    LIMIT 1
-);
-
-SET @id_exercicio_saque = (SELECT id FROM exercicios WHERE nome = 'Saque' LIMIT 1);
-SET @id_metrica_aproveitamento = (SELECT id FROM metricas WHERE nome = 'Aproveitamento' LIMIT 1);
-
-INSERT INTO desempenho_atleta (id_treino_atleta, id_exercicio, id_metrica, valor, observacao)
-VALUES (@id_treino_atleta_exemplo, @id_exercicio_saque, @id_metrica_aproveitamento, '8/10', 'Bom aproveitamento no saque');
+('Percepcao de esforco', 'Escala de esforço percebido pelo atleta', '0-10', 'escala_0_10', 'ativo'),
+('Acertos', 'Quantidade de acertos no exercício', 'un', 'numero', 'ativo'),
+('Tentativas', 'Quantidade de tentativas realizadas', 'un', 'numero', 'ativo'),
+('Aproveitamento', 'Relação entre acertos e tentativas', 'acertos/tentativas', 'aproveitamento', 'ativo'),
+('Repeticoes', 'Quantidade de repetições realizadas', 'rep', 'numero', 'ativo'),
+('Tempo', 'Tempo total do exercício', 'min', 'numero', 'ativo'),
+('Carga', 'Carga utilizada no exercício físico', 'kg', 'numero', 'ativo');

@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resumoCadastro = grupoCadastro?.querySelector(".menuGrupoResumo");
     const grupoTreinos = target.querySelector("#menuGrupoTreinos");
     const resumoTreinos = grupoTreinos?.querySelector(".menuGrupoResumo");
+    const linkAnalise = target.querySelector('[data-menu="analise"]');
 
     const linksCadastro = {
       modalidades: target.querySelector('[data-menu="modalidades"]'),
@@ -64,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const isEquipe = path.includes("/equipe/");
     const isTreinador = path.includes("/treinador/");
     const isAtleta = path.includes("/atleta/");
+    const isAnalise = path.includes("/analise/");
     const isTreinoNovo = path.includes("/treino/treino_novo.html");
     const isTreinoAlterar = path.includes("/treino/treino_alterar.html");
     const isAtletasTreino = path.includes("/treino/atletas_treino.html");
@@ -86,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (resumoTreinos) {
       resumoTreinos.classList.remove("active");
     }
+    linkAnalise?.classList.remove("active");
     Object.values(linksCadastro).forEach((link) => {
       link?.classList.remove("active");
     });
@@ -119,6 +122,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } else {
       grupoTreinos?.removeAttribute("open");
+    }
+
+    if (isAnalise) {
+      linkAnalise?.classList.add("active");
     }
 
     const btnLogout = document.querySelector("#btnMenuLogout");
