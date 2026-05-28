@@ -67,8 +67,12 @@ function preencherCards(tabela) {
         <p><strong>Treino:</strong> ${tituloTreino}</p>
         <p><strong>Detalhes:</strong> ${descricaoTreino}</p>
         <p><strong>Treino montado pelo treinador: </strong> ${treinador}</p>
-        <a href="treino_alterar.html?id=${treino.id}">Alterar</a>
-        <a href="#" onclick="excluir(${treino.id})">Excluir</a>
+        ${
+          atletaPodePreencher
+            ? ""
+            : `<a href="treino_alterar.html?id=${treino.id}">Alterar</a>
+               <a href="#" onclick="excluir(${treino.id})">Excluir</a>`
+        }
 
         <div class="area-desempenho">
           <h4>Metricas do treino</h4>

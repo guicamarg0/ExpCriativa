@@ -1,6 +1,8 @@
 <?php
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
+    include_once('../permissao.php');
+    exigir_admin();
 
 $retorno = [
     'status'    => 'nok',

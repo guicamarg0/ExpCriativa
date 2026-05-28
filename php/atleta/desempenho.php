@@ -1,5 +1,7 @@
 <?php
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_usuario_logado();
 
 $retorno = ['status'=>'nok','mensagem'=>'','data'=>[]];
 
@@ -8,6 +10,10 @@ $idAtleta = isset($_GET['id_atleta']) ? (int) $_GET['id_atleta'] : 0;
 try {
     if ($idAtleta <= 0) {
         throw new Exception('id_atleta obrigatório');
+    }
+
+    if (!atleta_permitido($conexao, $idAtleta)) {
+        responder_sem_permissao();
     }
 
     $stmt = $conexao->prepare("

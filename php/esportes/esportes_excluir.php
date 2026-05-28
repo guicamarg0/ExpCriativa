@@ -2,6 +2,8 @@
     header("Content-type:application/json;charset:utf-8");
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
+    include_once('../permissao.php');
+    exigir_admin();
     // Configurando o padrão de retorno em todas
     // as situações
     $retorno = [

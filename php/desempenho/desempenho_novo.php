@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_usuario_logado();
 
 $retorno = [
     'status' => 'nok',
@@ -18,6 +20,10 @@ if ($idTreinoAtleta <= 0 || $idExercicio <= 0 || $idMetrica <= 0 || $valor === '
     $retorno['mensagem'] = 'Dados obrigatórios não informados.';
     echo json_encode($retorno);
     exit;
+}
+
+if (!treino_atleta_permitido($conexao, $idTreinoAtleta)) {
+    responder_sem_permissao();
 }
 
 $stmt = $conexao->prepare("

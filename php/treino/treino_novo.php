@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_admin_ou_treinador();
 
 $retorno = [
     'status' => 'nok',
@@ -21,6 +23,14 @@ if ($titulo === '' || $idModalidade <= 0 || $dataInicio === '' || $idAtleta <= 0
     $retorno['mensagem'] = 'Dados obrigatorios nao informados.';
     echo json_encode($retorno);
     exit;
+}
+
+if (usuario_logado_nivel() === 2) {
+    $idTreinadorLogado = treinador_logado_id($conexao);
+
+    if ($idTreinador !== $idTreinadorLogado || !atleta_permitido($conexao, $idAtleta)) {
+        responder_sem_permissao();
+    }
 }
 
 $dataInicio .= strlen($dataInicio) === 10 ? ' 00:00:00' : '';

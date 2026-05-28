@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_usuario_logado();
 
 $retorno = [
     'status' => 'nok',
@@ -17,6 +19,10 @@ if ($id <= 0 || $idMetrica <= 0 || $valor === '') {
     $retorno['mensagem'] = 'ID, métrica e valor são obrigatórios.';
     echo json_encode($retorno);
     exit;
+}
+
+if (!desempenho_permitido($conexao, $id)) {
+    responder_sem_permissao();
 }
 
 $stmt = $conexao->prepare("

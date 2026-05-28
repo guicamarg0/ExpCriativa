@@ -2,6 +2,11 @@
   let sessaoEsportesAtual = null;
 
   async function obterSessaoEsportesAtual() {
+    if (!window.mitraSessao) {
+      await new Promise((resolve) => {
+        document.addEventListener("mitra:sessao", resolve, { once: true });
+      });
+    }
     sessaoEsportesAtual = window.mitraSessao;
     return sessaoEsportesAtual;
   }

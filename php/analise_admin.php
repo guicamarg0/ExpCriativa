@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
 require_once 'conexao.php';
+require_once 'permissao.php';
+exigir_admin();
 
 $resp = ['equipes'=>[], 'treinadores'=>[], 'atletas'=>[]];
 

@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_admin_ou_treinador();
 
 $retorno = [
     'status' => 'nok',
@@ -25,6 +27,10 @@ if ($id <= 0 || $titulo === '' || $idModalidade <= 0 || $dataInicio === '') {
     $retorno['mensagem'] = 'Dados obrigatorios nao informados.';
     echo json_encode($retorno);
     exit;
+}
+
+if (!treino_permitido($conexao, $id)) {
+    responder_sem_permissao();
 }
 
 $exercicios = json_decode($exerciciosJson, true);

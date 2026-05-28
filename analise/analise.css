@@ -96,12 +96,17 @@ body {
   color: #2b2f52;
 }
 
-.controls input {
+.controls input,
+.controls select {
   width: 100px;
   border: 1px solid var(--cinza-medio);
   border-radius: 10px;
   padding: 8px 10px;
   font-size: 0.95rem;
+}
+
+.controls select {
+  width: min(260px, 100%);
 }
 
 .controls button {

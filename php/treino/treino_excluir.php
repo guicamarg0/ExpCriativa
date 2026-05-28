@@ -1,6 +1,8 @@
 <?php
     header("Content-type:application/json;charset:utf-8");
     include_once('../conexao.php');
+    include_once('../permissao.php');
+    exigir_admin_ou_treinador();
     // Configurando o padrão de retorno em todas
     // as situações
     $retorno = [
@@ -10,6 +12,9 @@
     ];
 
     if(isset($_GET['id'])){
+        if (!treino_permitido($conexao, (int) $_GET['id'])) {
+            responder_sem_permissao();
+        }
         // Segunda situação - RECEBENDO O ID por GET
         $stmt = $conexao->prepare("DELETE FROM treinos WHERE id = ?");
         $stmt->bind_param("i",$_GET['id']);

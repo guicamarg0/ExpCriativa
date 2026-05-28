@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_usuario_logado();
 
 $retorno = [
     'status' => 'nok',
@@ -15,6 +17,10 @@ if (!isset($_GET['id_treino'])) {
 }
 
 $idTreino = (int) $_GET['id_treino'];
+
+if (!treino_permitido($conexao, $idTreino)) {
+    responder_sem_permissao();
+}
 
 $stmt = $conexao->prepare("
     SELECT metricas.*

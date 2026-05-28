@@ -61,6 +61,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       planilhasTreino: target.querySelector('[data-menu="planilhas-treino"]')
     };
 
+    function aplicarMenuPorSessao(sessao) {
+      const perfil = sessao?.perfil || {};
+      const tipo = perfil.tipo || "";
+
+      if (tipo === "admin" || !tipo) {
+        return;
+      }
+
+      if (tipo === "treinador") {
+        linksCadastro.modalidades?.remove();
+        linksCadastro.equipes?.remove();
+        linksCadastro.treinadores?.remove();
+        return;
+      }
+
+      if (tipo === "atleta") {
+        grupoCadastro?.remove();
+        linksTreinos.atletasTreino?.setAttribute(
+          "href",
+          `/ExpCriativa/treino/planilha_treino.html?id=${perfil.id || ""}`
+        );
+        if (linksTreinos.atletasTreino) {
+          linksTreinos.atletasTreino.innerHTML =
+            '<i class="bi bi-clipboard2-pulse"></i> Minha planilha';
+        }
+      }
+    }
+
+    aplicarMenuPorSessao(window.mitraSessao);
+    document.addEventListener("mitra:sessao", (event) => {
+      aplicarMenuPorSessao(event.detail);
+    });
+
     const isEsportes = path.includes("/esportes/");
     const isEquipe = path.includes("/equipe/");
     const isTreinador = path.includes("/treinador/");

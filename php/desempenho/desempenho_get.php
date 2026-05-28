@@ -1,6 +1,8 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_usuario_logado();
 
 $retorno = [
     'status' => 'nok',
@@ -10,6 +12,11 @@ $retorno = [
 
 if (isset($_GET['id'])) {
     $id = (int) $_GET['id'];
+
+    if (!desempenho_permitido($conexao, $id)) {
+        responder_sem_permissao();
+    }
+
     $stmt = $conexao->prepare("
         SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
         FROM desempenho_atleta
@@ -20,6 +27,11 @@ if (isset($_GET['id'])) {
     $stmt->bind_param("i", $id);
 } elseif (isset($_GET['id_treino_atleta'])) {
     $idTreinoAtleta = (int) $_GET['id_treino_atleta'];
+
+    if (!treino_atleta_permitido($conexao, $idTreinoAtleta)) {
+        responder_sem_permissao();
+    }
+
     $stmt = $conexao->prepare("
         SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
         FROM desempenho_atleta
@@ -30,13 +42,41 @@ if (isset($_GET['id'])) {
     ");
     $stmt->bind_param("i", $idTreinoAtleta);
 } else {
-    $stmt = $conexao->prepare("
-        SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
-        FROM desempenho_atleta
-        INNER JOIN metricas ON metricas.id = desempenho_atleta.id_metrica
-        INNER JOIN exercicios ON exercicios.id = desempenho_atleta.id_exercicio
-        ORDER BY desempenho_atleta.data_registro DESC
-    ");
+    if (usuario_logado_nivel() === 1) {
+        $stmt = $conexao->prepare("
+            SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
+            FROM desempenho_atleta
+            INNER JOIN metricas ON metricas.id = desempenho_atleta.id_metrica
+            INNER JOIN exercicios ON exercicios.id = desempenho_atleta.id_exercicio
+            ORDER BY desempenho_atleta.data_registro DESC
+        ");
+    } elseif (usuario_logado_nivel() === 2) {
+        $idTreinador = treinador_logado_id($conexao);
+        $stmt = $conexao->prepare("
+            SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
+            FROM desempenho_atleta
+            INNER JOIN treino_atletas ON treino_atletas.id = desempenho_atleta.id_treino_atleta
+            INNER JOIN atletas ON atletas.id = treino_atletas.id_atleta
+            INNER JOIN equipes ON equipes.id = atletas.id_equipe
+            INNER JOIN metricas ON metricas.id = desempenho_atleta.id_metrica
+            INNER JOIN exercicios ON exercicios.id = desempenho_atleta.id_exercicio
+            WHERE equipes.id_treinador_responsavel = ?
+            ORDER BY desempenho_atleta.data_registro DESC
+        ");
+        $stmt->bind_param("i", $idTreinador);
+    } else {
+        $idAtleta = atleta_logado_id($conexao);
+        $stmt = $conexao->prepare("
+            SELECT desempenho_atleta.*, metricas.nome AS nome_metrica, metricas.unidade_medida, exercicios.nome AS nome_exercicio
+            FROM desempenho_atleta
+            INNER JOIN treino_atletas ON treino_atletas.id = desempenho_atleta.id_treino_atleta
+            INNER JOIN metricas ON metricas.id = desempenho_atleta.id_metrica
+            INNER JOIN exercicios ON exercicios.id = desempenho_atleta.id_exercicio
+            WHERE treino_atletas.id_atleta = ?
+            ORDER BY desempenho_atleta.data_registro DESC
+        ");
+        $stmt->bind_param("i", $idAtleta);
+    }
 }
 
 if (!$stmt) {

@@ -1,9 +1,39 @@
 <?php
 header('Content-Type: application/json');
+session_start();
 require_once 'conexao.php';
 
 $id_atleta = isset($_GET['id_atleta']) ? intval($_GET['id_atleta']) : 0;
 if(!$id_atleta){ echo json_encode([]); exit; }
+
+$idNivel = (int) ($_SESSION['id_nivel'] ?? 0);
+$idUsuario = (int) ($_SESSION['usuario_id'] ?? 0);
+
+if ($idNivel === 3) {
+    $stmtPermissao = $conexao->prepare("SELECT id FROM atletas WHERE id = ? AND id_usuario = ?");
+    $stmtPermissao->bind_param('ii', $id_atleta, $idUsuario);
+    $stmtPermissao->execute();
+    if ($stmtPermissao->get_result()->num_rows === 0) {
+        echo json_encode(['presencas'=>0, 'evolucao'=>[], 'proximo_treino'=>null]);
+        exit;
+    }
+    $stmtPermissao->close();
+} elseif ($idNivel === 2) {
+    $stmtPermissao = $conexao->prepare("
+        SELECT atletas.id
+        FROM atletas
+        INNER JOIN equipes ON equipes.id = atletas.id_equipe
+        INNER JOIN treinadores ON treinadores.id = equipes.id_treinador_responsavel
+        WHERE atletas.id = ? AND treinadores.id_usuario = ?
+    ");
+    $stmtPermissao->bind_param('ii', $id_atleta, $idUsuario);
+    $stmtPermissao->execute();
+    if ($stmtPermissao->get_result()->num_rows === 0) {
+        echo json_encode(['presencas'=>0, 'evolucao'=>[], 'proximo_treino'=>null]);
+        exit;
+    }
+    $stmtPermissao->close();
+}
 
 $resp = ['presencas'=>0, 'evolucao'=>[], 'proximo_treino'=>null];
 

@@ -1,5 +1,7 @@
 ﻿<?php
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_admin();
 
 $id = (int) $_GET['id'];
 

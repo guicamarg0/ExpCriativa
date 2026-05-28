@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await window.atletaSessao.aplicarPermissoesTelaAtleta();
+  const sessao = window.atletaSessao.obterSessaoAtual() || window.mitraSessao || {};
+  const tipoPerfil = sessao.perfil?.tipo || "";
+  const podeEditar = tipoPerfil === "admin";
+  const acoesHeader = document.querySelector(".acoesHeaderAtleta");
+  if (!podeEditar && acoesHeader) {
+    acoesHeader.style.display = "none";
+  }
+
   const lista = document.querySelector(".listViewAtletas");
   const retornoAtletas = await fetch("../php/atleta/atleta_get.php");
   const respostaAtletas = await retornoAtletas.json();
@@ -21,7 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     html += `
       <div class="linhaAtleta">
-        <a class="btnEditarAtleta" href="atleta_alterar.html?id=${atleta.id}"><i class="bi bi-pencil-square"></i><span class="visually-hidden">Editar</span></a>
+        ${
+          podeEditar
+            ? `<a class="btnEditarAtleta" href="atleta_alterar.html?id=${atleta.id}"><i class="bi bi-pencil-square"></i><span class="visually-hidden">Editar</span></a>`
+            : "<span></span>"
+        }
         <p>${atleta.nome || ""}</p>
         <p>${String(atleta.data_nascimento || "").slice(0, 10)}</p>
         <p>${generoNome}</p>

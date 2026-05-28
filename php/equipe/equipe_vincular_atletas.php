@@ -1,5 +1,7 @@
 ﻿<?php
 include_once('../conexao.php');
+include_once('../permissao.php');
+exigir_admin();
 
 $idEquipe = (int) $_POST['id_equipe'];
 $idsTexto = $_POST['atletas_ids'] ?? '';

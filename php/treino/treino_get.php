@@ -1,5 +1,6 @@
 <?php
 header("Content-type:application/json;charset:utf-8");
+session_start();
 include_once('../conexao.php');
 
 $retorno = [
@@ -8,8 +9,43 @@ $retorno = [
     'data' => []
 ];
 
+$idNivel = (int) ($_SESSION['id_nivel'] ?? 0);
+$idUsuario = (int) ($_SESSION['usuario_id'] ?? 0);
+
+function atleta_permitido($conexao, $idAtleta, $idNivel, $idUsuario) {
+    if ($idNivel === 1) {
+        return true;
+    }
+
+    if ($idNivel === 3) {
+        $stmt = $conexao->prepare("SELECT id FROM atletas WHERE id = ? AND id_usuario = ?");
+        $stmt->bind_param("ii", $idAtleta, $idUsuario);
+        $stmt->execute();
+        $permitido = $stmt->get_result()->num_rows > 0;
+        $stmt->close();
+        return $permitido;
+    }
+
+    if ($idNivel === 2) {
+        $stmt = $conexao->prepare("
+            SELECT atletas.id
+            FROM atletas
+            INNER JOIN equipes ON equipes.id = atletas.id_equipe
+            INNER JOIN treinadores ON treinadores.id = equipes.id_treinador_responsavel
+            WHERE atletas.id = ? AND treinadores.id_usuario = ?
+        ");
+        $stmt->bind_param("ii", $idAtleta, $idUsuario);
+        $stmt->execute();
+        $permitido = $stmt->get_result()->num_rows > 0;
+        $stmt->close();
+        return $permitido;
+    }
+
+    return false;
+}
+
 if (isset($_GET['id'])) {
-    $stmt = $conexao->prepare("
+    $sqlId = "
         SELECT
             treinos.*,
             treino_atletas.id AS id_treino_atleta,
@@ -21,11 +57,35 @@ if (isset($_GET['id'])) {
         LEFT JOIN treinadores ON treinadores.id = treinos.id_treinador
         LEFT JOIN treino_exercicios ON treino_exercicios.id_treino = treinos.id
         WHERE treinos.id = ?
-        GROUP BY treinos.id, treino_atletas.id, treino_atletas.id_atleta, treinadores.nome
-    ");
+    ";
+    if ($idNivel === 2) {
+        $sqlId .= " AND EXISTS (
+            SELECT 1 FROM treinadores tperm
+            WHERE tperm.id = treinos.id_treinador AND tperm.id_usuario = ?
+        )";
+    } elseif ($idNivel === 3) {
+        $sqlId .= " AND EXISTS (
+            SELECT 1 FROM treino_atletas taperm
+            INNER JOIN atletas aperm ON aperm.id = taperm.id_atleta
+            WHERE taperm.id_treino = treinos.id AND aperm.id_usuario = ?
+        )";
+    }
+    $sqlId .= " GROUP BY treinos.id, treino_atletas.id, treino_atletas.id_atleta, treinadores.nome";
+    $stmt = $conexao->prepare($sqlId);
     $id = (int) $_GET['id'];
-    $stmt->bind_param("i", $id);
+    if ($idNivel === 2 || $idNivel === 3) {
+        $stmt->bind_param("ii", $id, $idUsuario);
+    } else {
+        $stmt->bind_param("i", $id);
+    }
 } elseif (isset($_GET['id_atleta'])) {
+    $idAtleta = (int) $_GET['id_atleta'];
+    if (!atleta_permitido($conexao, $idAtleta, $idNivel, $idUsuario)) {
+        $retorno['mensagem'] = 'Acesso negado para este atleta.';
+        echo json_encode($retorno);
+        exit;
+    }
+
     $stmt = $conexao->prepare("
         SELECT
             treinos.*,
@@ -41,7 +101,6 @@ if (isset($_GET['id'])) {
         GROUP BY treinos.id, treino_atletas.id, treino_atletas.id_atleta, treinadores.nome
         ORDER BY treinos.data_inicio DESC
     ");
-    $idAtleta = (int) $_GET['id_atleta'];
     $stmt->bind_param("i", $idAtleta);
 } else {
     $stmt = $conexao->prepare("

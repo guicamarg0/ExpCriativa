@@ -18,6 +18,60 @@
     window.location.href = "../login/index.html";
   }
 
+  function redirecionarHome() {
+    window.location.href = "../home/home.html";
+  }
+
+  function caminhoAtual() {
+    return window.location.pathname.toLowerCase();
+  }
+
+  function validarPermissao(data) {
+    const path = caminhoAtual();
+    const perfil = data.perfil || {};
+    const tipo = perfil.tipo || "";
+
+    if (tipo === "admin") {
+      return;
+    }
+
+    if (tipo === "treinador") {
+      const permitido =
+        path.includes("/home/") ||
+        path.includes("/analise/") ||
+        path.includes("/atleta/atleta.html") ||
+        path.includes("/treino/");
+
+      if (!permitido) {
+        redirecionarHome();
+      }
+      return;
+    }
+
+    if (tipo === "atleta") {
+      if (path.includes("/treino/atletas_treino.html")) {
+        window.location.href = `../treino/planilha_treino.html?id=${perfil.id}`;
+        return;
+      }
+
+      if (path.includes("/treino/planilha_treino.html")) {
+        const idUrl = new URLSearchParams(window.location.search).get("id");
+        if (String(idUrl || "") !== String(perfil.id || "")) {
+          window.location.href = `../treino/planilha_treino.html?id=${perfil.id}`;
+        }
+        return;
+      }
+
+      const permitido =
+        path.includes("/home/") ||
+        path.includes("/analise/");
+
+      if (!permitido) {
+        redirecionarHome();
+      }
+    }
+  }
+
   fetch(phpPath, { cache: "no-store" })
     .then((response) => response.json())
     .then((data) => {
@@ -31,6 +85,7 @@
 
       window.mitraSessao = data;
       document.dispatchEvent(new CustomEvent("mitra:sessao", { detail: data }));
+      validarPermissao(data);
     })
     .catch(() => {
       redirecionarLogin();
