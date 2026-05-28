@@ -41,7 +41,7 @@
                 $insertEx->close();
             }
 
-            $link = $conexao->prepare("INSERT IGNORE INTO modalidade_exercicio(modalidade_id, exercicio_id) VALUES(?,?)");
+            $link = $conexao->prepare("INSERT IGNORE INTO modalidade_exercicio(id_modalidade, id_exercicio) VALUES(?,?)");
             $link->bind_param("ii", $modalidade_id, $exercicio_id);
             $link->execute();
             $link->close();

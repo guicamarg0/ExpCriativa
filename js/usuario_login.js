@@ -38,7 +38,11 @@ async function login() {
     const resposta = await retorno.json();
     if (resposta.status == "ok") {
       localStorage.setItem("id_usuario", resposta.data[0].id);
-      localStorage.setItem("id_treinador", resposta.data[0].id_treinador);
+      if (resposta.data[0].id_treinador) {
+        localStorage.setItem("id_treinador", resposta.data[0].id_treinador);
+      } else {
+        localStorage.removeItem("id_treinador");
+      }
       alert("Login Efetuado com Sucesso");
       window.location.href = "../home/home.html";
     } else {

@@ -1,25 +1,39 @@
 // Fase 1
 // a) PEGA o ID da URL
 // b) Requisita o BACKEND por GET
-// c) Preenche o formulário com os dados do BACKEND
+// c) Preenche o formulario com os dados do BACKEND
 // ----------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  // pega a URL e armazena em um const
-  // busca nessa URL a variável id e armazana no const id.
+document.addEventListener("DOMContentLoaded", async () => {
   const url = new URLSearchParams(window.location.search);
   const id = url.get("id");
-  buscar(id);
+
+  if (!id) {
+    alert("ID da modalidade nao informado.");
+    window.location.href = "../esportes/esportes.html";
+    return;
+  }
+
+  await buscar(id);
+
+  const form = document.getElementById("formEsporteEdicao");
+  if (form) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await alterar();
+    });
+  }
 });
 
 async function buscar(id) {
   const retorno = await fetch("../php/esportes/esportes_get.php?id=" + id);
   const resposta = await retorno.json();
+
   if (resposta.status == "ok") {
     var registro = resposta.data[0];
     document.getElementById("nome").value = registro.nome;
     document.getElementById("status").value = registro.status;
     document.getElementById("id").value = id;
-    carregarExercicios(id);
+    await carregarExercicios(id);
   } else {
     alert("ERRO:" + resposta.mensagem);
     window.location.href = "../esportes/esportes.html";
@@ -27,11 +41,14 @@ async function buscar(id) {
 }
 
 async function carregarExercicios(id) {
-  const retorno = await fetch(
-    `../php/esportes/modalidade_exercicios_get.php?id=${id}`,
-  );
-  const resposta = await retorno.json();
   const textarea = document.getElementById("exercicios");
+  if (!textarea) {
+    return;
+  }
+
+  const retorno = await fetch(`../php/esportes/modalidade_exercicios_get.php?id=${id}`);
+  const resposta = await retorno.json();
+
   if (resposta.status == "ok") {
     const nomes = resposta.data.map((item) => item.nome);
     textarea.value = nomes.join("\n");
@@ -39,12 +56,6 @@ async function carregarExercicios(id) {
     textarea.value = "";
   }
 }
-
-// ----------------------------------------------
-// Fase 2
-document.getElementById("enviar").addEventListener("click", () => {
-  alterar();
-});
 
 async function alterar() {
   var nome = document.getElementById("nome").value;

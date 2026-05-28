@@ -59,6 +59,21 @@
         .form-container {
             max-width: 500px;
         }
+
+        .exercicio-metricas {
+            border: 1px solid var(--cinza-borda);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .metricas-exercicio {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+            padding-left: 24px;
+        }
+
     </style>
 </head>
 <body>
@@ -77,7 +92,14 @@
 
                 <div class="mb-3">
                     <label for="modalidade" class="form-label fw-semibold text-secondary">Modalidade do treino: </label>
-                    <input type="text" id="modalidade" name="modalidade" class="form-control" required>
+                    <select id="modalidade" name="modalidade_id" class="form-control" required>
+                        <option value="">Selecione uma modalidade</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="lista_exercicios_container" style="display: none">
+                    <label class="form-label fw-semibold text-secondary">Exercicios vinculados</label>
+                    <div id="lista_exercicios"></div>
                 </div>
 
                 <div class="mb-3">

@@ -20,8 +20,8 @@ if(!isset($_GET['id']) || !is_numeric($_GET['id'])){
 $modalidade_id = intval($_GET['id']);
 
 $stmt = $conexao->prepare("SELECT e.id, e.nome FROM exercicios e
-    INNER JOIN modalidade_exercicio me ON me.exercicio_id = e.id
-    WHERE me.modalidade_id = ? ORDER BY e.nome");
+    INNER JOIN modalidade_exercicio me ON me.id_exercicio = e.id
+    WHERE me.id_modalidade = ? ORDER BY e.nome");
 $stmt->bind_param("i", $modalidade_id);
 $stmt->execute();
 $resultado = $stmt->get_result();

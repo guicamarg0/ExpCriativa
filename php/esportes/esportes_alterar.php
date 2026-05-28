@@ -22,7 +22,7 @@ $retorno = [
         if($stmt->affected_rows >= 0){
             $stmt->close();
 
-            $delete = $conexao->prepare("DELETE FROM modalidade_exercicio WHERE modalidade_id = ?");
+            $delete = $conexao->prepare("DELETE FROM modalidade_exercicio WHERE id_modalidade = ?");
             $delete->bind_param("i", $modalidade_id);
             $delete->execute();
             $delete->close();
@@ -49,7 +49,7 @@ $retorno = [
                     $insertEx->close();
                 }
 
-                $link = $conexao->prepare("INSERT IGNORE INTO modalidade_exercicio(modalidade_id, exercicio_id) VALUES(?,?)");
+                $link = $conexao->prepare("INSERT IGNORE INTO modalidade_exercicio(id_modalidade, id_exercicio) VALUES(?,?)");
                 $link->bind_param("ii", $modalidade_id, $exercicio_id);
                 $link->execute();
                 $link->close();
